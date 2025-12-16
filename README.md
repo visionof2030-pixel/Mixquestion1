@@ -589,9 +589,6 @@
             showLoading(true);
             
             try {
-                // هنا يجب تحليل PDF واستخراج الأسئلة
-                // للتبسيط، سنستخدم البيانات المضمنة من ملف PDF المرفق
-                
                 // استخراج القواعد (Grammar)
                 extractedQuestions.grammar = [
                     { number: 1, text: "I. he ___ plays football on weekends.", options: ["does", "always", "has"], correct: 1 },
@@ -814,7 +811,6 @@
             // خلط كل قسم حسب الاختيار
             if (shuffleGrammar && shuffledQuestions.grammar.length > 0) {
                 shuffledQuestions.grammar = fisherYatesShuffle(shuffledQuestions.grammar);
-                // تحديث أرقام الأسئلة بعد الخلط
                 shuffledQuestions.grammar.forEach((q, index) => {
                     q.number = index + 1;
                 });
@@ -822,7 +818,6 @@
             
             if (shuffleOrthography && shuffledQuestions.orthography.length > 0) {
                 shuffledQuestions.orthography = fisherYatesShuffle(shuffledQuestions.orthography);
-                // تحديث أرقام الأسئلة بعد الخلط
                 shuffledQuestions.orthography.forEach((q, index) => {
                     q.number = index + 1;
                 });
@@ -830,7 +825,6 @@
             
             if (shuffleMatching && shuffledQuestions.matching.length > 0) {
                 shuffledQuestions.matching = fisherYatesShuffle(shuffledQuestions.matching);
-                // تحديث أرقام الأسئلة بعد الخلط
                 shuffledQuestions.matching.forEach((q, index) => {
                     q.number = index + 1;
                 });
@@ -838,7 +832,6 @@
             
             if (shuffleReading && shuffledQuestions.reading.length > 0) {
                 shuffledQuestions.reading = fisherYatesShuffle(shuffledQuestions.reading);
-                // تحديث أرقام الأسئلة بعد الخلط
                 shuffledQuestions.reading.forEach((q, index) => {
                     q.number = index + 1;
                 });
@@ -982,7 +975,7 @@
         
         // حفظ PDF مخلوط
         async function saveShuffledPDF() {
-            if (!shuffledQuestions || !pdfDoc) {
+            if (!shuffledQuestions) {
                 showStatus('لا توجد أسئلة مخلوطة لحفظها', 'error');
                 return;
             }
@@ -990,25 +983,426 @@
             showLoading(true);
             
             try {
-                // إنشاء نسخة من PDF الأصلي
-                const newPdfDoc = await PDFLib.PDFDocument.create();
+                // إنشاء ملف PDF جديد
+                const pdfDoc = await PDFLib.PDFDocument.create();
                 
-                // نسخ الصفحات من PDF الأصلي
-                const copiedPages = await newPdfDoc.copyPages(pdfDoc, pdfDoc.getPageIndices());
-                copiedPages.forEach(page => newPdfDoc.addPage(page));
+                // تسجيل fontkit مع PDFDoc
+                pdfDoc.registerFontkit(PDFLib.fontkit);
                 
-                // هنا يجب تعديل الصفحات لإضافة الأسئلة المخلوطة
-                // هذا يتطلب معرفة دقيقة بمواقع الأسئلة في PDF الأصلي
+                // إضافة الخطوط
+                const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+                const fontBold = await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+                const fontItalic = await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaOblique);
                 
-                // حفظ PDF الجديد
-                const newPdfBytes = await newPdfDoc.save();
+                // === الصفحة الأولى ===
+                const page1 = pdfDoc.addPage([595, 842]); // A4 بالبكسل
+                
+                // العنوان الرئيسي
+                page1.drawText('Kingdom of Saudi Arabia Ministry', {
+                    x: 50,
+                    y: 800,
+                    size: 12,
+                    font: fontBold,
+                });
+                
+                page1.drawText('of Education, Education', {
+                    x: 50,
+                    y: 785,
+                    size: 12,
+                    font: fontBold,
+                });
+                
+                page1.drawText('Directorate in Makkah', {
+                    x: 50,
+                    y: 770,
+                    size: 12,
+                    font: fontBold,
+                });
+                
+                page1.drawText('Saeed Ibn Alas Intermediate School', {
+                    x: 50,
+                    y: 750,
+                    size: 14,
+                    font: fontBold,
+                });
+                
+                page1.drawText('Written Exam 40', {
+                    x: 50,
+                    y: 730,
+                    size: 12,
+                    font: fontBold,
+                });
+                
+                page1.drawText('Written', {
+                    x: 50,
+                    y: 715,
+                    size: 12,
+                    font: font,
+                });
+                
+                // معلومات الطالب على اليمين
+                page1.drawText('رقم الجلوس', {
+                    x: 450,
+                    y: 750,
+                    size: 11,
+                    font: font,
+                });
+                
+                page1.drawText('Super Goal 3 - English Language', {
+                    x: 50,
+                    y: 690,
+                    size: 12,
+                    font: fontBold,
+                });
+                
+                page1.drawText('3rd Intermediate Grade', {
+                    x: 50,
+                    y: 675,
+                    size: 11,
+                    font: font,
+                });
+                
+                page1.drawText('2nd Term rescheduled Exam', {
+                    x: 50,
+                    y: 660,
+                    size: 11,
+                    font: font,
+                });
+                
+                page1.drawText('1447-2026.', {
+                    x: 50,
+                    y: 645,
+                    size: 11,
+                    font: font,
+                });
+                
+                page1.drawText('المراجع', {
+                    x: 450,
+                    y: 690,
+                    size: 11,
+                    font: font,
+                });
+                
+                page1.drawText('المصحح', {
+                    x: 450,
+                    y: 675,
+                    size: 11,
+                    font: font,
+                });
+                
+                page1.drawText('اسم الطالب', {
+                    x: 450,
+                    y: 660,
+                    size: 11,
+                    font: font,
+                });
+                
+                // قسم Grammar
+                page1.drawText('Grammar', {
+                    x: 50,
+                    y: 610,
+                    size: 14,
+                    font: fontBold,
+                });
+                
+                page1.drawText('1. choose the correct answer', {
+                    x: 50,
+                    y: 590,
+                    size: 12,
+                    font: font,
+                });
+                
+                // رسم خط للفصل
+                page1.drawLine({
+                    start: { x: 50, y: 580 },
+                    end: { x: 545, y: 580 },
+                    thickness: 1,
+                });
+                
+                // إضافة أسئلة Grammar المخلوطة
+                let yPos = 560;
+                if (shuffledQuestions.grammar && shuffledQuestions.grammar.length > 0) {
+                    shuffledQuestions.grammar.forEach((question, index) => {
+                        // رقم السؤال والنقاط
+                        page1.drawText(`${question.number}. ${question.text}`, {
+                            x: 50,
+                            y: yPos,
+                            size: 11,
+                            font: font,
+                        });
+                        
+                        page1.drawText('9', {
+                            x: 520,
+                            y: yPos,
+                            size: 11,
+                            font: font,
+                        });
+                        
+                        // الخيارات
+                        if (question.options && question.options.length > 0) {
+                            question.options.forEach((option, optIndex) => {
+                                const letter = String.fromCharCode(97 + optIndex);
+                                page1.drawText(`${letter}   ${option}`, {
+                                    x: 70,
+                                    y: yPos - 18 * (optIndex + 1),
+                                    size: 10,
+                                    font: font,
+                                });
+                            });
+                        }
+                        
+                        yPos -= 60;
+                    });
+                }
+                
+                // قسم Orthography
+                page1.drawText('Orthography', {
+                    x: 50,
+                    y: yPos - 20,
+                    size: 14,
+                    font: fontBold,
+                });
+                
+                page1.drawText('2. choose the correct answer', {
+                    x: 50,
+                    y: yPos - 40,
+                    size: 12,
+                    font: font,
+                });
+                
+                yPos -= 60;
+                
+                // إضافة أسئلة Orthography المخلوطة
+                if (shuffledQuestions.orthography && shuffledQuestions.orthography.length > 0) {
+                    shuffledQuestions.orthography.forEach((question, index) => {
+                        page1.drawText(`${question.number}. which letter completes the word? "${question.text}"`, {
+                            x: 50,
+                            y: yPos,
+                            size: 11,
+                            font: font,
+                        });
+                        
+                        page1.drawText('5', {
+                            x: 520,
+                            y: yPos,
+                            size: 11,
+                            font: font,
+                        });
+                        
+                        // الخيارات
+                        if (question.options && question.options.length > 0) {
+                            question.options.forEach((option, optIndex) => {
+                                const letter = String.fromCharCode(97 + optIndex);
+                                page1.drawText(`${letter}   ${option}`, {
+                                    x: 70,
+                                    y: yPos - 18 * (optIndex + 1),
+                                    size: 10,
+                                    font: font,
+                                });
+                            });
+                        }
+                        
+                        yPos -= 50;
+                    });
+                }
+                
+                // === الصفحة الثانية ===
+                const page2 = pdfDoc.addPage([595, 842]);
+                
+                // عنوان قسم Matching
+                page2.drawText('3. Carefully look at all the pictures shown in the column below.', {
+                    x: 50,
+                    y: 800,
+                    size: 11,
+                    font: font,
+                });
+                
+                page2.drawText('Then, read the list of words provided in the opposite column.', {
+                    x: 50,
+                    y: 785,
+                    size: 11,
+                    font: font,
+                });
+                
+                page2.drawText('Each word is labeled with a letter (A, B, C, etc.), and each picture is labeled', {
+                    x: 50,
+                    y: 770,
+                    size: 11,
+                    font: font,
+                });
+                
+                page2.drawText('with a number (1, 2, 3, etc.). Your task is to choose the correct word', {
+                    x: 50,
+                    y: 755,
+                    size: 11,
+                    font: font,
+                });
+                
+                page2.drawText('that matches each picture.', {
+                    x: 50,
+                    y: 740,
+                    size: 11,
+                    font: font,
+                });
+                
+                // جدول Matching
+                let tableY = 700;
+                if (shuffledQuestions.matching && shuffledQuestions.matching.length > 0) {
+                    shuffledQuestions.matching.forEach((question, index) => {
+                        const letter = String.fromCharCode(65 + index); // A, B, C, ...
+                        
+                        // عمود رقم الصورة
+                        page2.drawText(question.text, {
+                            x: 50,
+                            y: tableY,
+                            size: 11,
+                            font: fontBold,
+                        });
+                        
+                        // عمود النقاط
+                        page2.drawText('9', {
+                            x: 520,
+                            y: tableY,
+                            size: 11,
+                            font: font,
+                        });
+                        
+                        // عمود الحرف والكلمة
+                        page2.drawText(`(${letter})   ${question.match}`, {
+                            x: 250,
+                            y: tableY,
+                            size: 11,
+                            font: font,
+                        });
+                        
+                        tableY -= 25;
+                    });
+                }
+                
+                // === الصفحة الثالثة ===
+                const page3 = pdfDoc.addPage([595, 842]);
+                
+                // عنوان قسم Reading
+                page3.drawText('Reading', {
+                    x: 50,
+                    y: 800,
+                    size: 16,
+                    font: fontBold,
+                });
+                
+                page3.drawText('4.Read the passage then choose I for true And F for False :', {
+                    x: 50,
+                    y: 780,
+                    size: 12,
+                    font: fontBold,
+                });
+                
+                // نص القراءة
+                const readingText = "King Salman bin Abdulaziz was born in Riyadh. He studied religion, science, and the Holy Qur'an at the Princes' School. He became King of Saudi Arabia in 2015. He helped Riyadh grow from a small town into a major modern city. He also supported humanitarian and cultural projects inside and outside the Kingdom.";
+                
+                const lines = splitTextIntoLines(readingText, 80);
+                let textY = 750;
+                lines.forEach(line => {
+                    page3.drawText(line, {
+                        x: 50,
+                        y: textY,
+                        size: 11,
+                        font: font,
+                    });
+                    textY -= 20;
+                });
+                
+                // إضافة أسئلة Reading المخلوطة
+                let readingQY = textY - 30;
+                if (shuffledQuestions.reading && shuffledQuestions.reading.length > 0) {
+                    shuffledQuestions.reading.forEach((question, index) => {
+                        page3.drawText(`${question.number}. ${question.text}`, {
+                            x: 50,
+                            y: readingQY,
+                            size: 11,
+                            font: font,
+                        });
+                        
+                        page3.drawText('(T)', {
+                            x: 450,
+                            y: readingQY,
+                            size: 11,
+                            font: font,
+                        });
+                        
+                        page3.drawText('(F)', {
+                            x: 480,
+                            y: readingQY,
+                            size: 11,
+                            font: font,
+                        });
+                        
+                        readingQY -= 25;
+                    });
+                }
+                
+                // قسم Writing
+                readingQY -= 20;
+                page3.drawText('Writing', {
+                    x: 50,
+                    y: readingQY,
+                    size: 16,
+                    font: fontBold,
+                });
+                
+                readingQY -= 25;
+                page3.drawText('5- Write a coherent paragraph of 3-5 sentences using 8 words from the following list:', {
+                    x: 50,
+                    y: readingQY,
+                    size: 12,
+                    font: font,
+                });
+                
+                readingQY -= 20;
+                page3.drawText('(enjoy – fitness – work out – spend time – lifestyle – herbal tea – puzzle – fan)', {
+                    x: 50,
+                    y: readingQY,
+                    size: 11,
+                    font: fontBold,
+                });
+                
+                // خطوط للكتابة
+                readingQY -= 40;
+                for (let i = 0; i < 8; i++) {
+                    page3.drawLine({
+                        start: { x: 50, y: readingQY },
+                        end: { x: 545, y: readingQY },
+                        thickness: 1,
+                    });
+                    readingQY -= 25;
+                }
+                
+                // التوقيع
+                readingQY -= 30;
+                page3.drawText('My best wishes', {
+                    x: 50,
+                    y: readingQY,
+                    size: 12,
+                    font: fontItalic,
+                });
+                
+                readingQY -= 20;
+                page3.drawText('Teacher Friend Alkhaldi', {
+                    x: 50,
+                    y: readingQY,
+                    size: 12,
+                    font: fontItalic,
+                });
+                
+                // حفظ PDF
+                const pdfBytes = await pdfDoc.save();
                 
                 // تحميل الملف للمستخدم
-                const blob = new Blob([newPdfBytes], { type: 'application/pdf' });
+                const blob = new Blob([pdfBytes], { type: 'application/pdf' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `shuffled_exam_${new Date().toISOString().slice(0,10)}.pdf`;
+                a.download = `Shuffled_Exam_${new Date().toISOString().slice(0,10)}.pdf`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
@@ -1018,10 +1412,33 @@
                 updateWorkflow(4);
                 
             } catch (error) {
+                console.error('خطأ في إنشاء PDF:', error);
                 showStatus(`خطأ في حفظ PDF: ${error.message}`, 'error');
             } finally {
                 showLoading(false);
             }
+        }
+        
+        // دالة مساعدة لتقسيم النص إلى أسطر
+        function splitTextIntoLines(text, maxLength) {
+            const words = text.split(' ');
+            const lines = [];
+            let currentLine = '';
+            
+            words.forEach(word => {
+                if ((currentLine + word).length <= maxLength) {
+                    currentLine += (currentLine ? ' ' : '') + word;
+                } else {
+                    lines.push(currentLine);
+                    currentLine = word;
+                }
+            });
+            
+            if (currentLine) {
+                lines.push(currentLine);
+            }
+            
+            return lines;
         }
         
         // إعادة تعيين كل شيء
