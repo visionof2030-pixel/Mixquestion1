@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>أداة خلط فقرات PDF المتقدمة</title>
     <style>
+        /* ... (نفس الستايل السابق) ... */
         * {
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -341,6 +342,10 @@
     <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
     <!-- مكتبة pdf.js لاستخراج النص من PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <!-- مكتبة jsPDF لإنشاء PDF مع دعم النص العربي -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- مكتبة jsPDF مع دعم العربية -->
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@latest/dist/jspdf.umd.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -441,7 +446,7 @@
             <button class="btn btn-primary" onclick="processPdf()" id="processBtn">
                 <span>🔍</span> استخراج الفقرات
             </button>
-            <button class="btn btn-primary" onclick="shufflePdf()" id="shuffleBtn" disabled>
+            <button class="btn btn-primary" onclick="shuffleAndDownloadPdf()" id="shuffleBtn" disabled>
                 <span>🔀</span> خلط وتنزيل الملف
             </button>
             <button class="btn btn-secondary" onclick="resetAll()" id="resetBtn">
@@ -829,8 +834,8 @@
             }
         }
         
-        // دالة خلط وإنشاء PDF جديد
-        async function shufflePdf() {
+        // دالة خلط وإنشاء PDF جديد باستخدام jsPDF
+        async function shuffleAndDownloadPdf() {
             if (extractedParagraphs.length === 0) {
                 showStatus('يرجى استخراج الفقرات أولاً', 'error');
                 return;
@@ -843,54 +848,83 @@
                 // خلط الفقرات
                 shuffleParagraphs();
                 
-                // إنشاء مستند PDF جديد
-                const newPdfDoc = await PDFLib.PDFDocument.create();
+                // إنشاء مستند PDF جديد باستخدام jsPDF
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4'
+                });
                 
-                // الحصول على خصائص الصفحة الأصلية
-                const [firstPage] = pdfDoc.getPages();
-                const { width, height } = firstPage.getSize();
+                // إعدادات الصفحة
+                const pageWidth = doc.internal.pageSize.getWidth();
+                const pageHeight = doc.internal.pageSize.getHeight();
+                let y = 20; // بداية الكتابة من أعلى الصفحة
+                const lineHeight = 7;
+                const margin = 20;
                 
-                // إضافة صفحة جديدة
-                const page = newPdfDoc.addPage([width, height]);
+                // إضافة عنوان
+                doc.setFontSize(16);
+                doc.text("الملف المخلوط", pageWidth / 2, 15, { align: 'center' });
+                doc.setFontSize(12);
                 
                 // دمج الفقرات المخلوطة في نص واحد
-                let combinedText = '';
+                let combinedText = "";
+                
                 shuffledParagraphs.forEach((para, index) => {
                     if (para.type === 'question') {
-                        combinedText += `${para.question}\n\n`;
+                        // إضافة السؤال
+                        let questionText = `${index + 1}. ${para.question}`;
+                        
+                        // تقسيم النص الطويل
+                        const questionLines = doc.splitTextToSize(questionText, pageWidth - 2 * margin);
+                        
+                        // التحقق مما إذا كان هناك مساحة كافية في الصفحة
+                        if (y + (questionLines.length * lineHeight) > pageHeight - margin) {
+                            doc.addPage();
+                            y = margin;
+                        }
+                        
+                        doc.text(questionLines, margin, y);
+                        y += questionLines.length * lineHeight + 5;
+                        
+                        // إضافة الخيارات
                         if (para.options && para.options.length > 0) {
+                            const optionLetters = ['أ', 'ب', 'ج', 'د', 'ه'];
                             para.options.forEach((option, optIndex) => {
-                                const optionLetters = ['أ', 'ب', 'ج', 'د', 'ه'];
-                                combinedText += `${optionLetters[optIndex]}) ${option}\n`;
+                                const optionText = `   ${optionLetters[optIndex]}) ${option}`;
+                                const optionLines = doc.splitTextToSize(optionText, pageWidth - 2 * margin - 10);
+                                
+                                // التحقق من المساحة
+                                if (y + (optionLines.length * lineHeight) > pageHeight - margin) {
+                                    doc.addPage();
+                                    y = margin;
+                                }
+                                
+                                doc.text(optionLines, margin + 5, y);
+                                y += optionLines.length * lineHeight;
                             });
-                            combinedText += '\n';
+                            y += 10; // مسافة بعد السؤال
+                        } else {
+                            y += 10; // مسافة بعد السؤال بدون خيارات
                         }
                     } else {
-                        combinedText += `${para.text}\n\n`;
+                        // إضافة فقرة عادية
+                        let paragraphText = `${index + 1}. ${para.text}`;
+                        const paragraphLines = doc.splitTextToSize(paragraphText, pageWidth - 2 * margin);
+                        
+                        // التحقق من المساحة
+                        if (y + (paragraphLines.length * lineHeight) > pageHeight - margin) {
+                            doc.addPage();
+                            y = margin;
+                        }
+                        
+                        doc.text(paragraphLines, margin, y);
+                        y += paragraphLines.length * lineHeight + 10;
                     }
                 });
                 
-                // إضافة النص إلى الصفحة (ملاحظة: pdf-lib لا يدعم النص العربي جيداً)
-                // في التطبيق الحقيقي، قد تحتاج إلى استخدام مكتبة أخرى للنص العربي
-                page.drawText('ملاحظة: محتوى PDF الجديد قد لا يظهر بشكل صحيح بسبب محدودية دعم النص العربي في pdf-lib.', {
-                    x: 50,
-                    y: height - 50,
-                    size: 12,
-                });
-                
-                page.drawText('لرؤية المحتوى المخلوط، انظر قسم المعاينة أعلاه.', {
-                    x: 50,
-                    y: height - 80,
-                    size: 12,
-                });
-                
-                // حفظ الملف الجديد
-                const pdfBytes = await newPdfDoc.save();
-                const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                
-                // إنشاء اسم للملف النهائي
+                // حفظ الملف
                 const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
                 const methodName = document.getElementById('shuffleMethod').value;
                 const methodNames = {
@@ -900,10 +934,12 @@
                     'mixed': 'مختلط'
                 };
                 
-                link.download = `pdf_مخلوط_${methodNames[methodName] || 'مختلط'}_${timestamp}.pdf`;
-                link.click();
+                const fileName = `pdf_مخلوط_${methodNames[methodName] || 'مختلط'}_${timestamp}.pdf`;
                 
-                showStatus('تم إنشاء ملف PDF المخلوط وتنزيله بنجاح!', 'success');
+                // حفظ وتنزيل الملف
+                doc.save(fileName);
+                
+                showStatus(`تم إنشاء وتنزيل ملف PDF المخلوط: ${fileName}`, 'success');
                 
                 // تحديث عرض الفقرات المخلوطة
                 displayShuffledParagraphs();
@@ -916,17 +952,50 @@
             }
         }
         
-        // دالة خلط مصفوفة باستخدام بذرة (Seed)
-        function shuffleArray(array, seed) {
-            const shuffled = [...array];
-            const random = seededRandom(seed);
-            
-            for (let i = shuffled.length - 1; i > 0; i--) {
-                const j = Math.floor(random() * (i + 1));
-                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        // دالة خلط وإنشاء ملف نصي بديل
+        function createTextFile() {
+            if (extractedParagraphs.length === 0) {
+                showStatus('يرجى استخراج الفقرات أولاً', 'error');
+                return;
             }
             
-            return shuffled;
+            try {
+                // خلط الفقرات
+                shuffleParagraphs();
+                
+                // دمج الفقرات المخلوطة في نص واحد
+                let combinedText = "الملف المخلوط\n\n";
+                
+                shuffledParagraphs.forEach((para, index) => {
+                    if (para.type === 'question') {
+                        combinedText += `${index + 1}. ${para.question}\n\n`;
+                        if (para.options && para.options.length > 0) {
+                            const optionLetters = ['أ', 'ب', 'ج', 'د', 'ه'];
+                            para.options.forEach((option, optIndex) => {
+                                combinedText += `   ${optionLetters[optIndex]}) ${option}\n`;
+                            });
+                            combinedText += '\n';
+                        }
+                    } else {
+                        combinedText += `${index + 1}. ${para.text}\n\n`;
+                    }
+                });
+                
+                // إنشاء ملف نصي للتنزيل
+                const blob = new Blob([combinedText], { type: 'text/plain;charset=utf-8' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                
+                const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+                link.download = `نص_مخلوط_${timestamp}.txt`;
+                link.click();
+                
+                showStatus('تم إنشاء وتنزيل الملف النصي المخلوط بنجاح!', 'success');
+                
+            } catch (error) {
+                console.error('Error creating text file:', error);
+                showStatus('حدث خطأ أثناء إنشاء الملف النصي.', 'error');
+            }
         }
         
         // دالة إنشاء رقم عشوائي باستخدام بذرة
@@ -987,6 +1056,24 @@
             status.textContent = message;
             status.className = `status ${type}`;
         }
+        
+        // إضافة زر بديل لتحميل ملف نصي
+        window.addEventListener('DOMContentLoaded', () => {
+            // إضافة زر إضافي لتحميل نص بدلاً من PDF إذا لزم الأمر
+            const buttonsDiv = document.querySelector('.buttons');
+            const textDownloadBtn = document.createElement('button');
+            textDownloadBtn.className = 'btn btn-primary';
+            textDownloadBtn.innerHTML = '<span>📝</span> تنزيل كملف نصي';
+            textDownloadBtn.onclick = createTextFile;
+            textDownloadBtn.disabled = true;
+            textDownloadBtn.id = 'textDownloadBtn';
+            buttonsDiv.appendChild(textDownloadBtn);
+            
+            // تحديث حالة زر تنزيل النص
+            setInterval(() => {
+                document.getElementById('textDownloadBtn').disabled = (extractedParagraphs.length === 0);
+            }, 1000);
+        });
     </script>
 </body>
 </html>
