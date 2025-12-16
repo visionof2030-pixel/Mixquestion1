@@ -567,12 +567,8 @@
                 document.getElementById('shuffleOptions').style.display = 'block';
                 updateButtons();
                 
-                // محاولة استخراج الأسئلة تلقائيًا
-                setTimeout(() => {
-                    extractQuestions();
-                }, 1000);
-                
             } catch (error) {
+                console.error('Error loading PDF:', error);
                 showStatus(`خطأ في تحميل PDF: ${error.message}`, 'error');
             } finally {
                 showLoading(false);
@@ -589,7 +585,7 @@
             showLoading(true);
             
             try {
-                // استخراج القواعد (Grammar)
+                // بيانات تجريبية للأسئلة (بدلاً من استخراجها فعلياً)
                 extractedQuestions.grammar = [
                     { number: 1, text: "I. he ___ plays football on weekends.", options: ["does", "always", "has"], correct: 1 },
                     { number: 2, text: "How often ______ drink coffee?", options: ["does", "did", "do"], correct: 0 },
@@ -602,7 +598,6 @@
                     { number: 9, text: "They didn't go to school when they ______ young.", options: ["were", "are", "be"], correct: 0 }
                 ];
                 
-                // استخراج الإملاء (Orthography)
                 extractedQuestions.orthography = [
                     { number: 10, text: "___ilk_", options: ["N", "M", "T"], correct: 1 },
                     { number: 11, text: "_pota__oes", options: ["N", "T", "H"], correct: 1 },
@@ -611,7 +606,6 @@
                     { number: 14, text: "_mang__", options: ["u", "e", "o"], correct: 2 }
                 ];
                 
-                // استخراج التطابق (Matching)
                 extractedQuestions.matching = [
                     { number: 1, text: "(1)", match: "Lamb" },
                     { number: 2, text: "(2)", match: "Shrimp" },
@@ -624,7 +618,6 @@
                     { number: 9, text: "(9)", match: "Cheese" }
                 ];
                 
-                // استخراج القراءة (Reading)
                 extractedQuestions.reading = [
                     { number: 1, text: "King Salman was born in Jeddah.", correct: false },
                     { number: 2, text: "He studied at the Princes' School.", correct: true },
@@ -654,6 +647,7 @@
                 updateButtons();
                 
             } catch (error) {
+                console.error('Error extracting questions:', error);
                 showStatus(`خطأ في استخراج الأسئلة: ${error.message}`, 'error');
             } finally {
                 showLoading(false);
@@ -800,12 +794,13 @@
             
             // خوارزمية Fisher-Yates للخلط العشوائي
             function fisherYatesShuffle(array) {
-                for (let i = array.length - 1; i > 0; i--) {
+                const newArray = [...array];
+                for (let i = newArray.length - 1; i > 0; i--) {
                     const j = Math.floor(Math.random() * (i + 1));
-                    [array[i], array[j]] = [array[j], array[i]];
+                    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
                     shuffledCount++;
                 }
-                return array;
+                return newArray;
             }
             
             // خلط كل قسم حسب الاختيار
@@ -984,18 +979,18 @@
             
             try {
                 // إنشاء ملف PDF جديد
-                const pdfDoc = await PDFLib.PDFDocument.create();
+                const newPdfDoc = await PDFLib.PDFDocument.create();
                 
                 // تسجيل fontkit مع PDFDoc
-                pdfDoc.registerFontkit(PDFLib.fontkit);
+                newPdfDoc.registerFontkit(PDFLib.fontkit);
                 
                 // إضافة الخطوط
-                const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
-                const fontBold = await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
-                const fontItalic = await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaOblique);
+                const font = await newPdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+                const fontBold = await newPdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+                const fontItalic = await newPdfDoc.embedFont(PDFLib.StandardFonts.HelveticaOblique);
                 
                 // === الصفحة الأولى ===
-                const page1 = pdfDoc.addPage([595, 842]); // A4 بالبكسل
+                const page1 = newPdfDoc.addPage([595, 842]); // A4 بالبكسل
                 
                 // العنوان الرئيسي
                 page1.drawText('Kingdom of Saudi Arabia Ministry', {
@@ -1207,7 +1202,7 @@
                 }
                 
                 // === الصفحة الثانية ===
-                const page2 = pdfDoc.addPage([595, 842]);
+                const page2 = newPdfDoc.addPage([595, 842]);
                 
                 // عنوان قسم Matching
                 page2.drawText('3. Carefully look at all the pictures shown in the column below.', {
@@ -1280,7 +1275,7 @@
                 }
                 
                 // === الصفحة الثالثة ===
-                const page3 = pdfDoc.addPage([595, 842]);
+                const page3 = newPdfDoc.addPage([595, 842]);
                 
                 // عنوان قسم Reading
                 page3.drawText('Reading', {
@@ -1290,7 +1285,7 @@
                     font: fontBold,
                 });
                 
-                page3.drawText('4.Read the passage then choose I for true And F for False :', {
+                page3.drawText('4.Read the passage then choose T for true And F for False :', {
                     x: 50,
                     y: 780,
                     size: 12,
@@ -1395,10 +1390,10 @@
                 });
                 
                 // حفظ PDF
-                const pdfBytes = await pdfDoc.save();
+                const newPdfBytes = await newPdfDoc.save();
                 
                 // تحميل الملف للمستخدم
-                const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+                const blob = new Blob([newPdfBytes], { type: 'application/pdf' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
