@@ -1046,15 +1046,15 @@
                 
                 if (questionIndices.length > 1) {
                     for (let i = questionIndices.length - 1; i > 0; i--) {
-                        const j = Math.floor(random() * (i + 1
+                        const j = Math.floor(random() * (i + 1));
                         [questionIndices[i], questionIndices[j]] = [questionIndices[j], questionIndices[i]];
                     }
-
+                    
                     const shuffledQuestions = [];
                     questionIndices.forEach(index => {
                         shuffledQuestions.push(JSON.parse(JSON.stringify(shuffledParagraphs[index])));
                     });
-
+                    
                     let questionCounter = 0;
                     shuffledParagraphs.forEach((para, index) => {
                         if (para.type === 'question') {
@@ -1069,7 +1069,7 @@
                     [shuffledParagraphs[i], shuffledParagraphs[j]] = [shuffledParagraphs[j], shuffledParagraphs[i]];
                 }
             }
-
+            
             if (preserveNumbering === 'yes') {
                 shuffledParagraphs.forEach((para, index) => {
                     if (para.type === 'paragraph') {
@@ -1080,7 +1080,7 @@
                 });
             }
         }
-
+        
         // دالة جعل الفقرات قابلة للسحب والفرز
         function makeParagraphsSortable() {
             const items = shuffledParagraphsDiv.querySelectorAll('.paragraph-item');
@@ -1129,7 +1129,7 @@
                 });
             });
         }
-
+        
         // دالة خلط وإنشاء الملف
         async function shuffleAndDownload() {
             if (extractedParagraphs.length === 0) {
@@ -1170,7 +1170,7 @@
                 showLoading(false);
             }
         }
-
+        
         // دالة إنشاء ملف PDF باستخدام jsPDF
         async function createPdfFile() {
             try {
@@ -1264,7 +1264,7 @@
                 createTextFile();
             }
         }
-
+        
         // دالة إنشاء ملف نصي
         function createTextFile() {
             try {
@@ -1309,7 +1309,7 @@
                 throw new Error('فشل في إنشاء الملف النصي');
             }
         }
-
+        
         // دالة إنشاء ملف HTML
         function createHtmlFile() {
             try {
@@ -1448,7 +1448,7 @@
                 throw new Error('فشل في إنشاء ملف HTML');
             }
         }
-
+        
         // دالة إنشاء هاش من نص
         function hashString(str) {
             let hash = 0;
@@ -1460,7 +1460,7 @@
             }
             return Math.abs(hash);
         }
-
+        
         // دالة إعادة تعيين كل شيء
         function resetAll() {
             pdfDoc = null;
@@ -1475,7 +1475,7 @@
             document.getElementById('seedValue').value = '';
             showStatus('', '');
         }
-
+        
         // دالة عرض حالة التحميل
         function showLoading(show) {
             if (show) {
@@ -1490,7 +1490,7 @@
                 resetBtn.disabled = false;
             }
         }
-
+        
         // دالة عرض الرسائل
         function showStatus(message, type) {
             if (!message) {
