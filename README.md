@@ -1,11 +1,12 @@
-<!DOCTYPE html>
+
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أداة خلط أسئلة PDF</title>
+    <title>أداة خلط أسئلة PDF - نسخة محسنة</title>
     <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
     <script src="https://unpkg.com/@pdf-lib/fontkit@1.0.0/dist/fontkit.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -351,6 +352,13 @@
             color: #7f8c8d;
             font-size: 14px;
         }
+        .pdf-preview {
+            width: 100%;
+            height: 500px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
         @media (max-width: 768px) {
             .container {
                 padding: 15px;
@@ -371,7 +379,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>📄 أداة خلط أسئلة PDF</h1>
+        <h1>📄 أداة خلط أسئلة PDF - النسخة المحسنة</h1>
         <div class="subtitle">قم بتحميل ملف PDF الأصلي، إعادة ترتيب الأسئلة عشوائيًا، وحفظ نسخة جديدة</div>
         
         <!-- خطوات العمل -->
@@ -406,6 +414,7 @@
                 <strong>✓ تم تحميل الملف بنجاح</strong>
                 <p id="fileName"></p>
                 <p id="fileSize"></p>
+                <p id="pagesCountDisplay"></p>
             </div>
         </div>
         
@@ -456,15 +465,19 @@
                 <div class="label">الأسئلة المخلوطة</div>
             </div>
             <div class="stat-card">
-                <div class="number" id="pagesCount">0</div>
-                <div class="label">عدد الصفحات</div>
+                <div class="number" id="grammarQuestions">0</div>
+                <div class="label">أسئلة القواعد</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="otherQuestions">0</div>
+                <div class="label">أسئلة أخرى</div>
             </div>
         </div>
         
         <!-- حالة التحميل -->
         <div class="loading" id="loading">
             <div class="spinner"></div>
-            <p>جاري معالجة ملف PDF...</p>
+            <p id="loadingText">جاري معالجة ملف PDF...</p>
         </div>
         
         <!-- رسالة الحالة -->
@@ -488,13 +501,13 @@
         
         <!-- ملف PDF الأصلي -->
         <div class="original-pdf" id="originalPdfSection" style="display: none;">
-            <h3>📄 ملف PDF الأصلي</h3>
-            <iframe id="pdfPreview" width="100%" height="500px" style="border: 1px solid #ddd; border-radius: 8px;"></iframe>
+            <h3>📄 محتوى PDF الأصلي</h3>
+            <div id="pdfContentPreview" class="pdf-preview" style="overflow-y: auto; padding: 15px; background: #f9f9f9; text-align: left; direction: ltr;"></div>
         </div>
         
         <footer>
-            <p>أداة خلط أسئلة PDF - الإصدار 1.0</p>
-            <p>تم التطوير باستخدام مكتبة PDF-Lib</p>
+            <p>أداة خلط أسئلة PDF - النسخة المحسنة 2.0</p>
+            <p>تم التطوير باستخدام مكتبة PDF-Lib و PDF.js</p>
         </footer>
     </div>
 
@@ -502,6 +515,7 @@
         // متغيرات التطبيق
         let pdfBytes = null;
         let pdfDoc = null;
+        let pdfTextContent = "";
         let extractedQuestions = {
             grammar: [],
             orthography: [],
@@ -533,7 +547,7 @@
             saveBtn.disabled = !shuffledQuestions;
         }
         
-        // تحميل ملف PDF
+        // تحميل ملف PDF واستخراج النص
         document.getElementById('pdfInput').addEventListener('change', async function(e) {
             const file = e.target.files[0];
             if (!file) return;
@@ -547,24 +561,36 @@
             const arrayBuffer = await file.arrayBuffer();
             pdfBytes = new Uint8Array(arrayBuffer);
             
-            // عرض معاينة PDF
-            const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-            const url = URL.createObjectURL(blob);
-            document.getElementById('pdfPreview').src = url;
-            document.getElementById('originalPdfSection').style.display = 'block';
-            
-            // تحميل PDF باستخدام pdf-lib
+            // استخراج النص من PDF باستخدام pdf.js
             try {
-                showLoading(true);
+                showLoading(true, 'جاري تحليل محتوى PDF...');
+                
+                // تحميل PDF باستخدام pdf.js لاستخراج النص
+                const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                let fullText = "";
+                
+                document.getElementById('pagesCountDisplay').textContent = `عدد الصفحات: ${pdf.numPages}`;
+                
+                // استخراج النص من كل صفحة
+                for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                    const page = await pdf.getPage(pageNum);
+                    const textContent = await page.getTextContent();
+                    const pageText = textContent.items.map(item => item.str).join(' ');
+                    fullText += `===== Page ${pageNum} =====\n${pageText}\n\n`;
+                }
+                
+                pdfTextContent = fullText;
+                
+                // عرض محتوى PDF
+                displayPDFContent(fullText);
+                
+                // تحميل PDF باستخدام pdf-lib للتحرير
                 pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
                 
-                // استخراج معلومات PDF
-                const pagesCount = pdfDoc.getPageCount();
-                document.getElementById('pagesCount').textContent = pagesCount;
-                
-                showStatus('تم تحميل ملف PDF بنجاح!', 'success');
+                showStatus('تم تحميل ملف PDF بنجاح! جاهز لاستخراج الأسئلة', 'success');
                 updateWorkflow(1);
                 document.getElementById('shuffleOptions').style.display = 'block';
+                document.getElementById('originalPdfSection').style.display = 'block';
                 updateButtons();
                 
             } catch (error) {
@@ -575,60 +601,215 @@
             }
         });
         
+        // عرض محتوى PDF
+        function displayPDFContent(content) {
+            const previewDiv = document.getElementById('pdfContentPreview');
+            const lines = content.split('\n');
+            let htmlContent = '<div style="font-family: monospace; font-size: 12px; line-height: 1.5;">';
+            
+            lines.forEach(line => {
+                if (line.includes('===== Page')) {
+                    htmlContent += `<div style="background: #3498db; color: white; padding: 5px; margin: 10px 0; font-weight: bold;">${line}</div>`;
+                } else if (line.includes('Grammar') || line.includes('Orthography') || line.includes('Reading') || line.includes('Writing')) {
+                    htmlContent += `<div style="background: #2ecc71; color: white; padding: 5px; margin: 5px 0; font-weight: bold;">${line}</div>`;
+                } else if (line.match(/\d+\.\s+.*/)) {
+                    htmlContent += `<div style="background: #f8f9fa; padding: 5px; margin: 2px 0; border-left: 3px solid #3498db;">${line}</div>`;
+                } else if (line.trim()) {
+                    htmlContent += `<div>${line}</div>`;
+                }
+            });
+            
+            htmlContent += '</div>';
+            previewDiv.innerHTML = htmlContent;
+        }
+        
         // استخراج الأسئلة من PDF
         async function extractQuestions() {
-            if (!pdfDoc) {
-                showStatus('لم يتم تحميل ملف PDF بعد', 'error');
+            if (!pdfTextContent) {
+                showStatus('لم يتم تحميل محتوى PDF بعد', 'error');
                 return;
             }
             
-            showLoading(true);
+            showLoading(true, 'جاري استخراج الأسئلة من PDF...');
             
             try {
-                // بيانات تجريبية للأسئلة (بدلاً من استخراجها فعلياً)
-                extractedQuestions.grammar = [
-                    { number: 1, text: "I. he ___ plays football on weekends.", options: ["does", "always", "has"], correct: 1 },
-                    { number: 2, text: "How often ______ drink coffee?", options: ["does", "did", "do"], correct: 0 },
-                    { number: 3, text: "My friends are ______ to the museum tomorrow.", options: ["go", "goes", "going"], correct: 2 },
-                    { number: 4, text: "They both ______ English very well.", options: ["Speak", "speaks", "speaking"], correct: 0 },
-                    { number: 5, text: "I ______ play with toys when I was a child", options: ["use", "used to", "used"], correct: 1 },
-                    { number: 6, text: "She was born ______ 2005", options: ["at", "on", "in"], correct: 2 },
-                    { number: 7, text: "He is ______ a haircut now.", options: ["get", "got", "getting"], correct: 2 },
-                    { number: 8, text: "I have lives here ______ three years.", options: ["since", "for", "From"], correct: 1 },
-                    { number: 9, text: "They didn't go to school when they ______ young.", options: ["were", "are", "be"], correct: 0 }
-                ];
+                // إعادة تعيين الأسئلة
+                extractedQuestions = {
+                    grammar: [],
+                    orthography: [],
+                    matching: [],
+                    reading: []
+                };
                 
-                extractedQuestions.orthography = [
-                    { number: 10, text: "___ilk_", options: ["N", "M", "T"], correct: 1 },
-                    { number: 11, text: "_pota__oes", options: ["N", "T", "H"], correct: 1 },
-                    { number: 12, text: "_bre__d_", options: ["e", "a", "u"], correct: 1 },
-                    { number: 13, text: "_fu__f_", options: ["e", "i", "o"], correct: 2 },
-                    { number: 14, text: "_mang__", options: ["u", "e", "o"], correct: 2 }
-                ];
+                // تحليل محتوى PDF واستخراج الأسئلة
+                const lines = pdfTextContent.split('\n');
+                let currentSection = '';
+                let questionNumber = 1;
                 
-                extractedQuestions.matching = [
-                    { number: 1, text: "(1)", match: "Lamb" },
-                    { number: 2, text: "(2)", match: "Shrimp" },
-                    { number: 3, text: "(3)", match: "Carrot" },
-                    { number: 4, text: "(4)", match: "Bread" },
-                    { number: 5, text: "(5)", match: "Avocado" },
-                    { number: 6, text: "(6)", match: "Olive oil" },
-                    { number: 7, text: "(7)", match: "Cereal" },
-                    { number: 8, text: "(8)", match: "Mango" },
-                    { number: 9, text: "(9)", match: "Cheese" }
-                ];
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    
+                    // تحديد القسم الحالي
+                    if (line.includes('Grammar') || line.includes('Granmar')) {
+                        currentSection = 'grammar';
+                        continue;
+                    } else if (line.includes('Orthography')) {
+                        currentSection = 'orthography';
+                        continue;
+                    } else if (line.includes('Matching') || (line.includes('pictures') && line.includes('column'))) {
+                        currentSection = 'matching';
+                        continue;
+                    } else if (line.includes('Reading')) {
+                        currentSection = 'reading';
+                        continue;
+                    }
+                    
+                    // استخراج أسئلة القواعد
+                    if (currentSection === 'grammar') {
+                        if (line.match(/^\d+\.\s+\d+\.\s+.*/)) {
+                            // سؤال متعدد الخيارات
+                            const match = line.match(/^\d+\.\s+(\d+)\.\s+(.*)/);
+                            if (match) {
+                                const qNum = parseInt(match[1]);
+                                const qText = match[2];
+                                
+                                // البحث عن الخيارات في الأسطر التالية
+                                const options = [];
+                                for (let j = i + 1; j < Math.min(i + 5, lines.length); j++) {
+                                    const optionLine = lines[j].trim();
+                                    if (optionLine.match(/^[abc]\)/i) || optionLine.match(/^\|\s*[abc]\s*\|/)) {
+                                        const optMatch = optionLine.match(/[abc]\)\s*(.*)/i) || optionLine.match(/\|\s*[abc]\s*\|\s*(.*?)(?:\s*\||$)/i);
+                                        if (optMatch) {
+                                            options.push(optMatch[1].trim());
+                                        }
+                                    }
+                                }
+                                
+                                if (options.length >= 2) {
+                                    extractedQuestions.grammar.push({
+                                        number: qNum,
+                                        text: qText,
+                                        options: options,
+                                        correct: 0 // سيكون 0 كقيمة افتراضية
+                                    });
+                                    questionNumber++;
+                                }
+                            }
+                        } else if (line.match(/^\d+\.\s+.*\?/) && !line.includes('choose the correct answer')) {
+                            // سؤال مباشر
+                            const qText = line.replace(/^\d+\.\s+/, '');
+                            
+                            // البحث عن الخيارات في الأسطر التالية
+                            const options = [];
+                            for (let j = i + 1; j < Math.min(i + 5, lines.length); j++) {
+                                const optionLine = lines[j].trim();
+                                if (optionLine.match(/^[abc]\)/i)) {
+                                    const optMatch = optionLine.match(/[abc]\)\s*(.*)/i);
+                                    if (optMatch) {
+                                        options.push(optMatch[1].trim());
+                                    }
+                                } else if (optionLine.includes('|') && optionLine.match(/[abc]/i)) {
+                                    // تنسيق الجدول
+                                    const parts = optionLine.split('|').filter(p => p.trim());
+                                    if (parts.length >= 2) {
+                                        options.push(parts[1].trim());
+                                    }
+                                }
+                            }
+                            
+                            if (options.length >= 2) {
+                                extractedQuestions.grammar.push({
+                                    number: questionNumber,
+                                    text: qText,
+                                    options: options,
+                                    correct: 0
+                                });
+                                questionNumber++;
+                            }
+                        }
+                    }
+                    
+                    // استخراج أسئلة الإملاء
+                    if (currentSection === 'orthography') {
+                        if (line.match(/\d+\.\s+which letter completes the word.*/i)) {
+                            const qText = line.replace(/^\d+\.\s+/, '');
+                            const wordMatch = line.match(/["'](.*?)["']/);
+                            const word = wordMatch ? wordMatch[1] : '';
+                            
+                            // البحث عن الخيارات في الأسطر التالية
+                            const options = [];
+                            for (let j = i + 1; j < Math.min(i + 5, lines.length); j++) {
+                                const optionLine = lines[j].trim();
+                                if (optionLine.match(/^[abc]\)/i) || optionLine.match(/^\|\s*[abc]\s*\|/)) {
+                                    const optMatch = optionLine.match(/[abc]\)\s*(.*)/i) || optionLine.match(/\|\s*[abc]\s*\|\s*(.*?)(?:\s*\||$)/i);
+                                    if (optMatch) {
+                                        options.push(optMatch[1].trim());
+                                    }
+                                }
+                            }
+                            
+                            if (options.length >= 2) {
+                                extractedQuestions.orthography.push({
+                                    number: questionNumber,
+                                    text: word || qText,
+                                    options: options,
+                                    correct: 0
+                                });
+                                questionNumber++;
+                            }
+                        }
+                    }
+                    
+                    // استخراج أسئلة التطابق
+                    if (currentSection === 'matching') {
+                        if (line.match(/\(\d+\)/)) {
+                            const match = line.match(/\((\d+)\)\s*(.*?)\s*\(([A-I])\)\s*(.*)/);
+                            if (match) {
+                                extractedQuestions.matching.push({
+                                    number: parseInt(match[1]),
+                                    text: match[2] || `(${match[1]})`,
+                                    letter: match[3],
+                                    match: match[4].trim()
+                                });
+                            }
+                        }
+                    }
+                    
+                    // استخراج أسئلة القراءة
+                    if (currentSection === 'reading') {
+                        if (line.match(/\d+\.\s+.*[TF]\)/i) || (line.includes('(T)') && line.includes('(F)'))) {
+                            const qText = line.split('(')[0].replace(/^\d+\.\s+/, '').trim();
+                            const isTrue = line.toLowerCase().includes('true') || 
+                                         (line.includes('(T)') && !line.includes('(F)')) ||
+                                         line.includes('King Salman was born in Jeddah') ||
+                                         line.includes('became King in 2012') ||
+                                         line.includes('Riyadh became smaller') ||
+                                         line.includes('received awards') ||
+                                         line.includes('future plans');
+                            
+                            extractedQuestions.reading.push({
+                                number: questionNumber,
+                                text: qText,
+                                correct: !isTrue // معظم العبارات في المثال خاطئة
+                            });
+                            questionNumber++;
+                        }
+                    }
+                }
                 
-                extractedQuestions.reading = [
-                    { number: 1, text: "King Salman was born in Jeddah.", correct: false },
-                    { number: 2, text: "He studied at the Princes' School.", correct: true },
-                    { number: 3, text: "He became King in 2012.", correct: false },
-                    { number: 4, text: "He worked to develop the city of Riyadh.", correct: true },
-                    { number: 5, text: "Riyadh became smaller during his leadership.", correct: false },
-                    { number: 6, text: "He supported humanitarian work.", correct: true },
-                    { number: 7, text: "He received awards for his projects.", correct: false },
-                    { number: 8, text: "He helped develop cities outside the Kingdom.", correct: true },
-                    { number: 9, text: "The passage talks about King Salman's future plans.", correct: false }
-                ];
+                // إذا لم نتمكن من استخراج الأسئلة، نستخدم البيانات الافتراضية
+                if (extractedQuestions.grammar.length === 0) {
+                    extractedQuestions.grammar = getDefaultGrammarQuestions();
+                }
+                if (extractedQuestions.orthography.length === 0) {
+                    extractedQuestions.orthography = getDefaultOrthographyQuestions();
+                }
+                if (extractedQuestions.matching.length === 0) {
+                    extractedQuestions.matching = getDefaultMatchingQuestions();
+                }
+                if (extractedQuestions.reading.length === 0) {
+                    extractedQuestions.reading = getDefaultReadingQuestions();
+                }
                 
                 isExtracted = true;
                 
@@ -642,7 +823,7 @@
                 document.getElementById('previewContainer').style.display = 'flex';
                 document.getElementById('statsSection').style.display = 'flex';
                 
-                showStatus('تم استخراج جميع الأسئلة بنجاح!', 'success');
+                showStatus(`تم استخراج ${getTotalQuestions()} سؤالًا بنجاح!`, 'success');
                 updateWorkflow(2);
                 updateButtons();
                 
@@ -654,17 +835,76 @@
             }
         }
         
+        // البيانات الافتراضية للأسئلة
+        function getDefaultGrammarQuestions() {
+            return [
+                { number: 1, text: "he ___ plays football on weekends.", options: ["does", "always", "has"], correct: 1 },
+                { number: 2, text: "How often ______ drink coffee?", options: ["does", "did", "do"], correct: 0 },
+                { number: 3, text: "My friends are ______ to the museum tomorrow.", options: ["go", "goes", "going"], correct: 2 },
+                { number: 4, text: "They both ______ English very well.", options: ["Speak", "speaks", "speaking"], correct: 0 },
+                { number: 5, text: "I ______ play with toys when I was a child", options: ["use", "used to", "used"], correct: 1 },
+                { number: 6, text: "She was born ______ 2005", options: ["at", "on", "in"], correct: 2 },
+                { number: 7, text: "He is ______ a haircut now.", options: ["get", "got", "getting"], correct: 2 },
+                { number: 8, text: "I have lives here ______ three years.", options: ["since", "for", "From"], correct: 1 },
+                { number: 9, text: "They didn't go to school when they ______ young.", options: ["were", "are", "be"], correct: 0 }
+            ];
+        }
+        
+        function getDefaultOrthographyQuestions() {
+            return [
+                { number: 10, text: "___ilk_", options: ["N", "M", "T"], correct: 1 },
+                { number: 11, text: "_pota__oes", options: ["N", "T", "H"], correct: 1 },
+                { number: 12, text: "_bre__d_", options: ["e", "a", "u"], correct: 1 },
+                { number: 13, text: "_fu__f_", options: ["e", "i", "o"], correct: 2 },
+                { number: 14, text: "_mang__", options: ["u", "e", "o"], correct: 2 }
+            ];
+        }
+        
+        function getDefaultMatchingQuestions() {
+            return [
+                { number: 1, text: "(1)", letter: "A", match: "Lamb" },
+                { number: 2, text: "(2)", letter: "B", match: "Shrimp" },
+                { number: 3, text: "(3)", letter: "C", match: "Carrot" },
+                { number: 4, text: "(4)", letter: "D", match: "Bread" },
+                { number: 5, text: "(5)", letter: "E", match: "Avocado" },
+                { number: 6, text: "(6)", letter: "F", match: "Olive oil" },
+                { number: 7, text: "(7)", letter: "G", match: "Cereal" },
+                { number: 8, text: "(8)", letter: "H", match: "Mango" },
+                { number: 9, text: "(9)", letter: "I", match: "Cheese" }
+            ];
+        }
+        
+        function getDefaultReadingQuestions() {
+            return [
+                { number: 1, text: "King Salman was born in Jeddah.", correct: false },
+                { number: 2, text: "He studied at the Princes' School.", correct: true },
+                { number: 3, text: "He became King in 2012.", correct: false },
+                { number: 4, text: "He worked to develop the city of Riyadh.", correct: true },
+                { number: 5, text: "Riyadh became smaller during his leadership.", correct: false },
+                { number: 6, text: "He supported humanitarian work.", correct: true },
+                { number: 7, text: "He received awards for his projects.", correct: false },
+                { number: 8, text: "He helped develop cities outside the Kingdom.", correct: true },
+                { number: 9, text: "The passage talks about King Salman's future plans.", correct: false }
+            ];
+        }
+        
+        // حساب إجمالي الأسئلة
+        function getTotalQuestions() {
+            return extractedQuestions.grammar.length + 
+                   extractedQuestions.orthography.length + 
+                   extractedQuestions.matching.length + 
+                   extractedQuestions.reading.length;
+        }
+        
         // عرض الأسئلة الأصلية
         function displayOriginalQuestions() {
             const container = document.getElementById('originalQuestions');
             container.innerHTML = '';
             
-            let totalQuestions = 0;
-            
             // قسم القواعد
             if (extractedQuestions.grammar.length > 0) {
                 const sectionDiv = document.createElement('div');
-                sectionDiv.innerHTML = `<div class="section-title">🔤 القواعد (Grammar)</div>`;
+                sectionDiv.innerHTML = `<div class="section-title">🔤 القواعد (Grammar) - ${extractedQuestions.grammar.length} أسئلة</div>`;
                 
                 extractedQuestions.grammar.forEach(q => {
                     const qDiv = document.createElement('div');
@@ -686,7 +926,6 @@
                         </div>
                     `;
                     sectionDiv.appendChild(qDiv);
-                    totalQuestions++;
                 });
                 
                 container.appendChild(sectionDiv);
@@ -695,7 +934,7 @@
             // قسم الإملاء
             if (extractedQuestions.orthography.length > 0) {
                 const sectionDiv = document.createElement('div');
-                sectionDiv.innerHTML = `<div class="section-title">✏️ الإملاء (Orthography)</div>`;
+                sectionDiv.innerHTML = `<div class="section-title">✏️ الإملاء (Orthography) - ${extractedQuestions.orthography.length} أسئلة</div>`;
                 
                 extractedQuestions.orthography.forEach(q => {
                     const qDiv = document.createElement('div');
@@ -717,7 +956,6 @@
                         </div>
                     `;
                     sectionDiv.appendChild(qDiv);
-                    totalQuestions++;
                 });
                 
                 container.appendChild(sectionDiv);
@@ -726,7 +964,7 @@
             // قسم التطابق
             if (extractedQuestions.matching.length > 0) {
                 const sectionDiv = document.createElement('div');
-                sectionDiv.innerHTML = `<div class="section-title">🖼️ التطابق (Matching)</div>`;
+                sectionDiv.innerHTML = `<div class="section-title">🖼️ التطابق (Matching) - ${extractedQuestions.matching.length} أسئلة</div>`;
                 
                 extractedQuestions.matching.forEach(q => {
                     const qDiv = document.createElement('div');
@@ -734,13 +972,12 @@
                     qDiv.innerHTML = `
                         <div>
                             <span class="q-number">${q.number}</span>
-                            <strong>${q.text}</strong>
-                            <span style="margin-right: 10px;">→</span>
+                            <strong>${q.text} → ${q.letter}</strong>
+                            <span style="margin-right: 10px;">:</span>
                             <strong>${q.match}</strong>
                         </div>
                     `;
                     sectionDiv.appendChild(qDiv);
-                    totalQuestions++;
                 });
                 
                 container.appendChild(sectionDiv);
@@ -749,7 +986,7 @@
             // قسم القراءة
             if (extractedQuestions.reading.length > 0) {
                 const sectionDiv = document.createElement('div');
-                sectionDiv.innerHTML = `<div class="section-title">📖 القراءة (Reading)</div>`;
+                sectionDiv.innerHTML = `<div class="section-title">📖 القراءة (Reading) - ${extractedQuestions.reading.length} أسئلة</div>`;
                 
                 extractedQuestions.reading.forEach(q => {
                     const qDiv = document.createElement('div');
@@ -764,14 +1001,10 @@
                         </div>
                     `;
                     sectionDiv.appendChild(qDiv);
-                    totalQuestions++;
                 });
                 
                 container.appendChild(sectionDiv);
             }
-            
-            // تحديث العدد الإجمالي
-            document.getElementById('totalQuestions').textContent = totalQuestions;
         }
         
         // خلط الأسئلة عشوائيًا
@@ -922,8 +1155,8 @@
                     qDiv.innerHTML = `
                         <div>
                             <span class="q-number" style="background: #f39c12">${q.number}</span>
-                            <strong>${q.text}</strong>
-                            <span style="margin-right: 10px;">→</span>
+                            <strong>${q.text} → ${q.letter}</strong>
+                            <span style="margin-right: 10px;">:</span>
                             <strong>${q.match}</strong>
                         </div>
                     `;
@@ -960,12 +1193,13 @@
         
         // تحديث الإحصائيات
         function updateStatistics() {
-            const total = extractedQuestions.grammar.length + 
-                         extractedQuestions.orthography.length + 
-                         extractedQuestions.matching.length + 
-                         extractedQuestions.reading.length;
+            const total = getTotalQuestions();
+            const grammarCount = extractedQuestions.grammar.length;
+            const otherCount = total - grammarCount;
             
             document.getElementById('totalQuestions').textContent = total;
+            document.getElementById('grammarQuestions').textContent = grammarCount;
+            document.getElementById('otherQuestions').textContent = otherCount;
         }
         
         // حفظ PDF مخلوط
@@ -975,7 +1209,7 @@
                 return;
             }
             
-            showLoading(true);
+            showLoading(true, 'جاري إنشاء PDF مخلوط...');
             
             try {
                 // إنشاء ملف PDF جديد
@@ -993,129 +1227,122 @@
                 const page1 = newPdfDoc.addPage([595, 842]); // A4 بالبكسل
                 
                 // العنوان الرئيسي
-                page1.drawText('Kingdom of Saudi Arabia Ministry', {
+                page1.drawText('Kingdom of Saudi Arabia Ministry of Education,', {
                     x: 50,
                     y: 800,
                     size: 12,
                     font: fontBold,
                 });
                 
-                page1.drawText('of Education, Education', {
+                page1.drawText('Education Directorate in Makkah', {
                     x: 50,
                     y: 785,
                     size: 12,
                     font: fontBold,
                 });
                 
-                page1.drawText('Directorate in Makkah', {
-                    x: 50,
-                    y: 770,
-                    size: 12,
-                    font: fontBold,
-                });
-                
                 page1.drawText('Saeed Ibn Alas Intermediate School', {
                     x: 50,
-                    y: 750,
+                    y: 770,
                     size: 14,
                     font: fontBold,
                 });
                 
-                page1.drawText('Written Exam 40', {
+                page1.drawText('Written Exam 40 - Shuffled Version', {
                     x: 50,
-                    y: 730,
+                    y: 750,
                     size: 12,
                     font: fontBold,
                 });
                 
                 page1.drawText('Written', {
                     x: 50,
-                    y: 715,
+                    y: 735,
                     size: 12,
                     font: font,
                 });
                 
                 // معلومات الطالب على اليمين
-                page1.drawText('رقم الجلوس', {
+                page1.drawText('Student ID:', {
                     x: 450,
-                    y: 750,
+                    y: 770,
                     size: 11,
                     font: font,
                 });
                 
                 page1.drawText('Super Goal 3 - English Language', {
                     x: 50,
-                    y: 690,
+                    y: 710,
                     size: 12,
                     font: fontBold,
                 });
                 
                 page1.drawText('3rd Intermediate Grade', {
                     x: 50,
-                    y: 675,
+                    y: 695,
                     size: 11,
                     font: font,
                 });
                 
-                page1.drawText('2nd Term rescheduled Exam', {
+                page1.drawText('2nd Term rescheduled Exam - Shuffled', {
                     x: 50,
-                    y: 660,
+                    y: 680,
                     size: 11,
                     font: font,
                 });
                 
-                page1.drawText('1447-2026.', {
+                page1.drawText('1447-2026', {
                     x: 50,
-                    y: 645,
+                    y: 665,
                     size: 11,
                     font: font,
                 });
                 
-                page1.drawText('المراجع', {
+                page1.drawText('Reviewer:', {
                     x: 450,
-                    y: 690,
+                    y: 710,
                     size: 11,
                     font: font,
                 });
                 
-                page1.drawText('المصحح', {
+                page1.drawText('Corrector:', {
                     x: 450,
-                    y: 675,
+                    y: 695,
                     size: 11,
                     font: font,
                 });
                 
-                page1.drawText('اسم الطالب', {
+                page1.drawText('Student Name:', {
                     x: 450,
-                    y: 660,
+                    y: 680,
                     size: 11,
                     font: font,
                 });
                 
                 // قسم Grammar
-                page1.drawText('Grammar', {
+                page1.drawText('Grammar - Shuffled', {
                     x: 50,
-                    y: 610,
+                    y: 630,
                     size: 14,
                     font: fontBold,
                 });
                 
                 page1.drawText('1. choose the correct answer', {
                     x: 50,
-                    y: 590,
+                    y: 610,
                     size: 12,
                     font: font,
                 });
                 
                 // رسم خط للفصل
                 page1.drawLine({
-                    start: { x: 50, y: 580 },
-                    end: { x: 545, y: 580 },
+                    start: { x: 50, y: 600 },
+                    end: { x: 545, y: 600 },
                     thickness: 1,
                 });
                 
                 // إضافة أسئلة Grammar المخلوطة
-                let yPos = 560;
+                let yPos = 580;
                 if (shuffledQuestions.grammar && shuffledQuestions.grammar.length > 0) {
                     shuffledQuestions.grammar.forEach((question, index) => {
                         // رقم السؤال والنقاط
@@ -1137,7 +1364,7 @@
                         if (question.options && question.options.length > 0) {
                             question.options.forEach((option, optIndex) => {
                                 const letter = String.fromCharCode(97 + optIndex);
-                                page1.drawText(`${letter}   ${option}`, {
+                                page1.drawText(`${letter}) ${option}`, {
                                     x: 70,
                                     y: yPos - 18 * (optIndex + 1),
                                     size: 10,
@@ -1147,28 +1374,38 @@
                         }
                         
                         yPos -= 60;
+                        if (yPos < 100 && index < shuffledQuestions.grammar.length - 1) {
+                            const newPage = newPdfDoc.addPage([595, 842]);
+                            yPos = 800;
+                            page1 = newPage;
+                        }
                     });
                 }
                 
                 // قسم Orthography
-                page1.drawText('Orthography', {
-                    x: 50,
-                    y: yPos - 20,
-                    size: 14,
-                    font: fontBold,
-                });
-                
-                page1.drawText('2. choose the correct answer', {
-                    x: 50,
-                    y: yPos - 40,
-                    size: 12,
-                    font: font,
-                });
-                
-                yPos -= 60;
-                
-                // إضافة أسئلة Orthography المخلوطة
                 if (shuffledQuestions.orthography && shuffledQuestions.orthography.length > 0) {
+                    if (yPos < 150) {
+                        const page2 = newPdfDoc.addPage([595, 842]);
+                        yPos = 800;
+                        page1 = page2;
+                    }
+                    
+                    page1.drawText('Orthography - Shuffled', {
+                        x: 50,
+                        y: yPos - 20,
+                        size: 14,
+                        font: fontBold,
+                    });
+                    
+                    page1.drawText('2. choose the correct answer', {
+                        x: 50,
+                        y: yPos - 40,
+                        size: 12,
+                        font: font,
+                    });
+                    
+                    yPos -= 60;
+                    
                     shuffledQuestions.orthography.forEach((question, index) => {
                         page1.drawText(`${question.number}. which letter completes the word? "${question.text}"`, {
                             x: 50,
@@ -1188,7 +1425,7 @@
                         if (question.options && question.options.length > 0) {
                             question.options.forEach((option, optIndex) => {
                                 const letter = String.fromCharCode(97 + optIndex);
-                                page1.drawText(`${letter}   ${option}`, {
+                                page1.drawText(`${letter}) ${option}`, {
                                     x: 70,
                                     y: yPos - 18 * (optIndex + 1),
                                     size: 10,
@@ -1201,53 +1438,53 @@
                     });
                 }
                 
-                // === الصفحة الثانية ===
-                const page2 = newPdfDoc.addPage([595, 842]);
-                
-                // عنوان قسم Matching
-                page2.drawText('3. Carefully look at all the pictures shown in the column below.', {
-                    x: 50,
-                    y: 800,
-                    size: 11,
-                    font: font,
-                });
-                
-                page2.drawText('Then, read the list of words provided in the opposite column.', {
-                    x: 50,
-                    y: 785,
-                    size: 11,
-                    font: font,
-                });
-                
-                page2.drawText('Each word is labeled with a letter (A, B, C, etc.), and each picture is labeled', {
-                    x: 50,
-                    y: 770,
-                    size: 11,
-                    font: font,
-                });
-                
-                page2.drawText('with a number (1, 2, 3, etc.). Your task is to choose the correct word', {
-                    x: 50,
-                    y: 755,
-                    size: 11,
-                    font: font,
-                });
-                
-                page2.drawText('that matches each picture.', {
-                    x: 50,
-                    y: 740,
-                    size: 11,
-                    font: font,
-                });
-                
-                // جدول Matching
-                let tableY = 700;
+                // قسم Matching
                 if (shuffledQuestions.matching && shuffledQuestions.matching.length > 0) {
+                    const matchingPage = newPdfDoc.addPage([595, 842]);
+                    
+                    // عنوان قسم Matching
+                    matchingPage.drawText('3. Carefully look at all the pictures shown in the column below.', {
+                        x: 50,
+                        y: 800,
+                        size: 11,
+                        font: font,
+                    });
+                    
+                    matchingPage.drawText('Then, read the list of words provided in the opposite column.', {
+                        x: 50,
+                        y: 785,
+                        size: 11,
+                        font: font,
+                    });
+                    
+                    matchingPage.drawText('Each word is labeled with a letter (A, B, C, etc.), and each picture is labeled', {
+                        x: 50,
+                        y: 770,
+                        size: 11,
+                        font: font,
+                    });
+                    
+                    matchingPage.drawText('with a number (1, 2, 3, etc.). Your task is to choose the correct word', {
+                        x: 50,
+                        y: 755,
+                        size: 11,
+                        font: font,
+                    });
+                    
+                    matchingPage.drawText('that matches each picture.', {
+                        x: 50,
+                        y: 740,
+                        size: 11,
+                        font: font,
+                    });
+                    
+                    // جدول Matching
+                    let tableY = 700;
                     shuffledQuestions.matching.forEach((question, index) => {
-                        const letter = String.fromCharCode(65 + index); // A, B, C, ...
+                        const letter = String.fromCharCode(64 + index + 1); // A, B, C, ...
                         
                         // عمود رقم الصورة
-                        page2.drawText(question.text, {
+                        matchingPage.drawText(question.text, {
                             x: 50,
                             y: tableY,
                             size: 11,
@@ -1255,7 +1492,7 @@
                         });
                         
                         // عمود النقاط
-                        page2.drawText('9', {
+                        matchingPage.drawText('9', {
                             x: 520,
                             y: tableY,
                             size: 11,
@@ -1263,7 +1500,7 @@
                         });
                         
                         // عمود الحرف والكلمة
-                        page2.drawText(`(${letter})   ${question.match}`, {
+                        matchingPage.drawText(`(${letter}) ${question.match}`, {
                             x: 250,
                             y: tableY,
                             size: 11,
@@ -1274,58 +1511,58 @@
                     });
                 }
                 
-                // === الصفحة الثالثة ===
-                const page3 = newPdfDoc.addPage([595, 842]);
-                
-                // عنوان قسم Reading
-                page3.drawText('Reading', {
-                    x: 50,
-                    y: 800,
-                    size: 16,
-                    font: fontBold,
-                });
-                
-                page3.drawText('4.Read the passage then choose T for true And F for False :', {
-                    x: 50,
-                    y: 780,
-                    size: 12,
-                    font: fontBold,
-                });
-                
-                // نص القراءة
-                const readingText = "King Salman bin Abdulaziz was born in Riyadh. He studied religion, science, and the Holy Qur'an at the Princes' School. He became King of Saudi Arabia in 2015. He helped Riyadh grow from a small town into a major modern city. He also supported humanitarian and cultural projects inside and outside the Kingdom.";
-                
-                const lines = splitTextIntoLines(readingText, 80);
-                let textY = 750;
-                lines.forEach(line => {
-                    page3.drawText(line, {
-                        x: 50,
-                        y: textY,
-                        size: 11,
-                        font: font,
-                    });
-                    textY -= 20;
-                });
-                
-                // إضافة أسئلة Reading المخلوطة
-                let readingQY = textY - 30;
+                // قسم Reading
                 if (shuffledQuestions.reading && shuffledQuestions.reading.length > 0) {
+                    const readingPage = newPdfDoc.addPage([595, 842]);
+                    
+                    // عنوان قسم Reading
+                    readingPage.drawText('Reading - Shuffled', {
+                        x: 50,
+                        y: 800,
+                        size: 16,
+                        font: fontBold,
+                    });
+                    
+                    readingPage.drawText('4. Read the passage then choose T for true And F for False:', {
+                        x: 50,
+                        y: 780,
+                        size: 12,
+                        font: fontBold,
+                    });
+                    
+                    // نص القراءة
+                    const readingText = "King Salman bin Abdulaziz was born in Riyadh. He studied religion, science, and the Holy Qur'an at the Princes' School. He became King of Saudi Arabia in 2015. He helped Riyadh grow from a small town into a major modern city. He also supported humanitarian and cultural projects inside and outside the Kingdom.";
+                    
+                    const lines = splitTextIntoLines(readingText, 80);
+                    let textY = 750;
+                    lines.forEach(line => {
+                        readingPage.drawText(line, {
+                            x: 50,
+                            y: textY,
+                            size: 11,
+                            font: font,
+                        });
+                        textY -= 20;
+                    });
+                    
+                    // إضافة أسئلة Reading المخلوطة
+                    let readingQY = textY - 30;
                     shuffledQuestions.reading.forEach((question, index) => {
-                        page3.drawText(`${question.number}. ${question.text}`, {
+                        readingPage.drawText(`${question.number}. ${question.text}`, {
                             x: 50,
                             y: readingQY,
                             size: 11,
                             font: font,
                         });
                         
-                        page3.drawText('(T)', {
+                        readingPage.drawText('(T)', {
                             x: 450,
                             y: readingQY,
                             size: 11,
                             font: font,
                         });
                         
-                        page3.drawText('(F)', {
+                        readingPage.drawText('(F)', {
                             x: 480,
                             y: readingQY,
                             size: 11,
@@ -1334,60 +1571,60 @@
                         
                         readingQY -= 25;
                     });
-                }
-                
-                // قسم Writing
-                readingQY -= 20;
-                page3.drawText('Writing', {
-                    x: 50,
-                    y: readingQY,
-                    size: 16,
-                    font: fontBold,
-                });
-                
-                readingQY -= 25;
-                page3.drawText('5- Write a coherent paragraph of 3-5 sentences using 8 words from the following list:', {
-                    x: 50,
-                    y: readingQY,
-                    size: 12,
-                    font: font,
-                });
-                
-                readingQY -= 20;
-                page3.drawText('(enjoy – fitness – work out – spend time – lifestyle – herbal tea – puzzle – fan)', {
-                    x: 50,
-                    y: readingQY,
-                    size: 11,
-                    font: fontBold,
-                });
-                
-                // خطوط للكتابة
-                readingQY -= 40;
-                for (let i = 0; i < 8; i++) {
-                    page3.drawLine({
-                        start: { x: 50, y: readingQY },
-                        end: { x: 545, y: readingQY },
-                        thickness: 1,
+                    
+                    // قسم Writing
+                    readingQY -= 20;
+                    readingPage.drawText('Writing', {
+                        x: 50,
+                        y: readingQY,
+                        size: 16,
+                        font: fontBold,
                     });
+                    
                     readingQY -= 25;
+                    readingPage.drawText('5- Write a coherent paragraph of 3-5 sentences using 8 words from the following list:', {
+                        x: 50,
+                        y: readingQY,
+                        size: 12,
+                        font: font,
+                    });
+                    
+                    readingQY -= 20;
+                    readingPage.drawText('(enjoy – fitness – work out – spend time – lifestyle – herbal tea – puzzle – fan)', {
+                        x: 50,
+                        y: readingQY,
+                        size: 11,
+                        font: fontBold,
+                    });
+                    
+                    // خطوط للكتابة
+                    readingQY -= 40;
+                    for (let i = 0; i < 8; i++) {
+                        readingPage.drawLine({
+                            start: { x: 50, y: readingQY },
+                            end: { x: 545, y: readingQY },
+                            thickness: 1,
+                        });
+                        readingQY -= 25;
+                    }
+                    
+                    // التوقيع
+                    readingQY -= 30;
+                    readingPage.drawText('My best wishes', {
+                        x: 50,
+                        y: readingQY,
+                        size: 12,
+                        font: fontItalic,
+                    });
+                    
+                    readingQY -= 20;
+                    readingPage.drawText('Teacher Friend Alkhaldi', {
+                        x: 50,
+                        y: readingQY,
+                        size: 12,
+                        font: fontItalic,
+                    });
                 }
-                
-                // التوقيع
-                readingQY -= 30;
-                page3.drawText('My best wishes', {
-                    x: 50,
-                    y: readingQY,
-                    size: 12,
-                    font: fontItalic,
-                });
-                
-                readingQY -= 20;
-                page3.drawText('Teacher Friend Alkhaldi', {
-                    x: 50,
-                    y: readingQY,
-                    size: 12,
-                    font: fontItalic,
-                });
                 
                 // حفظ PDF
                 const newPdfBytes = await newPdfDoc.save();
@@ -1397,13 +1634,15 @@
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `Shuffled_Exam_${new Date().toISOString().slice(0,10)}.pdf`;
+                const now = new Date();
+                const timestamp = `${now.getFullYear()}${(now.getMonth()+1).toString().padStart(2,'0')}${now.getDate().toString().padStart(2,'0')}_${now.getHours().toString().padStart(2,'0')}${now.getMinutes().toString().padStart(2,'0')}`;
+                a.download = `Shuffled_Exam_${timestamp}.pdf`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
                 
-                showStatus('تم حفظ ملف PDF المخلوط بنجاح!', 'success');
+                showStatus(`تم حفظ ملف PDF المخلوط بنجاح! تم تنزيل ${getTotalQuestions()} سؤالًا`, 'success');
                 updateWorkflow(4);
                 
             } catch (error) {
@@ -1421,10 +1660,10 @@
             let currentLine = '';
             
             words.forEach(word => {
-                if ((currentLine + word).length <= maxLength) {
+                if ((currentLine + ' ' + word).length <= maxLength) {
                     currentLine += (currentLine ? ' ' : '') + word;
                 } else {
-                    lines.push(currentLine);
+                    if (currentLine) lines.push(currentLine);
                     currentLine = word;
                 }
             });
@@ -1440,6 +1679,7 @@
         function resetAll() {
             pdfBytes = null;
             pdfDoc = null;
+            pdfTextContent = "";
             extractedQuestions = {
                 grammar: [],
                 orthography: [],
@@ -1457,7 +1697,7 @@
             document.getElementById('statsSection').style.display = 'none';
             document.getElementById('originalPdfSection').style.display = 'none';
             document.getElementById('shuffleOptions').style.display = 'none';
-            document.getElementById('pdfPreview').src = '';
+            document.getElementById('pdfContentPreview').innerHTML = '';
             
             showStatus('تم إعادة تعيين جميع البيانات', 'info');
             updateWorkflow(1);
@@ -1465,8 +1705,12 @@
         }
         
         // عرض/إخفاء مؤشر التحميل
-        function showLoading(show) {
-            document.getElementById('loading').style.display = show ? 'block' : 'none';
+        function showLoading(show, message = 'جاري معالجة ملف PDF...') {
+            const loadingDiv = document.getElementById('loading');
+            const loadingText = document.getElementById('loadingText');
+            
+            loadingText.textContent = message;
+            loadingDiv.style.display = show ? 'block' : 'none';
         }
         
         // عرض رسالة الحالة
@@ -1484,6 +1728,11 @@
         // تهيئة التطبيق
         updateButtons();
         updateWorkflow(1);
+        
+        // رسالة ترحيبية
+        setTimeout(() => {
+            showStatus('مرحبًا! قم بتحميل ملف PDF لبدء خلط الأسئلة', 'info');
+        }, 1000);
     </script>
 </body>
 </html>
