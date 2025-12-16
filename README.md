@@ -1,11 +1,12 @@
 # Mixquestion1
-<!DOCTYPE html>
+
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>أداة خلط فقرات PDF المتقدمة</title>
     <style>
+        /* ... (نفس الستايل السابق) ... */
         * {
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -852,6 +853,15 @@
             });
         }
         
+        // دالة إنشاء مولد أرقام عشوائية باستخدام بذرة
+        function createSeededRandom(seed) {
+            // خوارزمية بسيطة لتوليد أرقام عشوائية باستخدام بذرة
+            return function() {
+                seed = (seed * 9301 + 49297) % 233280;
+                return seed / 233280;
+            };
+        }
+        
         // دالة خلط الفقرات
         function shuffleParagraphs() {
             const shuffleMode = document.getElementById('shuffleMode').value;
@@ -866,11 +876,11 @@
                 return;
             }
             
-            // إنشاء بذرة للخلط العشوائي
-            let randomSeed = seedValue ? hashString(seedValue) : Math.random();
-            const random = seededRandom(randomSeed);
+            // إنشاء مولد أرقام عشوائية باستخدام البذرة
+            const seed = seedValue ? hashString(seedValue) : Date.now();
+            const random = createSeededRandom(seed);
             
-            // خلط الفقرات
+            // خلط الفقرات باستخدام خوارزمية Fisher-Yates
             for (let i = shuffledParagraphs.length - 1; i > 0; i--) {
                 const j = Math.floor(random() * (i + 1));
                 [shuffledParagraphs[i], shuffledParagraphs[j]] = [shuffledParagraphs[j], shuffledParagraphs[i]];
@@ -880,7 +890,7 @@
             if (shuffleOptions) {
                 shuffledParagraphs.forEach(para => {
                     if (para.type === 'question' && para.options && para.options.length > 1) {
-                        // خلط الخيارات داخل السؤال
+                        // خلط الخيارات داخل السؤال باستخدام نفس المولد
                         for (let i = para.options.length - 1; i > 0; i--) {
                             const j = Math.floor(random() * (i + 1));
                             [para.options[i], para.options[j]] = [para.options[j], para.options[i]];
@@ -1193,21 +1203,16 @@
             }
         }
         
-        // دالة إنشاء رقم عشوائي باستخدام بذرة
-        function seededRandom(seed) {
-            const x = Math.sin(seed) * 10000;
-            return x - Math.floor(x);
-        }
-        
         // دالة إنشاء هاش من نص
         function hashString(str) {
             let hash = 0;
+            if (str.length === 0) return hash;
             for (let i = 0; i < str.length; i++) {
                 const char = str.charCodeAt(i);
-                hash = (hash << 5) - hash + char;
-                hash = hash & hash;
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Convert to 32bit integer
             }
-            return hash;
+            return Math.abs(hash);
         }
         
         // دالة إعادة تعيين كل شيء
