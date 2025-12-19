@@ -1,7 +1,6 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>أداة إعداد التقارير</title>
 
 <style>
@@ -22,21 +21,33 @@ body{
   max-width:900px;
   margin:auto;
   background:white;
-  padding:30px;
-  border-radius:20px;
+  padding:28px;
+  border-radius:18px;
 }
-.tool h2{text-align:center;color:#0a3b40;margin-bottom:10px;}
-label{font-weight:700;margin-top:14px;display:block;}
+.tool h2{
+  text-align:center;
+  color:#0a3b40;
+  margin-bottom:12px;
+}
+label{
+  font-weight:700;
+  margin-top:12px;
+  display:block;
+}
 input,textarea{
   width:100%;
-  padding:12px;
+  padding:11px;
   margin-top:6px;
-  border-radius:12px;
+  border-radius:10px;
   border:2px solid #cfd8dc;
   font-family:inherit;
 }
 textarea{resize:none;}
-.counter{font-size:11px;color:#4f6f68;margin-top:4px;}
+.counter{
+  font-size:11px;
+  margin-top:3px;
+  color:#4f6f68;
+}
 .counter.limit{color:#c62828;font-weight:700;}
 button{
   margin-top:14px;
@@ -61,28 +72,28 @@ body{background:white;padding:0}
 .tool{display:none}
 .report{display:block}
 
-/* ===== الهيدر ===== */
+/* ===== الهيدر (مصغر) ===== */
 .header{
   background:#0a3b40;
   color:white;
-  padding:6px;
-  border-radius:8px;
+  padding:4px 6px;
+  border-radius:6px;
   text-align:center;
-  margin-bottom:10px;
-  font-size:12px;
+  font-size:11px;
+  margin-bottom:8px;
 }
 
 /* ===== معلومات ===== */
 .info-grid{
   display:grid;
   grid-template-columns:repeat(4,1fr);
-  gap:8px;
-  margin-bottom:12px;
+  gap:6px;
+  margin-bottom:10px;
 }
 .info-box{
   border:2px solid #cfd8dc;
-  border-radius:10px;
-  padding:6px;
+  border-radius:8px;
+  padding:5px;
   text-align:center;
   font-size:11px;
 }
@@ -91,7 +102,7 @@ body{background:white;padding:0}
   background:#0a3b40;
   color:white;
   border-radius:6px;
-  padding:3px;
+  padding:2px;
   font-weight:700;
   margin-bottom:3px;
 }
@@ -99,17 +110,28 @@ body{background:white;padding:0}
 /* ===== المحتوى ===== */
 .grid-desc{
   display:flex;
-  gap:10px;
-  min-height:140px;
+  gap:8px;
+  margin-bottom:8px;
 }
-.desc-box{
+
+/* مربعات كبيرة */
+.desc-box.big{
   flex:1;
+  min-height:110px;
+}
+
+/* مربعات أصغر */
+.desc-box.small{
+  flex:1;
+  min-height:80px;
+}
+
+.desc-box{
   border:2px solid #cfd8dc;
-  border-radius:12px;
+  border-radius:10px;
   padding:8px;
   background:#f9fbfb;
   font-size:12px;
-  line-height:1.6;
   display:flex;
   flex-direction:column;
 }
@@ -119,11 +141,15 @@ body{background:white;padding:0}
   margin-bottom:6px;
   color:#0a3b40;
 }
-.desc-box p{white-space:pre-line;flex:1}
+.desc-box p{
+  white-space:pre-line;
+  flex:1;
+}
+
 .vertical{
-  width:36px;
+  width:32px;
   background:#eef3f1;
-  border-radius:10px;
+  border-radius:8px;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -135,23 +161,23 @@ body{background:white;padding:0}
   display:grid;
   grid-template-columns:repeat(2,1fr);
   gap:10px;
-  margin-top:14px;
+  margin-top:12px;
 }
 .images img{
   width:100%;
-  height:130px;
+  height:120px;
   object-fit:cover;
   border-radius:8px;
 }
 
 /* ===== التوقيعات ===== */
 .signatures{
-  margin-top:25px;
+  margin-top:22px;
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:40px;
   border-top:2px solid #cfd8dc;
-  padding-top:15px;
+  padding-top:14px;
 }
 .signature-box{
   text-align:center;
@@ -159,8 +185,8 @@ body{background:white;padding:0}
 }
 .signature-line{
   border-bottom:2px solid #000;
-  height:28px;
-  margin:10px 0;
+  height:26px;
+  margin:8px 0;
 }
 }
 </style>
@@ -189,6 +215,12 @@ body{background:white;padding:0}
 <label>عدد المستفيدين</label>
 <input oninput="sync('count',this.value)">
 
+<label>اسم المعلم</label>
+<input oninput="sync('teacher',this.value)">
+
+<label>اسم مدير المدرسة</label>
+<input oninput="sync('principal',this.value)">
+
 <label>وصف مختصر (15 كلمة)</label>
 <textarea oninput="limitWords(this,'desc1','c1')"></textarea>
 <div class="counter" id="c1">0 / 15 كلمة</div>
@@ -208,7 +240,7 @@ body{background:white;padding:0}
 <label>إرفاق الصور (صورتان كحد أقصى)</label>
 <input type="file" id="imagesInput" multiple accept="image/*">
 
-<button onclick="printReport()">تصدير PDF</button>
+<button onclick="window.print()">تصدير PDF</button>
 <button class="reset-btn" onclick="resetForm()">مسح جميع الخانات</button>
 </div>
 
@@ -227,39 +259,36 @@ body{background:white;padding:0}
 </div>
 
 <div class="grid-desc">
-<div class="desc-box"><strong>وصف مختصر</strong><p id="desc1"></p></div>
+<div class="desc-box big"><strong>وصف مختصر</strong><p id="desc1"></p></div>
 <div class="vertical">⇄</div>
-<div class="desc-box"><strong>إجراءات التنفيذ</strong><p id="desc2"></p></div>
+<div class="desc-box big"><strong>إجراءات التنفيذ</strong><p id="desc2"></p></div>
 </div>
 
-<div class="grid-desc" style="margin-top:10px">
-<div class="desc-box"><strong>النتائج</strong><p id="desc3"></p></div>
+<div class="grid-desc">
+<div class="desc-box small"><strong>النتائج</strong><p id="desc3"></p></div>
 <div class="vertical">⇄</div>
-<div class="desc-box"><strong>التوصيات</strong><p id="desc4"></p></div>
+<div class="desc-box small"><strong>التوصيات</strong><p id="desc4"></p></div>
 </div>
 
 <div class="images" id="imagesContainer"></div>
 
-<!-- ===== التوقيعات أسفل الصفحة ===== -->
 <div class="signatures">
-  <div class="signature-box">
-    اسم المعلم
-    <div class="signature-line"></div>
-    التوقيع
-  </div>
-  <div class="signature-box">
-    اسم مدير المدرسة
-    <div class="signature-line"></div>
-    التوقيع
-  </div>
+<div class="signature-box">
+اسم المعلم: <strong id="teacher"></strong>
+<div class="signature-line"></div>
+التوقيع
+</div>
+<div class="signature-box">
+مدير المدرسة: <strong id="principal"></strong>
+<div class="signature-line"></div>
+التوقيع
+</div>
 </div>
 
 </div>
 
 <script>
-function sync(id,val){
-  document.getElementById(id).textContent=val;
-}
+function sync(id,val){document.getElementById(id).textContent=val}
 
 function limitWords(el,target,counterId){
   let words=el.value.trim().replace(/\s+/g,' ').split(' ').filter(w=>w);
@@ -267,9 +296,9 @@ function limitWords(el,target,counterId){
     words=words.slice(0,15);
     el.value=words.join(' ');
   }
-  const counter=document.getElementById(counterId);
-  counter.textContent=`${words.length} / 15 كلمة`;
-  counter.classList.toggle('limit',words.length===15);
+  const c=document.getElementById(counterId);
+  c.textContent=`${words.length} / 15 كلمة`;
+  c.classList.toggle('limit',words.length===15);
   document.getElementById(target).textContent=el.value;
 }
 
@@ -295,7 +324,6 @@ imagesInput.addEventListener('change',e=>{
   });
 });
 
-function printReport(){window.print();}
 function resetForm(){
   if(!confirm('مسح جميع الخانات؟'))return;
   document.querySelectorAll('input,textarea').forEach(e=>e.value='');
