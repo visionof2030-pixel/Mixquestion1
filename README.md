@@ -72,7 +72,7 @@ body{background:white;padding:0}
 .tool{display:none}
 .report{display:block}
 
-/* ===== الهيدر (مصغر) ===== */
+/* ===== الهيدر المصغر ===== */
 .header{
   background:#0a3b40;
   color:white;
@@ -83,10 +83,10 @@ body{background:white;padding:0}
   margin-bottom:8px;
 }
 
-/* ===== معلومات ===== */
+/* ===== معلومات التقرير ===== */
 .info-grid{
   display:grid;
-  grid-template-columns:repeat(4,1fr);
+  grid-template-columns:repeat(5,1fr);
   gap:6px;
   margin-bottom:10px;
 }
@@ -114,18 +114,6 @@ body{background:white;padding:0}
   margin-bottom:8px;
 }
 
-/* مربعات كبيرة */
-.desc-box.big{
-  flex:1;
-  min-height:110px;
-}
-
-/* مربعات أصغر */
-.desc-box.small{
-  flex:1;
-  min-height:80px;
-}
-
 .desc-box{
   border:2px solid #cfd8dc;
   border-radius:10px;
@@ -135,16 +123,16 @@ body{background:white;padding:0}
   display:flex;
   flex-direction:column;
 }
+.desc-box.big{min-height:110px;flex:1}
+.desc-box.small{min-height:80px;flex:1}
+
 .desc-box strong{
   border-bottom:1px dashed #cfd8dc;
   padding-bottom:4px;
   margin-bottom:6px;
   color:#0a3b40;
 }
-.desc-box p{
-  white-space:pre-line;
-  flex:1;
-}
+.desc-box p{white-space:pre-line;flex:1}
 
 .vertical{
   width:32px;
@@ -203,6 +191,9 @@ body{background:white;padding:0}
 <label>اسم المدرسة</label>
 <input oninput="sync('school',this.value)">
 
+<label>البند التربوي</label>
+<input oninput="sync('axis',this.value)">
+
 <label>عنوان التقرير</label>
 <input oninput="sync('title',this.value)">
 
@@ -252,6 +243,7 @@ body{background:white;padding:0}
 </div>
 
 <div class="info-grid">
+<div class="info-box"><span>البند التربوي</span><div id="axis"></div></div>
 <div class="info-box"><span>عنوان التقرير</span><div id="title"></div></div>
 <div class="info-box"><span>تاريخ التنفيذ</span><div id="date"></div></div>
 <div class="info-box"><span>المستهدفون</span><div id="target"></div></div>
