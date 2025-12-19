@@ -9,6 +9,7 @@
   font-family:'KufamLocal';
   src:url('static/Kufam-Regular.ttf') format('truetype');
 }
+
 body{
   font-family:'KufamLocal',sans-serif;
   background:#f2f7f6;
@@ -35,8 +36,15 @@ input,textarea{
   font-family:inherit;
 }
 textarea{resize:none;}
-.counter{font-size:11px;color:#4f6f68;margin-top:4px;}
-.counter.limit{color:#c62828;font-weight:700;}
+.counter{
+  font-size:11px;
+  color:#4f6f68;
+  margin-top:4px;
+}
+.counter.limit{
+  color:#c62828;
+  font-weight:700;
+}
 button{
   margin-top:14px;
   padding:14px;
@@ -54,12 +62,13 @@ button{
 /* ===== التقرير ===== */
 .report{display:none;}
 @page{size:A4;margin:14mm;}
+
 @media print{
 body{background:white;padding:0}
 .tool{display:none}
 .report{display:block}
 
-/* ===== هيدر صغير ===== */
+/* ===== الهيدر ===== */
 .header{
   background:#0a3b40;
   color:white;
@@ -94,31 +103,39 @@ body{background:white;padding:0}
   margin-bottom:3px;
 }
 
-/* ===== المحتوى ===== */
+/* ===== المحتوى (مُصغَّر) ===== */
 .grid-desc{
   display:flex;
   gap:10px;
-  min-height:220px;
+  min-height:140px; /* ← تم التصغير هنا */
 }
+
 .desc-box{
   flex:1;
   border:2px solid #cfd8dc;
   border-radius:12px;
-  padding:10px;
+  padding:8px;       /* ← أقل */
   background:#f9fbfb;
   font-size:12px;
+  line-height:1.6;
   display:flex;
   flex-direction:column;
 }
+
 .desc-box strong{
   border-bottom:1px dashed #cfd8dc;
   padding-bottom:4px;
   margin-bottom:6px;
   color:#0a3b40;
 }
-.desc-box p{white-space:pre-line;flex:1}
+
+.desc-box p{
+  white-space:pre-line;
+  flex:1;
+}
+
 .vertical{
-  width:40px;
+  width:36px;
   background:#eef3f1;
   border-radius:10px;
   display:flex;
@@ -136,7 +153,7 @@ body{background:white;padding:0}
 }
 .images img{
   width:100%;
-  height:140px;
+  height:130px;
   object-fit:cover;
   border-radius:8px;
 }
@@ -184,7 +201,7 @@ body{background:white;padding:0}
 <div class="counter" id="c4">0 / 15 كلمة</div>
 
 <label>إرفاق الصور (صورتان كحد أقصى)</label>
-<input type="file" id="imagesInput" accept="image/*" multiple>
+<input type="file" id="imagesInput" multiple accept="image/*">
 
 <button onclick="printReport()">تصدير PDF</button>
 <button class="reset-btn" onclick="resetForm()">مسح جميع الخانات</button>
@@ -219,40 +236,50 @@ body{background:white;padding:0}
 </div>
 
 <script>
-function sync(id,val){document.getElementById(id).textContent=val}
+function sync(id,val){
+  document.getElementById(id).textContent=val;
+}
 
 function limitWords(el,target,counterId){
-let words=el.value.trim().replace(/\s+/g,' ').split(' ').filter(w=>w)
-if(words.length>15){words=words.slice(0,15);el.value=words.join(' ')}
-document.getElementById(counterId).textContent=`${words.length} / 15 كلمة`
-document.getElementById(counterId).classList.toggle('limit',words.length===15)
-document.getElementById(target).textContent=el.value
+  let words=el.value.trim().replace(/\s+/g,' ').split(' ').filter(w=>w);
+  if(words.length>15){
+    words=words.slice(0,15);
+    el.value=words.join(' ');
+  }
+  const counter=document.getElementById(counterId);
+  counter.textContent=`${words.length} / 15 كلمة`;
+  counter.classList.toggle('limit',words.length===15);
+  document.getElementById(target).textContent=el.value;
 }
 
-const imagesInput=document.getElementById('imagesInput')
-const imagesContainer=document.getElementById('imagesContainer')
+const imagesInput=document.getElementById('imagesInput');
+const imagesContainer=document.getElementById('imagesContainer');
 
 imagesInput.addEventListener('change',e=>{
-imagesContainer.innerHTML=''
-const files=[...e.target.files]
-if(files.length>2){alert('يسمح بصورتين فقط');imagesInput.value='';return}
-files.forEach(f=>{
-const r=new FileReader()
-r.onload=ev=>{
-const img=document.createElement('img')
-img.src=ev.target.result
-imagesContainer.appendChild(img)
-}
-r.readAsDataURL(f)
-})
-})
+  imagesContainer.innerHTML='';
+  const files=[...e.target.files];
+  if(files.length>2){
+    alert('يسمح بإرفاق صورتين فقط');
+    imagesInput.value='';
+    return;
+  }
+  files.forEach(f=>{
+    const r=new FileReader();
+    r.onload=ev=>{
+      const img=document.createElement('img');
+      img.src=ev.target.result;
+      imagesContainer.appendChild(img);
+    };
+    r.readAsDataURL(f);
+  });
+});
 
-function printReport(){window.print()}
+function printReport(){window.print();}
 function resetForm(){
-if(!confirm('مسح جميع الخانات؟'))return
-document.querySelectorAll('input,textarea').forEach(e=>e.value='')
-document.querySelectorAll('[id]').forEach(e=>e.textContent='')
-imagesContainer.innerHTML=''
+  if(!confirm('مسح جميع الخانات؟'))return;
+  document.querySelectorAll('input,textarea').forEach(e=>e.value='');
+  document.querySelectorAll('[id]').forEach(e=>e.textContent='');
+  imagesContainer.innerHTML='';
 }
 </script>
 
