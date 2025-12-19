@@ -36,15 +36,8 @@ input,textarea{
   font-family:inherit;
 }
 textarea{resize:none;}
-.counter{
-  font-size:11px;
-  color:#4f6f68;
-  margin-top:4px;
-}
-.counter.limit{
-  color:#c62828;
-  font-weight:700;
-}
+.counter{font-size:11px;color:#4f6f68;margin-top:4px;}
+.counter.limit{color:#c62828;font-weight:700;}
 button{
   margin-top:14px;
   padding:14px;
@@ -103,37 +96,30 @@ body{background:white;padding:0}
   margin-bottom:3px;
 }
 
-/* ===== المحتوى (مُصغَّر) ===== */
+/* ===== المحتوى ===== */
 .grid-desc{
   display:flex;
   gap:10px;
-  min-height:140px; /* ← تم التصغير هنا */
+  min-height:140px;
 }
-
 .desc-box{
   flex:1;
   border:2px solid #cfd8dc;
   border-radius:12px;
-  padding:8px;       /* ← أقل */
+  padding:8px;
   background:#f9fbfb;
   font-size:12px;
   line-height:1.6;
   display:flex;
   flex-direction:column;
 }
-
 .desc-box strong{
   border-bottom:1px dashed #cfd8dc;
   padding-bottom:4px;
   margin-bottom:6px;
   color:#0a3b40;
 }
-
-.desc-box p{
-  white-space:pre-line;
-  flex:1;
-}
-
+.desc-box p{white-space:pre-line;flex:1}
 .vertical{
   width:36px;
   background:#eef3f1;
@@ -156,6 +142,25 @@ body{background:white;padding:0}
   height:130px;
   object-fit:cover;
   border-radius:8px;
+}
+
+/* ===== التوقيعات ===== */
+.signatures{
+  margin-top:25px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:40px;
+  border-top:2px solid #cfd8dc;
+  padding-top:15px;
+}
+.signature-box{
+  text-align:center;
+  font-size:12px;
+}
+.signature-line{
+  border-bottom:2px solid #000;
+  height:28px;
+  margin:10px 0;
 }
 }
 </style>
@@ -208,6 +213,7 @@ body{background:white;padding:0}
 </div>
 
 <div class="report">
+
 <div class="header">
 <div id="edu"></div>
 <div id="school"></div>
@@ -233,6 +239,21 @@ body{background:white;padding:0}
 </div>
 
 <div class="images" id="imagesContainer"></div>
+
+<!-- ===== التوقيعات أسفل الصفحة ===== -->
+<div class="signatures">
+  <div class="signature-box">
+    اسم المعلم
+    <div class="signature-line"></div>
+    التوقيع
+  </div>
+  <div class="signature-box">
+    اسم مدير المدرسة
+    <div class="signature-line"></div>
+    التوقيع
+  </div>
+</div>
+
 </div>
 
 <script>
