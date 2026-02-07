@@ -12,6 +12,99 @@
 html,body{font-family:'Cairo',sans-serif;background: linear-gradient(135deg, #f0f9f6 0%, #e8f4f0 50%, #d4ebe2 100%);direction:rtl;overflow-x:hidden;min-height:100vh;-webkit-text-size-adjust:100%; -moz-text-size-adjust:100%; -ms-text-size-adjust:100%; text-size-adjust:100%; touch-action: manipulation;}
 .wrapper{max-width:900px;margin:auto;padding:20px;width:100%;}
 
+/* ==================== صفحة التفعيل الجديدة - تم التعديل ==================== */
+#activationScreen {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg, #022e22 0%, #044a35 100%);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cairo', sans-serif;
+    padding: 20px;
+}
+
+.activation-card {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    text-align: center;
+    border: 3px solid #ffd166;
+}
+
+.activation-header {
+    color: #044a35;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e0f0ea;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    font-size: 22px;
+    font-weight: 900;
+}
+
+.activation-input {
+    width: 100%;
+    padding: 16px;
+    border-radius: 12px;
+    border: 2px solid #d4ebe2;
+    font-size: 16px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-family: 'Cairo', sans-serif;
+    transition: all 0.3s;
+}
+
+.activation-input:focus {
+    outline: none;
+    border-color: #066d4d;
+    box-shadow: 0 0 0 4px rgba(6,109,77,0.15);
+}
+
+.activation-btn {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #066d4d 0%, #05553d 100%);
+    color: #fff;
+    font-size: 17px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 6px 15px rgba(6,109,77,0.25);
+}
+
+.activation-btn:hover {
+    background: linear-gradient(135deg, #05553d 0%, #044a35 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(6,109,77,0.35);
+}
+
+.activation-info {
+    font-size: 13px;
+    color: #666;
+    margin-top: 15px;
+    line-height: 1.5;
+}
+
+.activation-warning {
+    background: #fff8e6;
+    border: 2px solid #ffd166;
+    border-radius: 10px;
+    padding: 12px;
+    margin-top: 15px;
+    font-size: 12px;
+    color: #5c3c00;
+    text-align: right;
+}
+
 /* العداد التنازلي الجديد */
 #subscriptionTimer {
     position: fixed;
@@ -669,6 +762,11 @@ bottom: 10px;
     font-size: 11px;
     padding: 6px 8px;
 }
+
+.activation-card {
+    padding: 20px;
+    margin: 10px;
+}
 }
 
 /* تحسينات للشاشات الصغيرة جداً */
@@ -758,6 +856,10 @@ font-size: 13px;
 #subscriptionTimer {
     font-size: 10px;
     padding: 4px 6px;
+}
+
+.activation-card {
+    padding: 15px;
 }
 }
 
@@ -1372,60 +1474,34 @@ user-select: none;
 
 <body>
 
-<!-- صفحة التفعيل الجديدة -->
-<div id="activationScreen" style="
-position:fixed;
-inset:0;
-background:rgba(240,249,246,0.97);
-z-index:9999;
-display:flex;
-align-items:center;
-justify-content:center;
-font-family:Cairo;
-">
-
-  <div style="
-  background:#fff;
-  padding:25px;
-  border-radius:14px;
-  width:90%;
-  max-width:420px;
-  box-shadow:0 10px 30px rgba(0,0,0,.15);
-  text-align:center;
-  ">
-
-    <h3 style="color:#044a35;margin-bottom:15px;">🔐 تفعيل الأداة</h3>
-
-    <input id="activationInput"
-      placeholder="أدخل كود التفعيل"
-      style="
-      width:100%;
-      padding:14px;
-      border-radius:10px;
-      border:1px solid #ccc;
-      font-size:14px;
-      margin-bottom:15px;
-      ">
-
-    <button onclick="activateTool()" style="
-      width:100%;
-      padding:14px;
-      border:none;
-      border-radius:10px;
-      background:#066d4d;
-      color:#fff;
-      font-size:15px;
-      font-weight:700;
-      cursor:pointer;
-    ">
-      تفعيل
-    </button>
-
-    <p style="font-size:12px;color:#777;margin-top:10px;">
-      سيتم حفظ التفعيل على هذا الجهاز
-    </p>
-
-  </div>
+<!-- صفحة التفعيل الجديدة - تم التعديل -->
+<div id="activationScreen">
+    <div class="activation-card">
+        <div class="activation-header">
+            <i class="fas fa-lock"></i>
+            <h3>🔐 تفعيل الأداة</h3>
+        </div>
+        
+        <input id="activationInput" 
+               class="activation-input"
+               placeholder="أدخل كود التفعيل"
+               onkeypress="if(event.key === 'Enter') activateTool()">
+        
+        <button onclick="activateTool()" class="activation-btn">
+            <i class="fas fa-check-circle" style="margin-left: 8px;"></i>
+            تفعيل
+        </button>
+        
+        <div class="activation-warning">
+            <i class="fas fa-exclamation-triangle" style="margin-left: 5px;"></i>
+            سيتم حفظ التفعيل على هذا الجهاز فقط
+        </div>
+        
+        <div class="activation-info">
+            <i class="fas fa-info-circle" style="margin-left: 5px;"></i>
+            كود التفعيل صالح للاستخدام على هذا الجهاز فقط
+        </div>
+    </div>
 </div>
 
 <!-- عداد الاشتراك -->
@@ -1688,45 +1764,38 @@ font-family:Cairo;
   <div class="form-group">
     <label><i class="fas fa-flag"></i>الهدف التربوي</label>
     <textarea id="goal" placeholder="أدخل الهدف التربوي" oninput="updateReport()"></textarea>
-    <!-- تم إزالة أزرار التعبئة الذكية -->
   </div>
   
   <div class="form-group">
     <label><i class="fas fa-file-signature"></i>نبذة مختصرة</label>
     <textarea id="summary" placeholder="أدخل نبذة مختصرة" oninput="updateReport()"></textarea>
-    <!-- تم إزالة أزرار التعبئة الذكية -->
   </div>
   
   <div class="form-group">
     <label><i class="fas fa-tasks"></i>إجراءات التنفيذ</label>
     <textarea id="steps" placeholder="كيف تم تنفيذ النشاط؟" oninput="updateReport()"></textarea>
-    <!-- تم إزالة أزرار التعبئة الذكية -->
   </div>
   
   <div class="form-group">
     <label><i class="fas fa-chess-board"></i>الاستراتيجيات</label>
     <textarea id="strategies" placeholder="ما هي الاستراتيجيات" oninput="updateReport()"></textarea>
-    <!-- تم إزالة أزرار التعبئة الذكية -->
   </div>
   
   <div class="form-row">
     <div class="form-group">
       <label><i class="fas fa-thumbs-up"></i>نقاط القوة</label>
       <textarea id="strengths" placeholder="نقاط القوة" oninput="updateReport()"></textarea>
-      <!-- تم إزالة أزرار التعبئة الذكية -->
     </div>
     
     <div class="form-group">
       <label><i class="fas fa-tools"></i>نقاط التحسين</label>
       <textarea id="improve" placeholder="نقاط تحتاج تطوير" oninput="updateReport()"></textarea>
-      <!-- تم إزالة أزرار التعبئة الذكية -->
     </div>
   </div>
   
   <div class="form-group">
     <label><i class="fas fa-lightbulb"></i>التوصيات</label>
     <textarea id="recomm" placeholder="توصيات مستقبلية" oninput="updateReport()"></textarea>
-    <!-- تم إزالة أزرار التعبئة الذكية -->
   </div>
   
   <!-- قسم الأدوات والوسائل التعليمية -->
@@ -1896,56 +1965,162 @@ font-family:Cairo;
 </div>
 
 <script>
-// ==================== وظائف التفعيل ====================
+// ==================== الإعدادات الأساسية ====================
+const API_BASE_URL = 'https://tarafbackend.onrender.com';
+let authToken = localStorage.getItem('auth_token');
+let deviceId = getDeviceId();
+
+// ==================== Device ID ====================
+function getDeviceId() {
+  let id = localStorage.getItem("device_id");
+  if (!id) {
+    // إنشاء معرف جهاز فريد
+    id = 'device-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem("device_id", id);
+  }
+  return id;
+}
+
+// ==================== رسائل الأخطاء ====================
+function getArabicErrorMessage(errorCode) {
+  const messages = {
+    "CODE_REQUIRED": "يرجى إدخال كود التفعيل.",
+    "INVALID_CODE": "كود التفعيل غير صحيح.",
+    "CODE_EXPIRED": "انتهت صلاحية كود التفعيل.",
+    "DEVICE_REQUIRED": "تعذر التحقق من الجهاز، يرجى إعادة المحاولة.",
+    "DEVICE_MISMATCH": "هذا الكود مفعل على جهاز آخر ولا يمكن استخدامه هنا.",
+    "TOKEN_EXPIRED": "انتهت صلاحية الجلسة، يرجى إعادة التفعيل.",
+    "INVALID_TOKEN": "جلسة غير صالحة، يرجى إعادة التفعيل.",
+    "FORBIDDEN": "ليس لديك صلاحية تنفيذ هذا الإجراء.",
+    "NETWORK_ERROR": "تعذر الاتصال بالخادم، تحقق من الإنترنت.",
+    "UNKNOWN_ERROR": "حدث خطأ غير متوقع، حاول لاحقًا."
+  };
+
+  return messages[errorCode] || messages["UNKNOWN_ERROR"];
+}
+
+// ==================== واجهة الرسائل ====================
+function showError(message) {
+  const notification = document.getElementById('saveNotification');
+  notification.querySelector('i').className = 'fas fa-exclamation-circle';
+  notification.querySelector('span').textContent = message;
+  notification.style.background = 'linear-gradient(135deg, #d9534f 0%, #c9302c 100%)';
+  notification.classList.add('show');
+  
+  setTimeout(() => {
+    notification.classList.remove('show');
+  }, 3000);
+}
+
+function showSuccess(message) {
+  const notification = document.getElementById('saveNotification');
+  notification.querySelector('i').className = 'fas fa-check-circle';
+  notification.querySelector('span').textContent = message;
+  notification.style.background = 'linear-gradient(135deg, #066d4d 0%, #05553d 100%)';
+  notification.classList.add('show');
+  
+  setTimeout(() => {
+    notification.classList.remove('show');
+  }, 3000);
+}
+
+// ==================== تفعيل الكود ====================
 async function activateTool() {
     const code = document.getElementById("activationInput").value.trim();
 
     if (!code) {
-        alert("الرجاء إدخال كود التفعيل");
+        showError("يرجى إدخال كود التفعيل");
         return;
     }
 
     try {
-        const res = await fetch("https://tarafbackend.onrender.com/activate", {
+        const response = await fetch(`${API_BASE_URL}/activate`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                code: code
+                code: code,
+                device_id: deviceId
             })
         });
 
-        if (!res.ok) {
-            throw new Error("INVALID_CODE");
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw data.detail || "UNKNOWN_ERROR";
         }
 
-        const data = await res.json();
-
-        // حفظ التوكن النهائي
-        localStorage.setItem("AI_TOKEN", data.token);
-        
-        // حفظ تاريخ انتهاء الصلاحية بتنسيق AI_EXPIRES_AT
-        localStorage.setItem("AI_EXPIRES_AT", data.expires_at);
+        // حفظ التوكن
+        authToken = data.token;
+        localStorage.setItem("auth_token", data.token);
+        localStorage.setItem("auth_expires_at", data.expires_at);
 
         // إخفاء شاشة التفعيل
         document.getElementById("activationScreen").style.display = "none";
 
         // تشغيل الأداة والعداد
+        showSuccess("تم تفعيل الأداة بنجاح ✅");
         initializeApp();
         startSubscriptionCountdown();
 
     } catch (error) {
-        alert("❌ كود التفعيل غير صحيح أو منتهي");
-        localStorage.removeItem("AI_TOKEN");
-        localStorage.removeItem("AI_EXPIRES_AT");
+        const message = getArabicErrorMessage(typeof error === "string" ? error : "NETWORK_ERROR");
+        showError(message);
+        localStorage.removeItem("auth_token");
+        localStorage.removeItem("auth_expires_at");
     }
+}
+
+// ==================== طلبات محمية ====================
+async function secureFetch(url, options = {}) {
+  if (!authToken) {
+    showError("يرجى تفعيل الأداة أولاً");
+    document.getElementById("activationScreen").style.display = "flex";
+    return null;
+  }
+
+  try {
+    const response = await fetch(url, {
+      ...options,
+      headers: {
+        ...(options.headers || {}),
+        "Content-Type": "application/json",
+        "X-Token": authToken,
+        "X-Device-Id": deviceId
+      }
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      if (data.detail === "DEVICE_MISMATCH" || data.detail === "TOKEN_EXPIRED") {
+        localStorage.removeItem("auth_token");
+        localStorage.removeItem("auth_expires_at");
+        showError(getArabicErrorMessage(data.detail));
+        setTimeout(() => {
+          document.getElementById("activationScreen").style.display = "flex";
+        }, 1000);
+        return null;
+      }
+      throw data.detail || "UNKNOWN_ERROR";
+    }
+
+    return data;
+
+  } catch (error) {
+    const message = getArabicErrorMessage(
+      typeof error === "string" ? error : "NETWORK_ERROR"
+    );
+    showError(message);
+    return null;
+  }
 }
 
 // ==================== نظام العد التنازلي المعدل ====================
 function startSubscriptionCountdown() {
     const timerEl = document.getElementById("subscriptionTimer");
-    const expiresAt = localStorage.getItem("AI_EXPIRES_AT");
+    const expiresAt = localStorage.getItem("auth_expires_at");
 
     if (!timerEl || !expiresAt) {
         if (timerEl) timerEl.textContent = "⏳ الاشتراك غير مفعل";
@@ -1960,10 +2135,10 @@ function startSubscriptionCountdown() {
 
         if (diff <= 0) {
             timerEl.textContent = "⛔ انتهت صلاحية الاشتراك";
-            localStorage.clear();
-            // إعادة تحميل الصفحة للعودة إلى شاشة التفعيل
+            localStorage.removeItem("auth_token");
+            localStorage.removeItem("auth_expires_at");
             setTimeout(() => {
-                location.reload();
+                document.getElementById("activationScreen").style.display = "flex";
             }, 2000);
             return;
         }
@@ -1977,7 +2152,6 @@ function startSubscriptionCountdown() {
         const minutes = Math.floor(diff / (1000 * 60));
         const seconds = Math.floor((diff / 1000) % 60);
 
-        // تنسيق الرسالة
         let message = `⏳ ينتهي الاشتراك بعد `;
         
         if (days > 0) {
@@ -2002,7 +2176,6 @@ function startSubscriptionCountdown() {
 }
 
 // ==================== كائن التقارير ====================
-// كائن يحتوي على جميع التقارير مصنفة
 const allReportsByCategory = {
   "التقارير التعليمية الصفية": [
     "تقرير أنشطة صفية",
@@ -2187,7 +2360,7 @@ const allReportsByCategory = {
     "تقرير تصميم الأنشطة اللاصفية",
     "تقرير تحليل محتوى المنهج",
     "تقرير مواءمة المنهج مع نواتج التعلم",
-    "t report تطوير أدوات التقويم",
+    "تقرير تطوير أدوات التقويم",
     "تقرير البحث الإجرائي"
   ],
   "تقارير الجودة واللجان": [
@@ -2238,9 +2411,6 @@ let currentReportType = "";
 let dateMode = 'hijri'; // hijri أو gregorian
 let currentHijriDate = '';
 let currentGregorianDate = '';
-
-// رابط خادم الذكاء الاصطناعي
-const backendAIUrl = 'https://tarafbackend.onrender.com/generate';
 
 // ==================== دوال التحويل والتواريخ ====================
 async function convertHijriToGregorian(hijriDate) {
@@ -2296,7 +2466,7 @@ function autoFill(id){
         document.getElementById(id).value = texts[id][counters[id]];
         updateReport();
     } else {
-        alert("لا توجد نصوص ذكية متاحة لهذا الحقل في التقرير الحالي");
+        showError("لا توجد نصوص ذكية متاحة لهذا الحقل في التقرير الحالي");
     }
 }
 
@@ -2657,18 +2827,7 @@ function saveTeacherData(){
     });
     
     localStorage.setItem('teacherData', JSON.stringify(teacherData));
-    showNotification('تم حفظ بيانات المعلم بنجاح!');
-}
-
-// دالة لعرض الإشعارات
-function showNotification(message) {
-    const notification = document.getElementById('saveNotification');
-    notification.querySelector('span').textContent = message;
-    notification.classList.add('show');
-    
-    setTimeout(() => {
-        notification.classList.remove('show');
-    }, 3000);
+    showSuccess('تم حفظ بيانات المعلم بنجاح!');
 }
 
 // دالة لتحميل بيانات المعلم المحفوظة عند تشغيل الصفحة
@@ -2731,30 +2890,25 @@ function loadTeacherData() {
     }
 }
 
-// دالة الذكاء الاصطناعي
+// دالة الذكاء الاصطناعي - تم التعديل لاستخدام secureFetch
 async function fillWithAI() {
-    // التحقق من التفعيل أولاً
-    const token = localStorage.getItem("AI_TOKEN");
-    if (!token) {
-        alert("يرجى تفعيل الأداة أولاً");
+    if (!authToken) {
+        showError("يرجى تفعيل الأداة أولاً");
         document.getElementById("activationScreen").style.display = "flex";
         return;
     }
     
-    // التحقق من اتصال الإنترنت
     if (!navigator.onLine) {
-        alert('لا يوجد اتصال بالإنترنت. الرجاء التأكد من الاتصال');
+        showError('لا يوجد اتصال بالإنترنت. الرجاء التأكد من الاتصال');
         return;
     }
     
-    // الحصول على نوع التقرير
     const reportType = getReportTypeText();
     if (!reportType || reportType === 'تقرير') {
-        alert('الرجاء اختيار أو إدخال نوع التقرير أولاً');
+        showError('الرجاء اختيار أو إدخال نوع التقرير أولاً');
         return;
     }
     
-    // الحصول على معلومات إضافية
     const subject = document.getElementById('subject').value || '';
     const lesson = document.getElementById('lesson').value || '';
     const grade = document.getElementById('grade').value || '';
@@ -2762,7 +2916,6 @@ async function fillWithAI() {
     const place = document.getElementById('place').value || '';
     const count = document.getElementById('count').value || '';
     
-    // عرض مؤشر التحميل
     const aiButton = document.getElementById('aiFillBtn');
     const originalText = aiButton.querySelector('.btn-text').textContent;
     const originalIcon = aiButton.querySelector('.btn-icon').className;
@@ -2820,12 +2973,8 @@ ${count ? `عدد الحضور: ${count}` : ''}
 
 يرجى تقديم الإجابة باللغة العربية الفصحى، وتنظيمها بحيث يكون كل حقل في سطر منفصل يبدأ برقمه فقط دون ذكر العنوان.`;
 
-        const response = await fetch(backendAIUrl, {
+        const data = await secureFetch(`${API_BASE_URL}/generate`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Token': token
-            },
             body: JSON.stringify({
                 prompt: prompt,
                 reportData: {
@@ -2840,23 +2989,17 @@ ${count ? `عدد الحضور: ${count}` : ''}
             })
         });
 
-        if (!response.ok) {
-            throw new Error(`خطأ في الاتصال بالخادم: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        if (!data || !data.answer) {
+        if (!data) {
             throw new Error('فشل التوليد من السيرفر');
         }
 
         const aiResponse = data.answer;
         parseAIResponseProfessional(aiResponse);
-        showNotification('تم تعبئة الحقول باستخدام الذكاء الاصطناعي بنجاح! ✓');
+        showSuccess('تم تعبئة الحقول باستخدام الذكاء الاصطناعي بنجاح! ✓');
         
     } catch (error) {
         console.error('خطأ في الذكاء الاصطناعي:', error);
-        alert(`خطأ: ${error.message}\n\nتأكد من اتصال الإنترنت`);
+        showError(`خطأ: ${error.message}\n\nتأكد من اتصال الإنترنت`);
     } finally {
         if (loadingIndicator) {
             loadingIndicator.style.display = 'none';
@@ -2911,7 +3054,6 @@ function parseAIResponseProfessional(response) {
     updateReport();
 }
 
-// دالة لإزالة عناوين الحقول من النص
 function removeFieldTitles(content) {
     const fieldTitles = [
         'الهدف التربوي', 'الهدف التربوي', ,
@@ -2941,7 +3083,6 @@ function removeFieldTitles(content) {
     return cleanedContent || content;
 }
 
-// دالة لتأكيد عدد الكلمات مع لمسة مهنية
 function ensureWordCount(content, targetWords) {
     const words = content.split(' ');
     
@@ -2981,7 +3122,6 @@ function ensureWordCount(content, targetWords) {
     return content;
 }
 
-// دالة لإضافة لمسة مهنية للمحتوى
 function addProfessionalTouch(content, fieldId) {
     const words = content.split(' ');
     if (words.length >= 20) return content;
@@ -3003,7 +3143,6 @@ function addProfessionalTouch(content, fieldId) {
     return content;
 }
 
-// نهج بديل محسن لتحليل الاستجابة المهنية
 function fallbackProfessionalAIParsing(response) {
     const sentences = response.split(/[\.\n]/).filter(s => {
         const trimmed = s.trim();
@@ -3124,7 +3263,7 @@ async function downloadPDF(){
         document.body.style.margin = "";
         document.body.style.background = "#f9fcfb";
         reportContent.style.display = 'none';
-        showNotification("تم تنزيل التقرير بصيغة PDF ✓");
+        showSuccess("تم تنزيل التقرير بصيغة PDF ✓");
     });
 }
 
@@ -3263,11 +3402,9 @@ function handleReportType() {
     const manualTitleInput = document.getElementById('manualReportTitle');
     
     if (reportTypeSelect.value) {
-        // إذا تم اختيار تقرير من القائمة
         manualTitleInput.value = reportTypeSelect.value;
         updateReport();
     } else if (reportTypeInput.value) {
-        // إذا تم إدخال تقرير يدوياً
         manualTitleInput.value = reportTypeInput.value;
         updateReport();
     }
@@ -3305,22 +3442,31 @@ function initializeApp() {
 
 // ==================== عند تحميل الصفحة ====================
 document.addEventListener("DOMContentLoaded", function() {
-    const token = localStorage.getItem("AI_TOKEN");
-    const expiresAt = localStorage.getItem("AI_EXPIRES_AT");
+    authToken = localStorage.getItem("auth_token");
+    const expiresAt = localStorage.getItem("auth_expires_at");
     
-    if (token && expiresAt) {
-        // المستخدم مفعل سابقًا - عرض التطبيق مباشرة
-        document.getElementById("activationScreen").style.display = "none";
-        initializeApp();
-        startSubscriptionCountdown(); // بدء العد التنازلي المعدل
-    } else {
-        // المستخدم غير مفعل - عرض شاشة التفعيل
-        document.getElementById("activationScreen").style.display = "flex";
-        // إظهار رسالة في العداد
-        const timerEl = document.getElementById("subscriptionTimer");
-        if (timerEl) {
-            timerEl.textContent = "⏳ الاشتراك غير مفعل";
+    if (authToken && expiresAt) {
+        const expiresTime = new Date(expiresAt).getTime();
+        const now = Date.now();
+        
+        if (expiresTime > now) {
+            document.getElementById("activationScreen").style.display = "none";
+            initializeApp();
+            startSubscriptionCountdown();
+            showSuccess("تم تحميل التفعيل السابق بنجاح ✓");
+        } else {
+            localStorage.removeItem("auth_token");
+            localStorage.removeItem("auth_expires_at");
+            authToken = null;
+            document.getElementById("activationScreen").style.display = "flex";
         }
+    } else {
+        document.getElementById("activationScreen").style.display = "flex";
+    }
+    
+    const timerEl = document.getElementById("subscriptionTimer");
+    if (timerEl && !authToken) {
+        timerEl.textContent = "⏳ الاشتراك غير مفعل";
     }
 });
 </script>
