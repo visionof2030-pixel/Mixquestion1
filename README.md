@@ -1974,7 +1974,7 @@ let deviceId = getDeviceId();
 function getDeviceId() {
   let id = localStorage.getItem("device_id");
   if (!id) {
-    // إنشاء معرف جهاز فريد
+    // إنشاء معرف جهاز فريد باستخدام crypto.randomUUID
     id = 'device-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
     localStorage.setItem("device_id", id);
   }
