@@ -2047,32 +2047,30 @@ async function activateTool() {
 
         const data = await response.json();
 
+        // ✅ هنا كان الخطأ
         if (!response.ok) {
-            throw data.detail || "UNKNOWN_ERROR";
+            throw (typeof data.detail === "string"
+                ? data.detail
+                : data.detail?.code || "UNKNOWN_ERROR");
         }
 
-        // حفظ التوكن
+        // ✅ نجاح التفعيل
         authToken = data.token;
         localStorage.setItem("auth_token", data.token);
         localStorage.setItem("auth_expires_at", data.expires_at);
 
-        // إخفاء شاشة التفعيل
         document.getElementById("activationScreen").style.display = "none";
 
-        // تشغيل الأداة والعداد
-        showSuccess("تم تفعيل الأداة بنجاح ✅");
+        showSuccess("✅ تم تفعيل الأداة بنجاح");
         initializeApp();
         startSubscriptionCountdown();
 
-    } catch (error) {
-        const message = getArabicErrorMessage(typeof error === "string" ? error : "NETWORK_ERROR");
-        showError(message);
+    } catch (errorCode) {
+        showError(getArabicErrorMessage(errorCode));
         localStorage.removeItem("auth_token");
         localStorage.removeItem("auth_expires_at");
     }
-}
-
-// ==================== طلبات محمية ====================
+}// ==================== طلبات محمية ====================
 async function secureFetch(url, options = {}) {
   if (!authToken) {
     showError("يرجى تفعيل الأداة أولاً");
