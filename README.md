@@ -2326,7 +2326,7 @@ window.__ACTIVATED__ = false;
 
 // ==================== متغيرات التفعيل ====================
 const ACTIVATION_KEY_NAME = "activation_code";
-const BACKEND_URL = "https://deep-qphc.onrender.com";
+const BACKEND_URL = "https://tarafbackend.onrender.com";
 
 function hideActivationScreen() {
     if (window.__ACTIVATED__) {
