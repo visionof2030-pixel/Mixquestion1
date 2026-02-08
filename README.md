@@ -2938,8 +2938,18 @@ ${count ? `عدد الحضور: ${count}` : ''}
         });
 
         if (!response.ok) {
-            throw new Error(`خطأ في المفتاح ${availableKey.id}: ${response.status}`);
+    let errorMessage = "حدث خطأ غير متوقع";
+
+    try {
+        const errData = await response.json();
+        if (errData.detail) {
+            errorMessage = errData.detail; // ← الرسالة العربية من الباك
         }
+    } catch (_) {}
+
+    throw new Error(errorMessage);
+}
+        
 
         const data = await response.json();
         
@@ -3582,8 +3592,25 @@ ${count ? `عدد الحضور: ${count}` : ''}
         });
 
         if (!response.ok) {
-            throw new Error(`خطأ في الاتصال بالخادم: ${response.status}`);
+    let errorMessage = "تعذر تنفيذ الطلب";
+
+    try {
+        const errData = await response.json();
+
+        if (errData.detail) {
+            const map = {
+                "Usage limit reached": "تم استهلاك عدد الاستخدامات المسموح بها لهذا الكود",
+                "Activation code expired": "انتهت صلاحية كود التفعيل",
+                "Activation code disabled": "كود التفعيل غير مفعل",
+                "Invalid activation code": "كود التفعيل غير صحيح"
+            };
+
+            errorMessage = map[errData.detail] || errData.detail;
         }
+    } catch (_) {}
+
+    throw new Error(errorMessage);
+}
 
         const data = await response.json();
         
@@ -3596,9 +3623,13 @@ ${count ? `عدد الحضور: ${count}` : ''}
         showNotification('تم تعبئة الحقول باستخدام الذكاء الاصطناعي بنجاح! ✓');
         
     } catch (error) {
-        console.error('خطأ في الذكاء الاصطناعي:', error);
-        alert(`خطأ: ${error.message}\n\nتأكد من:\n1. اتصال الإنترنت\n2. أن خادم Backend يعمل على الرابط: ${backendAIUrl}`);
-    } finally {
+    console.error('خطأ في الذكاء الاصطناعي:', error);
+
+    alert(
+    error.message ||
+    "تعذر تنفيذ الطلب.\n\nيرجى التأكد من صلاحية كود التفعيل وعدم استهلاك عدد الاستخدامات."
+);
+} finally {
         if (loadingIndicator) {
             loadingIndicator.style.display = 'none';
         }
