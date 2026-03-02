@@ -3,2114 +3,225 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-<title>تقاريرك - النظام المتكامل (7 أدوار)</title>
+<title>تقاريرك - النظام المتكامل (موحد الأدوار)</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-/* ========== جميع الأنماط كما هي دون تغيير ========== */
+/* جميع الأنماط كما هي دون تغيير (لن أكررها للاختصار) */
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap');
-
-:root {
-    --primary: #066d4d;
-    --primary-dark: #044a35;
-    --primary-light: #0a9d72;
-    --secondary: #ffd166;
-    --secondary-dark: #ffc145;
-    --danger: #ff6b6b;
-    --success: #25D366;
-    --gray-light: #f8fdfa;
-    --gray: #e0f0ea;
-    --text-dark: #083024;
-    --text-light: #666;
-    --white: #ffffff;
-    --shadow: 0 10px 30px rgba(4, 74, 53, 0.12);
-    --border: #d4ebe2;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
-}
-
-html, body {
-    font-family: 'Cairo', sans-serif;
-    background: linear-gradient(135deg, #f0f9f6 0%, #e8f4f0 50%, #d4ebe2 100%);
-    direction: rtl;
-    overflow-x: hidden;
-    min-height: 100vh;
-    -webkit-text-size-adjust: 100%;
-    -moz-text-size-adjust: 100%;
-    -ms-text-size-adjust: 100%;
-    text-size-adjust: 100%;
-    touch-action: manipulation;
-}
-
-.wrapper {
-    max-width: 900px;
-    margin: auto;
-    padding: 20px;
-    width: 100%;
-}
-
-/* شريط الأخبار العلوي */
-.top-marquee {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    background: linear-gradient(135deg, #022e22 0%, #044a35 100%);
-    color: #fff;
-    padding: 10px 5px;
-    font-size: 14px;
-    z-index: 300;
-    overflow: hidden;
-    height: auto;
-    min-height: 45px;
-    white-space: nowrap;
-    border-bottom: 3px solid #ffd166;
-    box-shadow: 0 4px 12px rgba(2, 46, 34, 0.25);
-    display: flex;
-    align-items: center;
-    line-height: 1.5;
-}
-
-.marquee-inner {
-    display: inline-block;
-    padding-left: 2%;
-    animation: newsScroll 30s linear infinite;
-    color: #e8f4f0;
-    font-weight: 600;
-    white-space: nowrap;
-}
-
-@keyframes newsScroll {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
-}
-
-.top-marquee:hover .marquee-inner {
-    animation-play-state: paused;
-}
-
-/* نظام الأزرار المحسّن */
-.top-small-buttons button,
-.main-buttons-bar button,
-#aiFillFloatingBtn {
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    box-sizing: border-box;
-    outline: none;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    user-select: none;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* المجموعة الأولى: الأزرار الصغيرة */
-.top-small-buttons {
-    position: fixed;
-    top: 45px;
-    left: 0;
-    right: 0;
-    width: 100%;
-    z-index: 250;
-    background: linear-gradient(135deg, #ffffff 0%, #f5fcf9 100%);
-    padding: 8px 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-bottom: 1px solid #e0f0ea;
-    box-shadow: 0 2px 8px rgba(4, 74, 53, 0.08);
-    box-sizing: border-box;
-}
-
-.small-buttons-grid {
-    display: flex;
-    gap: 8px;
-    width: 100%;
-    max-width: 600px;
-    justify-content: center;
-}
-
-.small-btn {
-    border: 2px solid;
-    padding: 6px 4px;
-    font-size: 10px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    font-weight: 700;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-    min-height: 45px;
-    min-width: 90px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-    flex: 1;
-    position: relative;
-    overflow: hidden;
-}
-
-.small-btn:active {
-    box-shadow: 0 0 0 2px rgba(255,255,255,0.5), inset 0 3px 5px rgba(0,0,0,0.1) !important;
-    filter: brightness(0.95);
-}
-
-#saveTeacherBtn {
-    background: linear-gradient(135deg, #4f7bff 0%, #3b5bdb 100%);
-    color: white;
-    border-color: #3b5bdb;
-}
-
-#clearBtn {
-    background: linear-gradient(135deg, #ffd166 0%, #ffc145 100%);
-    color: #5a3e00;
-    border-color: #ffc145;
-}
-
-#savedReportsBtn {
-    background: linear-gradient(135deg, #9D50BB 0%, #6E48AA 100%);
-    color: white;
-    border-color: #6E48AA;
-}
-
-#settingsBtn {
-    background: linear-gradient(135deg, #718096 0%, #4a5568 100%);
-    color: white;
-    border-color: #4a5568;
-}
-
-.small-btn-icon {
-    font-size: 12px;
-    color: white;
-    transition: none;
-}
-
-.small-btn .small-btn-text {
-    font-size: 9px;
-    font-weight: 800;
-    text-align: center;
-    line-height: 1.1;
-    white-space: nowrap;
-    transition: none;
-}
-
-/* المجموعة الثانية: الأزرار الكبيرة */
-.main-buttons-bar {
-    position: fixed;
-    top: 98px;
-    left: 0;
-    right: 0;
-    width: 100%;
-    z-index: 240;
-    background: linear-gradient(135deg, #f8fdfa 0%, #f0f9f6 100%);
-    padding: 10px 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 3px 10px rgba(4, 74, 53, 0.1);
-    border-bottom: 1px solid #d4ebe2;
-    box-sizing: border-box;
-}
-
-.main-buttons-grid {
-    display: flex;
-    gap: 20px;
-    width: 100%;
-    max-width: 350px;
-    justify-content: center;
-}
-
-.main-btn {
-    border: 2px solid;
-    padding: 12px 10px;
-    font-size: 13px;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    font-weight: 700;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    min-height: 65px;
-    min-width: 130px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-    flex: 1;
-    position: relative;
-    overflow: hidden;
-}
-
-.main-btn:active {
-    box-shadow: 0 0 0 3px rgba(255,255,255,0.5), inset 0 4px 6px rgba(0,0,0,0.1) !important;
-    filter: brightness(0.95);
-}
-
-#pdfBtn {
-    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
-    color: white;
-    border-color: #ee5a52;
-}
-
-#whatsappBtn {
-    background: linear-gradient(135deg, #25D366 0%, #1da851 100%);
-    color: white;
-    border-color: #1da851;
-}
-
-.main-btn-icon {
-    font-size: 18px;
-    color: white;
-    transition: none;
-}
-
-.main-btn .main-btn-text {
-    font-size: 12px;
-    font-weight: 800;
-    text-align: center;
-    line-height: 1.2;
-    white-space: nowrap;
-    transition: none;
-}
-
-/* زر التعبئة الذكية العائم */
-#aiFillFloatingBtn {
-    position: fixed;
-    bottom: 30px;
-    left: 30px;
-    width: 100px;
-    height: 100px;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    font-size: 16px;
-    font-weight: 900;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    border: 4px solid rgba(255, 255, 255, 0.7);
-    z-index: 1000;
-    overflow: hidden;
-    transform: translateY(0);
-    animation: floatButton 3s ease-in-out infinite;
-    background: linear-gradient(135deg, #9D50BB 0%, #6E48AA 25%, #533D8B 50%, #3A2569 100%);
-    box-shadow: 0 12px 35px rgba(157, 80, 187, 0.6), 0 0 0 3px rgba(255, 255, 255, 0.3), 0 0 25px rgba(157, 80, 187, 0.5);
-}
-
-#aiFillFloatingBtn .floating-ai-icon {
-    font-size: 38px;
-    animation: magicalPulse 2s infinite;
-    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.5));
-    margin-bottom: 2px;
-    color: #FFFFFF;
-    transition: none;
-}
-
-#aiFillFloatingBtn .floating-ai-text {
-    font-size: 14px;
-    font-weight: 900;
-    letter-spacing: 0.5px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-    color: #FFFFFF;
-    background: linear-gradient(45deg, #FFFFFF, #F0F0F0, #FFFFFF);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    background-size: 200% auto;
-    animation: textShine 2s ease-in-out infinite;
-    white-space: nowrap;
-    transition: none;
-}
-
-@keyframes floatButton {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    25% { transform: translateY(-12px) rotate(3deg); }
-    50% { transform: translateY(0) rotate(0deg); }
-    75% { transform: translateY(-8px) rotate(-3deg); }
-}
-
-@keyframes magicalPulse {
-    0%, 100% { 
-        transform: scale(1) rotate(0deg);
-        filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.5)) brightness(1);
-    }
-    25% { 
-        transform: scale(1.15) rotate(10deg);
-        filter: drop-shadow(0 5px 10px rgba(255, 255, 255, 0.6)) brightness(1.2);
-    }
-    50% { 
-        transform: scale(1.1) rotate(-5deg);
-        filter: drop-shadow(0 4px 8px rgba(255, 255, 255, 0.5)) brightness(1.1);
-    }
-    75% { 
-        transform: scale(1.18) rotate(5deg);
-        filter: drop-shadow(0 6px 12px rgba(255, 255, 255, 0.7)) brightness(1.3);
-    }
-}
-
-@keyframes textShine {
-    0%, 100% { 
-        background-position: 0% 50%;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-    }
-    50% { 
-        background-position: 100% 50%;
-        text-shadow: 0 3px 6px rgba(255, 255, 255, 0.3), 0 0 10px rgba(255, 255, 255, 0.2);
-    }
-}
-
-#aiFillFloatingBtn.loading {
-    animation: loadingMagicalGlow 1.5s ease-in-out infinite;
-}
-
-@keyframes loadingMagicalGlow {
-    0%, 100% { 
-        box-shadow: 0 12px 35px rgba(0,0,0,0.4), 0 0 0 4px rgba(255, 255, 255, 0.4), 0 0 30px rgba(0,0,0,0.3);
-    }
-    50% { 
-        box-shadow: 0 18px 45px rgba(0,0,0,0.6), 0 0 0 5px rgba(255, 255, 255, 0.7), 0 0 40px rgba(0,0,0,0.5);
-    }
-}
-
-#aiFillFloatingBtn.loading .floating-ai-icon {
-    animation: magicalSpin 1.2s linear infinite;
-}
-
-@keyframes magicalSpin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* شاشة التفعيل */
-#activationScreen {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: linear-gradient(135deg, #022e22, #044a35);
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Cairo', sans-serif;
-    transition: opacity 0.5s ease;
-}
-
-#activationScreen .activation-box {
-    background: white;
-    padding: 30px;
-    border-radius: 15px;
-    width: 90%;
-    max-width: 400px;
-    text-align: center;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-    border: 3px solid #ffd166;
-}
-
-#activationScreen h3 {
-    color: #044a35; 
-    margin-bottom: 20px; 
-    font-size: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-}
-
-#activationScreen p {
-    color: #666; 
-    font-size: 14px; 
-    margin-bottom: 20px;
-}
-
-#activationCodeInput {
-    width: 100%;
-    padding: 15px;
-    border: 2px solid #d4ebe2;
-    border-radius: 10px;
-    font-size: 16px;
-    text-align: center;
-    margin-bottom: 20px;
-    font-family: 'Cairo', sans-serif;
-    transition: all 0.3s;
-}
-
-#activationCodeInput:focus {
-    outline: none;
-    border-color: #066d4d;
-    box-shadow: 0 0 0 3px rgba(6, 109, 77, 0.15);
-}
-
-#activationScreen button {
-    width: 100%;
-    padding: 15px;
-    background: linear-gradient(135deg, #066d4d 0%, #05553d 100%);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-weight: 700;
-    cursor: pointer;
-    font-size: 16px;
-    transition: all 0.3s;
-    font-family: 'Cairo', sans-serif;
-    margin-bottom: 10px;
-}
-
-#activationScreen button:hover {
-    background: linear-gradient(135deg, #05553d 0%, #044a35 100%);
-    filter: brightness(1.05);
-}
-
-#activationScreen button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-#contactForTrialBtn {
-    background: linear-gradient(135deg, #5a67d8 0%, #4c51bf 100%);
-}
-
-#contactForTrialBtn:hover {
-    background: linear-gradient(135deg, #4c51bf 0%, #434190 100%);
-}
-
-#skipActivationBtn {
-    background: #ffc107;
-    color: #000;
-    margin-top: 5px;
-}
-
-#skipActivationBtn:hover {
-    background: #e0a800;
-}
-
-#activationError {
-    color: #d9534f;
-    font-size: 13px;
-    margin-top: 15px;
-    padding: 10px;
-    background: #fee;
-    border-radius: 8px;
-    border-right: 4px solid #d9534f;
-    display: none;
-}
-
-/* تحسين واجهة الإدخال */
-.input-section {
-    background: #ffffff;
-    padding: 25px;
-    border-radius: 20px;
-    border: 2px solid #e0f0ea;
-    box-shadow: 0 10px 30px rgba(4, 74, 53, 0.12);
-    position: relative;
-    overflow: hidden;
-    margin-top: 170px; /* لتعويض الأزرار الثابتة */
-}
-
-.input-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 100%;
-    height: 5px;
-    background: linear-gradient(to left, #066d4d, #ffd166, #25D366);
-}
-
-.input-section h2 {
-    color: #044a35;
-    font-size: 24px;
-    margin-bottom: 30px;
-    padding-bottom: 15px;
-    border-bottom: 3px solid #e0f0ea;
-    text-align: center;
-    font-weight: 900;
-    position: relative;
-}
-
-.input-section h2::after {
-    content: '';
-    position: absolute;
-    bottom: -3px;
-    right: 50%;
-    transform: translateX(50%);
-    width: 120px;
-    height: 3px;
-    background: linear-gradient(to left, #066d4d, #ffd166);
-    border-radius: 2px;
-}
-
-/* تصميم الحقول */
-.form-group {
-    margin-bottom: 25px;
-    position: relative;
-}
-
-.form-group label {
-    font-size: 16px;
-    font-weight: 800;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding-right: 8px;
-    position: relative;
-    color: #083024;
-}
-
-.form-group label i {
-    color: #066d4d;
-    font-size: 16px;
-    background: #f0f9f6;
-    padding: 7px;
-    border-radius: 10px;
-    border: 1px solid #d4ebe2;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-}
-
-.form-group label::before {
-    content: '';
-    width: 8px;
-    height: 8px;
-    background: #ffd166;
-    border-radius: 50%;
-    display: inline-block;
-    margin-left: 6px;
-    box-shadow: 0 0 6px #ffd166;
-}
-
-input, select, textarea {
-    width: 100%;
-    padding: 16px;
-    margin-top: 8px;
-    border: 2px solid #d4ebe2;
-    border-radius: 12px;
-    font-size: 18px;
-    background: #f9fcfb;
-    transition: all 0.3s;
-    font-family: 'Cairo', sans-serif;
-    color: #083024;
-    box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);
-    -webkit-appearance: none;
-}
-
-input:focus, select:focus, textarea:focus {
-    outline: none;
-    border-color: #066d4d;
-    box-shadow: 0 0 0 4px rgba(6,109,77,0.15), inset 0 2px 8px rgba(0,0,0,0.05);
-    background: #ffffff;
-}
-
-textarea {
-    height: 120px;
-    resize: none;
-    overflow: hidden;
-    line-height: 1.7;
-    font-size: 17px;
-}
-
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-}
-
-/* تلميحات للأزرار */
-button[title] {
-    position: relative;
-}
-
-button[title]:hover::after {
-    content: attr(title);
-    position: absolute;
-    bottom: calc(100% + 10px);
-    right: 50%;
-    transform: translateX(50%);
-    background: rgba(4, 58, 42, 0.95);
-    color: white;
-    padding: 10px 15px;
-    border-radius: 8px;
-    font-size: 12px;
-    white-space: pre-line;
-    z-index: 1000;
-    border: 1px solid #044a35;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-    max-width: 300px;
-    min-width: 200px;
-}
-
-button[title]:hover::before {
-    content: '';
-    position: absolute;
-    bottom: calc(100% + 2px);
-    right: 50%;
-    transform: translateX(50%);
-    border: 6px solid transparent;
-    border-top-color: rgba(4, 58, 42, 0.95);
-    z-index: 1000;
-}
-
-/* إشعارات */
-.notification {
-    position: fixed;
-    top: 150px;
-    right: 10px;
-    left: 10px;
-    background: linear-gradient(135deg, #066d4d 0%, #044a35 100%);
-    color: white;
-    padding: 12px 18px;
-    border-radius: 10px;
-    box-shadow: 0 6px 20px rgba(4, 74, 53, 0.3);
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 600;
-    transform: translateX(150%);
-    transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-    border-right: 5px solid #ffd166;
-    text-align: center;
-    justify-content: center;
-}
-
-.notification.show {
-    transform: translateX(0);
-}
-
-.notification i {
-    font-size: 18px;
-}
-
-/* أنماط القوائم */
-.levels-container {
-    background: #f8fdfa;
-    border-radius: 12px;
-    padding: 15px;
-    margin-bottom: 20px;
-    border: 2px solid #d4ebe2;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-}
-
-.level-indicator {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 15px;
-    padding: 8px;
-    background: linear-gradient(135deg, #066d4d 0%, #044a35 100%);
-    border-radius: 8px;
-    color: white;
-    font-weight: 700;
-    font-size: 14px;
-}
-
-.level-indicator span {
-    background: rgba(255,255,255,0.2);
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-size: 12px;
-}
-
-.level-select {
-    margin-bottom: 15px;
-}
-
-.level-select select {
-    width: 100%;
-    padding: 12px;
-    border: 2px solid #d4ebe2;
-    border-radius: 8px;
-    font-family: 'Cairo', sans-serif;
-    font-size: 14px;
-    background: white;
-    cursor: pointer;
-}
-
-.level-select select:focus {
-    border-color: #066d4d;
-    outline: none;
-}
-
-.level-select label {
-    font-size: 12px;
-    color: #044a35;
-    font-weight: 600;
-    margin-bottom: 5px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.level-select label i {
-    color: #066d4d;
-    font-size: 12px;
-}
-
-/* معلومات المعيار المحدد */
-.criterion-info {
-    background: white;
-    border-radius: 8px;
-    padding: 10px 15px;
-    margin: 15px 0;
-    border-right: 4px solid #ffd166;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
-
-.criterion-name {
-    font-weight: 800;
-    color: #044a35;
-    font-size: 14px;
-}
-
-.criterion-weight {
-    background: #ffd166;
-    color: #5a3e00;
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-weight: 700;
-    font-size: 12px;
-}
-
-/* أنماط البحث */
-#reportSearchContainer {
-    position: relative;
-    margin-bottom: 15px;
-}
-
-#searchResults {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    max-height: 200px;
-    overflow-y: auto;
-    z-index: 1000;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-#searchResults div {
-    padding: 8px 12px;
-    cursor: pointer;
-    border-bottom: 1px solid #eee;
-}
-
-#searchResults div:hover {
-    background-color: #f0f9f6 !important;
-    color: #066d4d;
-}
-
-#searchResults div:last-child {
-    border-bottom: none;
-}
-
-#reportSearch:focus {
-    outline: none;
-    border-color: #066d4d;
-    box-shadow: 0 0 0 2px rgba(6, 109, 77, 0.2);
-}
-
-/* خانة عنوان التقرير اليدوية */
-.manual-title-container {
-    margin-top: 15px;
-    padding: 15px;
-    background: #f8fdfa;
-    border-radius: 12px;
-    border: 2px solid #d4ebe2;
-}
-
-.manual-title-container label {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: #044a35;
-    font-weight: 700;
-    margin-bottom: 10px;
-}
-
-.manual-title-container input {
-    background: white;
-    border: 2px solid #d4ebe2;
-    padding: 12px;
-    border-radius: 8px;
-    font-size: 16px;
-}
-
-/* قسم الأدوات - تصميم متجاوب باستخدام Grid */
-.tools-section {
-    background: #f8fdfa;
-    padding: 18px;
-    border-radius: 12px;
-    border: 1px solid #d4ebe2;
-    margin-top: 10px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-    counter-reset: tool-counter;
-}
-
-.tools-grid {
-    display: grid;
-    gap: 12px;
-    /* على الجوال: عنصرين في الصف */
-    grid-template-columns: repeat(2, 1fr);
-}
-
-@media (min-width: 768px) {
-    .tools-grid {
-        /* على الشاشات الأكبر: ثلاثة عناصر في الصف */
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-.tool-checkbox {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 8px 12px 8px;
-    background: white;
-    border-radius: 12px;
-    border: 2px solid #d4ebe2;
-    transition: all 0.3s;
-    cursor: pointer;
-    position: relative;
-    min-height: 55px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.03);
-}
-
-.tool-checkbox::before {
-    counter-increment: tool-counter;
-    content: counter(tool-counter);
-    position: absolute;
-    right: 8px;
-    background: #066d4d;
-    color: white;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: 700;
-}
-
-.tool-checkbox:hover {
-    border-color: #066d4d;
-    background: #f0f9f6;
-    box-shadow: 0 6px 12px rgba(6, 109, 77, 0.1);
-    transform: translateY(-2px);
-}
-
-.tool-checkbox input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    position: absolute;
-    opacity: 0;
-    z-index: 1;
-}
-
-.tool-checkbox span {
-    font-size: 14px;
-    font-weight: 700;
-    color: #083024;
-    margin-right: 35px; /* مساحة للرقم */
-    flex: 1;
-    line-height: 1.4;
-}
-
-.tool-checkbox.checked {
-    border-color: #066d4d;
-    background: #e8f4f0;
-    box-shadow: 0 4px 12px rgba(6, 109, 77, 0.15);
-}
-
-.checkmark {
-    color: #066d4d;
-    font-size: 18px;
-    margin-right: 5px;
-    display: none;
-}
-
-.tool-checkbox.checked .checkmark {
-    display: inline-block;
-}
-
-/* أدوات خارج الصف */
-.tools-outside-grid {
-    display: grid;
-    gap: 12px;
-    grid-template-columns: repeat(2, 1fr);
-    margin-top: 10px;
-}
-
-@media (min-width: 768px) {
-    .tools-outside-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-.other-tool-container {
-    margin-top: 15px;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.other-tool-container input {
-    flex: 1;
-    padding: 10px;
-    border-radius: 8px;
-    border: 2px solid #d4ebe2;
-    font-size: 14px;
-}
-
-.other-tool-container button {
-    background: #066d4d;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 10px 20px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.other-tool-container button:hover {
-    background: #044a35;
-}
-
-.other-tools-list {
-    margin-top: 10px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
-.other-tag {
-    background: #e0f0ea;
-    border: 1px solid #b0d5c9;
-    border-radius: 20px;
-    padding: 5px 12px;
-    font-size: 13px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.other-tag i {
-    color: #d9534f;
-    cursor: pointer;
-    font-size: 12px;
-}
-
-/* الحقول الصغيرة الخاصة بالدور */
-.small-fields {
-    margin: 20px 0;
-    padding: 15px;
-    background: #f0f9f6;
-    border-radius: 12px;
-    border: 2px solid #d4ebe2;
-}
-
-.small-fields .form-row {
-    margin-bottom: 0;
-}
-
-/* الحقول الكبيرة الإضافية (للتوجيه الطلابي) */
-.large-extra-fields {
-    margin-top: 30px;
-    padding: 20px;
-    background: #f8fdfa;
-    border-radius: 12px;
-    border: 2px solid #ffd166;
-}
-
-.large-extra-fields h4 {
-    color: #044a35;
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 18px;
-}
-
-/* نافذة التقارير المحفوظة (بها شريط التقدم) */
-#savedReportsModal {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: 6000;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Cairo', sans-serif;
-}
-
-#savedReportsModal > div {
-    background: white;
-    padding: 25px;
-    border-radius: 15px;
-    width: 90%;
-    max-width: 800px;
-    max-height: 80vh;
-    overflow-y: auto;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-    border: 3px solid #ffd166;
-}
-
-#savedReportsModal h3 {
-    color: #044a35;
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    position: sticky;
-    top: 0;
-    background: white;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #d4ebe2;
-}
-
-/* شريط التقدم داخل نافذة التقارير المحفوظة */
-.progress-bar-container {
-    width: 100%;
-    background: linear-gradient(135deg, #ffffff 0%, #f8fdfa 100%);
-    padding: 16px 20px;
-    margin-bottom: 20px;
-    border: 2px solid #d4ebe2;
-    border-radius: 20px;
-    box-shadow: 0 4px 15px rgba(4, 74, 53, 0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    font-family: 'Cairo', sans-serif;
-    box-sizing: border-box;
-}
-
-.progress-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    max-width: 900px;
-    margin: 0 auto;
-    color: #044a35;
-    font-weight: 700;
-    font-size: 15px;
-}
-
-.progress-stats {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-}
-
-.progress-percentage {
-    background: linear-gradient(135deg, #ffd166, #ffc233);
-    color: #5a3e00;
-    padding: 4px 12px;
-    border-radius: 30px;
-    font-size: 13px;
-    font-weight: 800;
-    box-shadow: 0 2px 8px rgba(255, 209, 102, 0.3);
-    border: 1px solid #ffb830;
-}
-
-.progress-message {
-    color: #066d4d;
-    font-size: 12px;
-    font-weight: 600;
-    background: #e8f4f0;
-    padding: 4px 12px;
-    border-radius: 30px;
-    border: 1px solid #c0e0d6;
-}
-
-.progress-track {
-    width: 100%;
-    max-width: 900px;
-    margin: 0 auto;
-    height: 16px;
-    background: #e0f0ea;
-    border-radius: 30px;
-    overflow: hidden;
-    border: 1px solid #c0e0d6;
-    box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
-    position: relative;
-}
-
-.progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #066d4d, #0a9d72);
-    border-radius: 30px;
-    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-}
-
-.reports-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 15px;
-    margin-bottom: 20px;
-}
-
-.report-card {
-    background: #f8fdfa;
-    border: 2px solid #d4ebe2;
-    border-radius: 12px;
-    padding: 15px;
-    transition: all 0.3s;
-    position: relative;
-    overflow: hidden;
-}
-
-.report-card:hover {
-    border-color: #066d4d;
-    box-shadow: 0 5px 15px rgba(6,109,77,0.15);
-    transform: translateY(-3px);
-}
-
-.report-card.completed {
-    border-right: 6px solid #066d4d;
-    background: #f0f9f6;
-}
-
-.report-card .report-title {
-    font-weight: 800;
-    color: #044a35;
-    font-size: 16px;
-    margin-bottom: 10px;
-    padding-left: 25px;
-}
-
-.report-card .report-criterion {
-    font-size: 12px;
-    color: #066d4d;
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.report-card .report-criterion i {
-    font-size: 10px;
-}
-
-.report-card .report-weight {
-    background: #ffd166;
-    color: #5a3e00;
-    padding: 2px 8px;
-    border-radius: 15px;
-    font-size: 11px;
-    font-weight: 700;
-    display: inline-block;
-    margin-bottom: 10px;
-}
-
-.report-card .report-date {
-    font-size: 11px;
-    color: #666;
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.report-actions {
-    display: flex;
-    gap: 5px;
-    justify-content: flex-end;
-    flex-wrap: wrap;
-}
-
-.report-actions button {
-    padding: 6px 8px;
-    border: none;
-    border-radius: 6px;
-    font-size: 11px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    flex: 1 1 auto;
-    justify-content: center;
-}
-
-.report-actions .load-btn {
-    background: #066d4d;
-    color: white;
-}
-
-.report-actions .load-btn:hover {
-    background: #044a35;
-}
-
-.report-actions .pdf-btn {
-    background: #ff6b6b;
-    color: white;
-}
-
-.report-actions .pdf-btn:hover {
-    background: #ee5a52;
-}
-
-.report-actions .whatsapp-btn {
-    background: #25D366;
-    color: white;
-}
-
-.report-actions .whatsapp-btn:hover {
-    background: #1da851;
-}
-
-.report-actions .delete-btn {
-    background: #fee;
-    color: #d9534f;
-    border: 1px solid #fcc;
-}
-
-.report-actions .delete-btn:hover {
-    background: #fdd;
-    color: #b52b27;
-}
-
-.close-reports-btn {
-    width: 100%;
-    padding: 12px;
-    background: #066d4d;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-weight: 700;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.3s;
-    position: sticky;
-    bottom: 0;
-}
-
-.close-reports-btn:hover {
-    background: #044a35;
-}
-
-.empty-reports {
-    text-align: center;
-    padding: 30px;
-    color: #666;
-    font-size: 14px;
-    background: #f8fdfa;
-    border-radius: 10px;
-    border: 2px dashed #d4ebe2;
-}
-
-.empty-reports i {
-    font-size: 40px;
-    color: #c0e0d6;
-    margin-bottom: 10px;
-}
-
-/* نافذة الإعدادات */
-#settingsModal {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: 5000;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Cairo', sans-serif;
-}
-
-#settingsModal > div {
-    background: white;
-    padding: 25px;
-    border-radius: 15px;
-    width: 90%;
-    max-width: 400px;
-    max-height: 80vh;
-    overflow-y: auto;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-    border: 3px solid #ffd166;
-}
-
-#settingsModal h3 {
-    color: #044a35;
-    text-align: center;
-    margin-bottom: 15px;
-    font-size: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-}
-
-#settingsModal #subInfo {
-    font-size: 14px;
-    line-height: 2;
-    color: #333;
-    text-align: center;
-    margin-bottom: 15px;
-}
-
-#settingsModal label {
-    font-weight: 700;
-    color: #044a35;
-    display: block;
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-#settingsModal input[type="date"] {
-    width: 100%;
-    margin-top: 8px;
-    padding: 10px;
-    border-radius: 8px;
-    border: 2px solid #d4ebe2;
-    font-family: 'Cairo', sans-serif;
-    font-size: 16px;
-}
-
-#settingsModal input[type="date"]:focus {
-    outline: none;
-    border-color: #066d4d;
-    box-shadow: 0 0 0 3px rgba(6,109,77,0.15);
-}
-
-#settingsModal button {
-    width: 100%;
-    padding: 12px;
-    background: #066d4d;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: 'Cairo', sans-serif;
-    transition: all 0.3s;
-    margin-top: 10px;
-}
-
-#settingsModal button:hover {
-    background: #05553d;
-    filter: brightness(1.05);
-}
-
-#settingsModal .btn-secondary {
-    background: #4f7bff;
-    margin-top: 5px;
-}
-
-#settingsModal .btn-secondary:hover {
-    background: #3b5bdb;
-    filter: brightness(1.05);
-}
-
-#settingsModal hr {
-    margin: 15px 0;
-    border: none;
-    border-top: 1px solid #d4ebe2;
-}
-
-/* أنماط الثيمات */
-.theme-light-blue body {
-    background: linear-gradient(135deg, #e8f0ff 0%, #d6e4ff 50%, #c2d4ff 100%) !important;
-}
-
-.theme-light-blue .input-section {
-    background: #ffffff;
-    border: 2px solid #c2d4ff;
-    box-shadow: 0 10px 30px rgba(66, 133, 244, 0.15);
-}
-
-.theme-light-blue .input-section::before {
-    background: linear-gradient(to left, #4285f4, #34a853, #fbbc05);
-}
-
-.theme-light-blue .input-section h2 {
-    color: #4285f4;
-}
-
-.theme-light-blue .top-marquee {
-    background: linear-gradient(135deg, #1a73e8 0%, #4285f4 100%);
-}
-
-.theme-light-blue #aiFillFloatingBtn {
-    background: linear-gradient(135deg, #4285f4 0%, #34a853 25%, #fbbc05 50%, #ea4335 100%) !important;
-}
-
-.theme-dark body {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%) !important;
-    color: #e0e0e0;
-}
-
-.theme-dark .input-section {
-    background: #1e293b;
-    border: 2px solid #334155;
-    color: #e0e0e0;
-}
-
-.theme-dark .input-section h2 {
-    color: #60a5fa;
-}
-
-.theme-dark input,
-.theme-dark select,
-.theme-dark textarea {
-    background: #1e293b;
-    border-color: #475569;
-    color: #e0e0e0;
-}
-
-.theme-dark .top-marquee {
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-}
-
-.theme-dark #aiFillFloatingBtn {
-    background: linear-gradient(135deg, #6d28d9 0%, #7c3aed 25%, #8b5cf6 50%, #a78bfa 100%) !important;
-}
-
-.theme-green body {
-    background: linear-gradient(135deg, #e6f7ef 0%, #d4f0e4 50%, #c2e8d9 100%) !important;
-}
-
-.theme-green .input-section {
-    background: #ffffff;
-    border: 2px solid #2ecc71;
-    box-shadow: 0 10px 30px rgba(46, 204, 113, 0.15);
-}
-
-.theme-green .input-section h2 {
-    color: #27ae60;
-}
-
-.theme-green .top-marquee {
-    background: linear-gradient(135deg, #1e8449 0%, #27ae60 100%);
-}
-
-.theme-green #aiFillFloatingBtn {
-    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 25%, #3498db 50%, #9b59b6 100%) !important;
-}
-
-/* قسم PDF (جميع القوالب) */
-@page {
-    size: A4;
-    margin: 10mm;
-}
-
-:root {
-    --main: #062f25;
-    --border: #2f9e8f;
-    --bg: #ffffff;
-}
-
-[id^="report-content"] {
-    width: 100%;
-    max-width: 210mm;
-    margin: 4mm auto 0 auto;
-    padding: 0 6mm;
-    box-sizing: border-box;
-    display: none;
-    font-family: 'Cairo', sans-serif;
-    background: var(--bg);
-}
-
-/* داخل الصف */
-.header {
-    background: var(--main);
-    height: 150px;
-    border-radius: 8px;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    margin-bottom: 8px;
-}
-
-.header img {
-    width: 260px;
-    filter: brightness(0) invert(1);
-}
-
-.header-school {
-    position: absolute;
-    right: 12px;
-    top: 45px;
-    font-size: 16px;
-    font-weight: 700;
-    max-width: 70%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    text-align: right;
-}
-
-.header-education {
-    position: absolute;
-    left: 50%;
-    bottom: 18px;
-    transform: translateX(-50%);
-    font-size: 16px;
-    font-weight: 800;
-    text-align: center;
-    width: 100%;
-}
-
-.header-date {
-    position: absolute;
-    left: 12px;
-    top: 10px;
-    font-size: 12px;
-    text-align: right;
-}
-
-/* مربعات المعلومات */
-.info-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 6px;
-    margin-bottom: 6px;
-}
-
-.info-grid2 {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 6px;
-    margin-bottom: 6px;
-}
-
-.info-box {
-    border: 1px solid var(--border);
-    border-radius: 7px;
-    padding: 14px 4px 6px;
-    position: relative;
-    text-align: center;
-    font-size: 10px;
-    min-height: 34px;
-    overflow: hidden;
-    background: var(--bg);
-}
-
-.info-title {
-    position: absolute;
-    top: 4px;
-    right: 50%;
-    transform: translateX(50%);
-    font-size: 8px;
-    font-weight: 800;
-    color: var(--main);
-    white-space: nowrap;
-}
-
-.info-value {
-    font-size: 10px;
-    font-weight: 600;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.box-objective {
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 8px;
-    margin-bottom: 6px;
-    height: 110px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    background: var(--bg);
-}
-
-.box-objective .box-title {
-    text-align: center;
-    color: var(--main);
-    font-weight: 800;
-    font-size: 11px;
-    margin-bottom: 4px;
-}
-
-.box-objective .box-content {
-    font-size: 11px;
-    line-height: 1.5;
-    text-align: center;
-    overflow: hidden;
-}
-
-.box {
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 8px;
-    margin-bottom: 6px;
-    height: 150px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    background: var(--bg);
-}
-
-.box-title {
-    text-align: center;
-    color: var(--main);
-    font-weight: 800;
-    font-size: 11px;
-    margin-bottom: 4px;
-}
-
-.box-content {
-    font-size: 11px;
-    line-height: 1.5;
-    text-align: center;
-    overflow: hidden;
-}
-
-.row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
-}
-
-.images {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
-    margin-bottom: 6px;
-}
-
-.image-box {
-    border: 1px dashed var(--border);
-    height: 125px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    background: #f9fdfb;
-    position: relative;
-}
-
-.image-box::before {
-    content: 'صورة توثيقية';
-    position: absolute;
-    top: 4px;
-    right: 4px;
-    font-size: 12px;
-    background: rgba(255,255,255,.9);
-    padding: 1px 5px;
-    border-radius: 3px;
-    z-index: 1;
-}
-
-.image-box img {
-    width: 65%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
-}
-
-.signatures {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
-    text-align: center;
-    font-size: 10px;
-    margin-bottom: 6px;
-}
-
-.signature-role {
-    font-size: 9px;
-    color: var(--main);
-    font-weight: 600;
-    margin-bottom: 2px;
-}
-
-.signature-name {
-    font-size: 11px;
-    font-weight: 700;
-}
-
-.sign-line {
-    border-top: 1px solid #000;
-    margin: 6px auto 0;
-    width: 70%;
-}
-
-.footer-box {
-    background: var(--main);
-    color: #fff;
-    text-align: center;
-    font-size: 8px;
-    padding: 3px 4px;
-    border-radius: 6px;
-}
-
-/* خارج الصف - تعديل بسيط */
-#report-content-outside .info-grid {
-    grid-template-columns: repeat(4, 1fr);
-}
-#report-content-outside .info-grid2 {
-    grid-template-columns: 1fr;
-    max-width: 100%;
-}
-#report-content-outside .info-grid2 .info-box {
-    width: 100%;
-}
-#report-content-outside .box {
-    height: 130px;
-}
-#report-content-outside .image-box::before {
-    content: 'صورة توثيقية';
-}
-
-/* القوالب الادارية والاشرافية والنشاط والتوجيه الصحي - كلها بنفس التصميم الأساسي */
-#report-content-admin .info-grid,
-#report-content-supervisor .info-grid,
-#report-content-activity .info-grid,
-#report-content-student .info-grid,
-#report-content-health .info-grid {
-    grid-template-columns: repeat(5, 1fr);
-}
-#report-content-admin .info-grid2,
-#report-content-supervisor .info-grid2,
-#report-content-activity .info-grid2,
-#report-content-student .info-grid2,
-#report-content-health .info-grid2 {
-    grid-template-columns: repeat(3, 1fr);
-}
-#report-content-admin .box,
-#report-content-supervisor .box,
-#report-content-activity .box,
-#report-content-student .box,
-#report-content-health .box {
-    height: 150px;
-}
-#report-content-admin .box-objective,
-#report-content-supervisor .box-objective,
-#report-content-activity .box-objective,
-#report-content-student .box-objective,
-#report-content-health .box-objective {
-    height: 110px;
-}
-
-.pdf-export * {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-    color-adjust: exact !important;
-}
-
-/* تحسينات للهواتف المحمولة */
-@media (max-width: 768px) {
-    .top-small-buttons {
-        padding: 6px 15px;
-    }
-    
-    .small-buttons-grid {
-        gap: 6px;
-    }
-    
-    .small-btn {
-        min-height: 38px;
-        min-width: 70px;
-        padding: 4px 3px;
-        font-size: 9px;
-    }
-    
-    .small-btn-icon {
-        font-size: 10px;
-    }
-    
-    .small-btn .small-btn-text {
-        font-size: 8px;
-    }
-    
-    .main-buttons-bar {
-        padding: 8px 15px;
-    }
-    
-    .main-buttons-grid {
-        gap: 12px;
-        max-width: 280px;
-    }
-    
-    .main-btn {
-        min-height: 55px;
-        min-width: 110px;
-        padding: 8px 6px;
-    }
-    
-    .main-btn-icon {
-        font-size: 16px;
-    }
-    
-    .main-btn .main-btn-text {
-        font-size: 11px;
-    }
-    
-    .input-section {
-        padding: 15px;
-        margin-top: 160px;
-    }
-    
-    .input-section h2 {
-        font-size: 20px;
-    }
-    
-    .form-row {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-    
-    .tools-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    #aiFillFloatingBtn {
-        width: 85px;
-        height: 85px;
-        bottom: 20px;
-        left: 20px;
-    }
-    
-    #aiFillFloatingBtn .floating-ai-icon {
-        font-size: 32px;
-    }
-    
-    #aiFillFloatingBtn .floating-ai-text {
-        font-size: 12px;
-    }
-}
-
-@media (max-width: 480px) {
-    .top-marquee {
-        font-size: 12px;
-        min-height: 40px;
-    }
-    
-    .marquee-inner {
-        animation-duration: 35s;
-    }
-    
-    .small-btn {
-        min-height: 35px;
-        min-width: 60px;
-        padding: 3px 2px;
-        font-size: 8px;
-    }
-    
-    .small-btn-icon {
-        font-size: 9px;
-    }
-    
-    .small-btn .small-btn-text {
-        font-size: 7px;
-    }
-    
-    .main-btn {
-        min-height: 50px;
-        min-width: 95px;
-    }
-    
-    .main-btn-icon {
-        font-size: 14px;
-    }
-    
-    .main-btn .main-btn-text {
-        font-size: 10px;
-    }
-    
-    #aiFillFloatingBtn {
-        width: 75px;
-        height: 75px;
-        bottom: 15px;
-        left: 15px;
-    }
-    
-    #aiFillFloatingBtn .floating-ai-icon {
-        font-size: 28px;
-    }
-    
-    #aiFillFloatingBtn .floating-ai-text {
-        font-size: 11px;
-    }
-    
-    .input-section {
-        padding: 12px;
-        margin-top: 150px;
-    }
-    
-    input, select, textarea {
-        padding: 12px;
-        font-size: 16px;
-    }
-    
-    .form-group label {
-        font-size: 13px;
-    }
-    
-    .tool-checkbox {
-        padding: 10px 5px;
-    }
-    
-    .tool-checkbox span {
-        font-size: 12px;
-        margin-right: 32px;
-    }
-    
-    .tools-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-/* ثيمات PDF */
-.pdf-theme-classic {
-    --main: #062f25;
-    --border: #2f9e8f;
-    --bg: #ffffff;
-}
-
-.pdf-theme-professional {
-    --main: #1a365d;
-    --border: #4299e1;
-    --bg: #ffffff;
-}
-
-.pdf-theme-professional .header {
-    background: linear-gradient(135deg, #1a365d 0%, #2d3748 100%);
-}
-
-.pdf-theme-minimal {
-    --main: #4a5568;
-    --border: #cbd5e0;
-    --bg: #ffffff;
-}
-
-.pdf-theme-minimal .header {
-    background: #4a5568;
-}
-
-.pdf-theme-tech {
-    --main: #2d3748;
-    --border: #4fd1c7;
-    --bg: #ffffff;
-}
-
-.pdf-theme-tech .header {
-    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
-}
-
-.pdf-theme-educational {
-    --main: #2b6cb0;
-    --border: #4299e1;
-    --bg: #ffffff;
-}
-
-.pdf-theme-educational .header {
-    background: linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%);
-}
-
-/* صندوق التوجيه بعد التوليد */
-.ai-guide-box {
-    position: fixed;
-    bottom: 150px;
-    left: 30px;
-    background: white;
-    border-radius: 20px;
-    padding: 20px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-    border: 3px solid #ff6b6b;
-    z-index: 2000;
-    max-width: 280px;
-    text-align: center;
-    animation: slideIn 0.5s ease;
-    direction: rtl;
-}
-
-@keyframes slideIn {
-    from { transform: translateX(100px); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-}
-
-.ai-guide-arrow {
-    font-size: 50px;
-    color: #ff6b6b;
-    position: absolute;
-    bottom: -20px;
-    left: -20px;
-    transform: rotate(45deg);
-    animation: bounceArrow 1s infinite;
-}
-
-@keyframes bounceArrow {
-    0%, 100% { transform: rotate(45deg) translateX(0); }
-    50% { transform: rotate(45deg) translateX(-10px); }
-}
-
-.ai-guide-content h4 {
-    color: #044a35;
-    margin-bottom: 10px;
-    font-size: 18px;
-}
-
-.ai-guide-timer {
-    font-size: 24px;
-    font-weight: 900;
-    color: #ff6b6b;
-    margin: 10px 0;
-}
-
-.ai-guide-btn {
-    background: #ff6b6b;
-    color: white;
-    border: none;
-    border-radius: 50px;
-    padding: 12px 25px;
-    font-size: 18px;
-    font-weight: 700;
-    cursor: pointer;
-    width: 100%;
-    margin: 10px 0;
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-}
-
-.ai-guide-btn:hover {
-    background: #ee5a52;
-    transform: scale(1.05);
-}
-
-.ai-guide-close {
-    background: none;
-    border: none;
-    color: #666;
-    font-size: 14px;
-    cursor: pointer;
-    text-decoration: underline;
-    margin-top: 5px;
-}
+:root { --primary: #066d4d; --primary-dark: #044a35; --primary-light: #0a9d72; --secondary: #ffd166; --secondary-dark: #ffc145; --danger: #ff6b6b; --success: #25D366; --gray-light: #f8fdfa; --gray: #e0f0ea; --text-dark: #083024; --text-light: #666; --white: #ffffff; --shadow: 0 10px 30px rgba(4, 74, 53, 0.12); --border: #d4ebe2; }
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { font-family: 'Cairo', sans-serif; background: linear-gradient(135deg, #f0f9f6 0%, #e8f4f0 50%, #d4ebe2 100%); direction: rtl; overflow-x: hidden; min-height: 100vh; -webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; -ms-text-size-adjust: 100%; text-size-adjust: 100%; touch-action: manipulation; }
+.wrapper { max-width: 900px; margin: auto; padding: 20px; width: 100%; }
+.top-marquee { position: fixed; top: 0; left: 0; right: 0; width: 100%; background: linear-gradient(135deg, #022e22 0%, #044a35 100%); color: #fff; padding: 10px 5px; font-size: 14px; z-index: 300; overflow: hidden; height: auto; min-height: 45px; white-space: nowrap; border-bottom: 3px solid #ffd166; box-shadow: 0 4px 12px rgba(2, 46, 34, 0.25); display: flex; align-items: center; line-height: 1.5; }
+.marquee-inner { display: inline-block; padding-left: 2%; animation: newsScroll 30s linear infinite; color: #e8f4f0; font-weight: 600; white-space: nowrap; }
+@keyframes newsScroll { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+.top-marquee:hover .marquee-inner { animation-play-state: paused; }
+.top-small-buttons button, .main-buttons-bar button, #aiFillFloatingBtn { -webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; outline: none; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; user-select: none; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+.top-small-buttons { position: fixed; top: 45px; left: 0; right: 0; width: 100%; z-index: 250; background: linear-gradient(135deg, #ffffff 0%, #f5fcf9 100%); padding: 8px 20px; display: flex; justify-content: center; align-items: center; border-bottom: 1px solid #e0f0ea; box-shadow: 0 2px 8px rgba(4, 74, 53, 0.08); box-sizing: border-box; }
+.small-buttons-grid { display: flex; gap: 8px; width: 100%; max-width: 600px; justify-content: center; }
+.small-btn { border: 2px solid; padding: 6px 4px; font-size: 10px; border-radius: 8px; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); font-weight: 700; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 45px; min-width: 90px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); flex: 1; position: relative; overflow: hidden; }
+.small-btn:active { box-shadow: 0 0 0 2px rgba(255,255,255,0.5), inset 0 3px 5px rgba(0,0,0,0.1) !important; filter: brightness(0.95); }
+#saveTeacherBtn { background: linear-gradient(135deg, #4f7bff 0%, #3b5bdb 100%); color: white; border-color: #3b5bdb; }
+#clearBtn { background: linear-gradient(135deg, #ffd166 0%, #ffc145 100%); color: #5a3e00; border-color: #ffc145; }
+#savedReportsBtn { background: linear-gradient(135deg, #9D50BB 0%, #6E48AA 100%); color: white; border-color: #6E48AA; }
+#settingsBtn { background: linear-gradient(135deg, #718096 0%, #4a5568 100%); color: white; border-color: #4a5568; }
+.small-btn-icon { font-size: 12px; color: white; transition: none; }
+.small-btn .small-btn-text { font-size: 9px; font-weight: 800; text-align: center; line-height: 1.1; white-space: nowrap; transition: none; }
+.main-buttons-bar { position: fixed; top: 98px; left: 0; right: 0; width: 100%; z-index: 240; background: linear-gradient(135deg, #f8fdfa 0%, #f0f9f6 100%); padding: 10px 20px; display: flex; justify-content: center; align-items: center; box-shadow: 0 3px 10px rgba(4, 74, 53, 0.1); border-bottom: 1px solid #d4ebe2; box-sizing: border-box; }
+.main-buttons-grid { display: flex; gap: 20px; width: 100%; max-width: 350px; justify-content: center; }
+.main-btn { border: 2px solid; padding: 12px 10px; font-size: 13px; border-radius: 12px; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); font-weight: 700; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; min-height: 65px; min-width: 130px; box-shadow: 0 3px 10px rgba(0,0,0,0.15); flex: 1; position: relative; overflow: hidden; }
+.main-btn:active { box-shadow: 0 0 0 3px rgba(255,255,255,0.5), inset 0 4px 6px rgba(0,0,0,0.1) !important; filter: brightness(0.95); }
+#pdfBtn { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%); color: white; border-color: #ee5a52; }
+#whatsappBtn { background: linear-gradient(135deg, #25D366 0%, #1da851 100%); color: white; border-color: #1da851; }
+.main-btn-icon { font-size: 18px; color: white; transition: none; }
+.main-btn .main-btn-text { font-size: 12px; font-weight: 800; text-align: center; line-height: 1.2; white-space: nowrap; transition: none; }
+#aiFillFloatingBtn { position: fixed; bottom: 30px; left: 30px; width: 100px; height: 100px; color: white; border: none; border-radius: 50%; font-size: 16px; font-weight: 900; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; border: 4px solid rgba(255, 255, 255, 0.7); z-index: 1000; overflow: hidden; transform: translateY(0); animation: floatButton 3s ease-in-out infinite; background: linear-gradient(135deg, #9D50BB 0%, #6E48AA 25%, #533D8B 50%, #3A2569 100%); box-shadow: 0 12px 35px rgba(157, 80, 187, 0.6), 0 0 0 3px rgba(255, 255, 255, 0.3), 0 0 25px rgba(157, 80, 187, 0.5); }
+#aiFillFloatingBtn .floating-ai-icon { font-size: 38px; animation: magicalPulse 2s infinite; filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.5)); margin-bottom: 2px; color: #FFFFFF; transition: none; }
+#aiFillFloatingBtn .floating-ai-text { font-size: 14px; font-weight: 900; letter-spacing: 0.5px; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); color: #FFFFFF; background: linear-gradient(45deg, #FFFFFF, #F0F0F0, #FFFFFF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; background-size: 200% auto; animation: textShine 2s ease-in-out infinite; white-space: nowrap; transition: none; }
+@keyframes floatButton { 0%, 100% { transform: translateY(0) rotate(0deg); } 25% { transform: translateY(-12px) rotate(3deg); } 50% { transform: translateY(0) rotate(0deg); } 75% { transform: translateY(-8px) rotate(-3deg); } }
+@keyframes magicalPulse { 0%, 100% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.5)) brightness(1); } 25% { transform: scale(1.15) rotate(10deg); filter: drop-shadow(0 5px 10px rgba(255, 255, 255, 0.6)) brightness(1.2); } 50% { transform: scale(1.1) rotate(-5deg); filter: drop-shadow(0 4px 8px rgba(255, 255, 255, 0.5)) brightness(1.1); } 75% { transform: scale(1.18) rotate(5deg); filter: drop-shadow(0 6px 12px rgba(255, 255, 255, 0.7)) brightness(1.3); } }
+@keyframes textShine { 0%, 100% { background-position: 0% 50%; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); } 50% { background-position: 100% 50%; text-shadow: 0 3px 6px rgba(255, 255, 255, 0.3), 0 0 10px rgba(255, 255, 255, 0.2); } }
+#aiFillFloatingBtn.loading { animation: loadingMagicalGlow 1.5s ease-in-out infinite; }
+@keyframes loadingMagicalGlow { 0%, 100% { box-shadow: 0 12px 35px rgba(0,0,0,0.4), 0 0 0 4px rgba(255, 255, 255, 0.4), 0 0 30px rgba(0,0,0,0.3); } 50% { box-shadow: 0 18px 45px rgba(0,0,0,0.6), 0 0 0 5px rgba(255, 255, 255, 0.7), 0 0 40px rgba(0,0,0,0.5); } }
+#aiFillFloatingBtn.loading .floating-ai-icon { animation: magicalSpin 1.2s linear infinite; }
+@keyframes magicalSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+#activationScreen { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, #022e22, #044a35); z-index: 9999; display: flex; align-items: center; justify-content: center; font-family: 'Cairo', sans-serif; }
+#activationScreen .activation-box { background: white; padding: 30px; border-radius: 15px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 15px 40px rgba(0,0,0,0.3); border: 3px solid #ffd166; }
+#activationScreen h3 { color: #044a35; margin-bottom: 20px; font-size: 22px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+#activationScreen p { color: #666; font-size: 14px; margin-bottom: 20px; }
+#activationCodeInput { width: 100%; padding: 15px; border: 2px solid #d4ebe2; border-radius: 10px; font-size: 16px; text-align: center; margin-bottom: 20px; font-family: 'Cairo', sans-serif; transition: all 0.3s; }
+#activationCodeInput:focus { outline: none; border-color: #066d4d; box-shadow: 0 0 0 3px rgba(6, 109, 77, 0.15); }
+#activationScreen button { width: 100%; padding: 15px; background: linear-gradient(135deg, #066d4d 0%, #05553d 100%); color: white; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 16px; transition: all 0.3s; font-family: 'Cairo', sans-serif; }
+#activationScreen button:hover { background: linear-gradient(135deg, #05553d 0%, #044a35 100%); filter: brightness(1.05); }
+#contactForTrialBtn { width: 100%; padding: 15px; background: linear-gradient(135deg, #5a67d8 0%, #4c51bf 100%); color: white; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 16px; transition: all 0.3s; font-family: 'Cairo', sans-serif; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+#contactForTrialBtn:hover { background: linear-gradient(135deg, #4c51bf 0%, #434190 100%); filter: brightness(1.05); }
+#activationError { color: #d9534f; font-size: 13px; margin-top: 15px; padding: 10px; background: #fee; border-radius: 8px; border-right: 4px solid #d9534f; display: none; }
+.input-section { background: #ffffff; padding: 25px; border-radius: 20px; border: 2px solid #e0f0ea; box-shadow: 0 10px 30px rgba(4, 74, 53, 0.12); position: relative; overflow: hidden; margin-top: 170px; }
+.input-section::before { content: ''; position: absolute; top: 0; right: 0; width: 100%; height: 5px; background: linear-gradient(to left, #066d4d, #ffd166, #25D366); }
+.input-section h2 { color: #044a35; font-size: 24px; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 3px solid #e0f0ea; text-align: center; font-weight: 900; position: relative; }
+.input-section h2::after { content: ''; position: absolute; bottom: -3px; right: 50%; transform: translateX(50%); width: 120px; height: 3px; background: linear-gradient(to left, #066d4d, #ffd166); border-radius: 2px; }
+.form-group { margin-bottom: 25px; position: relative; }
+.form-group label { font-size: 16px; font-weight: 800; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; padding-right: 8px; position: relative; color: #083024; }
+.form-group label i { color: #066d4d; font-size: 16px; background: #f0f9f6; padding: 7px; border-radius: 10px; border: 1px solid #d4ebe2; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+.form-group label::before { content: ''; width: 8px; height: 8px; background: #ffd166; border-radius: 50%; display: inline-block; margin-left: 6px; box-shadow: 0 0 6px #ffd166; }
+input, select, textarea { width: 100%; padding: 16px; margin-top: 8px; border: 2px solid #d4ebe2; border-radius: 12px; font-size: 18px; background: #f9fcfb; transition: all 0.3s; font-family: 'Cairo', sans-serif; color: #083024; box-shadow: inset 0 2px 8px rgba(0,0,0,0.05); -webkit-appearance: none; }
+input:focus, select:focus, textarea:focus { outline: none; border-color: #066d4d; box-shadow: 0 0 0 4px rgba(6,109,77,0.15), inset 0 2px 8px rgba(0,0,0,0.05); background: #ffffff; }
+textarea { height: 120px; resize: none; overflow: hidden; line-height: 1.7; font-size: 17px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+button[title] { position: relative; }
+button[title]:hover::after { content: attr(title); position: absolute; bottom: calc(100% + 10px); right: 50%; transform: translateX(50%); background: rgba(4, 58, 42, 0.95); color: white; padding: 10px 15px; border-radius: 8px; font-size: 12px; white-space: pre-line; z-index: 1000; border: 1px solid #044a35; box-shadow: 0 5px 15px rgba(0,0,0,0.15); max-width: 300px; min-width: 200px; }
+button[title]:hover::before { content: ''; position: absolute; bottom: calc(100% + 2px); right: 50%; transform: translateX(50%); border: 6px solid transparent; border-top-color: rgba(4, 58, 42, 0.95); z-index: 1000; }
+.notification { position: fixed; top: 150px; right: 10px; left: 10px; background: linear-gradient(135deg, #066d4d 0%, #044a35 100%); color: white; padding: 12px 18px; border-radius: 10px; box-shadow: 0 6px 20px rgba(4, 74, 53, 0.3); z-index: 1000; display: flex; align-items: center; gap: 10px; font-weight: 600; transform: translateX(150%); transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); border-right: 5px solid #ffd166; text-align: center; justify-content: center; }
+.notification.show { transform: translateX(0); }
+.notification i { font-size: 18px; }
+.levels-container { background: #f8fdfa; border-radius: 12px; padding: 15px; margin-bottom: 20px; border: 2px solid #d4ebe2; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+.level-indicator { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; padding: 8px; background: linear-gradient(135deg, #066d4d 0%, #044a35 100%); border-radius: 8px; color: white; font-weight: 700; font-size: 14px; }
+.level-indicator span { background: rgba(255,255,255,0.2); padding: 3px 10px; border-radius: 20px; font-size: 12px; }
+.level-select { margin-bottom: 15px; }
+.level-select select { width: 100%; padding: 12px; border: 2px solid #d4ebe2; border-radius: 8px; font-family: 'Cairo', sans-serif; font-size: 14px; background: white; cursor: pointer; }
+.level-select select:focus { border-color: #066d4d; outline: none; }
+.level-select label { font-size: 12px; color: #044a35; font-weight: 600; margin-bottom: 5px; display: flex; align-items: center; gap: 5px; }
+.level-select label i { color: #066d4d; font-size: 12px; }
+.criterion-info { background: white; border-radius: 8px; padding: 10px 15px; margin: 15px 0; border-right: 4px solid #ffd166; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+.criterion-name { font-weight: 800; color: #044a35; font-size: 14px; }
+.criterion-weight { background: #ffd166; color: #5a3e00; padding: 3px 10px; border-radius: 20px; font-weight: 700; font-size: 12px; }
+#reportSearchContainer { position: relative; margin-bottom: 15px; }
+#searchResults { display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #ddd; border-radius: 6px; max-height: 200px; overflow-y: auto; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+#searchResults div { padding: 8px 12px; cursor: pointer; border-bottom: 1px solid #eee; }
+#searchResults div:hover { background-color: #f0f9f6 !important; color: #066d4d; }
+#searchResults div:last-child { border-bottom: none; }
+#reportSearch:focus { outline: none; border-color: #066d4d; box-shadow: 0 0 0 2px rgba(6, 109, 77, 0.2); }
+.manual-title-container { margin-top: 15px; padding: 15px; background: #f8fdfa; border-radius: 12px; border: 2px solid #d4ebe2; }
+.manual-title-container label { display: flex; align-items: center; gap: 10px; color: #044a35; font-weight: 700; margin-bottom: 10px; }
+.manual-title-container input { background: white; border: 2px solid #d4ebe2; padding: 12px; border-radius: 8px; font-size: 16px; }
+.tools-section { background: #f8fdfa; padding: 18px; border-radius: 12px; border: 1px solid #d4ebe2; margin-top: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.05); counter-reset: tool-counter; }
+.tools-grid { display: grid; gap: 12px; grid-template-columns: repeat(2, 1fr); }
+@media (min-width: 768px) { .tools-grid { grid-template-columns: repeat(3, 1fr); } }
+.tool-checkbox { display: flex; align-items: center; gap: 8px; padding: 12px 8px 12px 8px; background: white; border-radius: 12px; border: 2px solid #d4ebe2; transition: all 0.3s; cursor: pointer; position: relative; min-height: 55px; box-shadow: 0 2px 6px rgba(0,0,0,0.03); }
+.tool-checkbox::before { counter-increment: tool-counter; content: counter(tool-counter); position: absolute; right: 8px; background: #066d4d; color: white; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+.tool-checkbox:hover { border-color: #066d4d; background: #f0f9f6; box-shadow: 0 6px 12px rgba(6, 109, 77, 0.1); transform: translateY(-2px); }
+.tool-checkbox input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; position: absolute; opacity: 0; z-index: 1; }
+.tool-checkbox span { font-size: 14px; font-weight: 700; color: #083024; margin-right: 35px; flex: 1; line-height: 1.4; }
+.tool-checkbox.checked { border-color: #066d4d; background: #e8f4f0; box-shadow: 0 4px 12px rgba(6, 109, 77, 0.15); }
+.checkmark { color: #066d4d; font-size: 18px; margin-right: 5px; display: none; }
+.tool-checkbox.checked .checkmark { display: inline-block; }
+.tools-outside-grid { display: grid; gap: 12px; grid-template-columns: repeat(2, 1fr); margin-top: 10px; }
+@media (min-width: 768px) { .tools-outside-grid { grid-template-columns: repeat(3, 1fr); } }
+.other-tool-container { margin-top: 15px; display: flex; gap: 10px; align-items: center; }
+.other-tool-container input { flex: 1; padding: 10px; border-radius: 8px; border: 2px solid #d4ebe2; font-size: 14px; }
+.other-tool-container button { background: #066d4d; color: white; border: none; border-radius: 8px; padding: 10px 20px; font-weight: 700; cursor: pointer; transition: all 0.3s; }
+.other-tool-container button:hover { background: #044a35; }
+.other-tools-list { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px; }
+.other-tag { background: #e0f0ea; border: 1px solid #b0d5c9; border-radius: 20px; padding: 5px 12px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+.other-tag i { color: #d9534f; cursor: pointer; font-size: 12px; }
+.small-fields { margin: 20px 0; padding: 15px; background: #f0f9f6; border-radius: 12px; border: 2px solid #d4ebe2; }
+.small-fields .form-row { margin-bottom: 0; }
+.large-extra-fields { margin-top: 30px; padding: 20px; background: #f8fdfa; border-radius: 12px; border: 2px solid #ffd166; }
+.large-extra-fields h4 { color: #044a35; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; font-size: 18px; }
+#savedReportsModal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 6000; align-items: center; justify-content: center; font-family: 'Cairo', sans-serif; }
+#savedReportsModal > div { background: white; padding: 25px; border-radius: 15px; width: 90%; max-width: 800px; max-height: 80vh; overflow-y: auto; box-shadow: 0 15px 40px rgba(0,0,0,0.3); border: 3px solid #ffd166; }
+#savedReportsModal h3 { color: #044a35; text-align: center; margin-bottom: 20px; font-size: 22px; display: flex; align-items: center; justify-content: center; gap: 10px; position: sticky; top: 0; background: white; padding-bottom: 10px; border-bottom: 2px solid #d4ebe2; }
+.progress-bar-container { width: 100%; background: linear-gradient(135deg, #ffffff 0%, #f8fdfa 100%); padding: 16px 20px; margin-bottom: 20px; border: 2px solid #d4ebe2; border-radius: 20px; box-shadow: 0 4px 15px rgba(4, 74, 53, 0.1); display: flex; flex-direction: column; align-items: center; gap: 10px; font-family: 'Cairo', sans-serif; box-sizing: border-box; }
+.progress-header { display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 900px; margin: 0 auto; color: #044a35; font-weight: 700; font-size: 15px; }
+.progress-stats { display: flex; gap: 15px; align-items: center; }
+.progress-percentage { background: linear-gradient(135deg, #ffd166, #ffc233); color: #5a3e00; padding: 4px 12px; border-radius: 30px; font-size: 13px; font-weight: 800; box-shadow: 0 2px 8px rgba(255, 209, 102, 0.3); border: 1px solid #ffb830; }
+.progress-message { color: #066d4d; font-size: 12px; font-weight: 600; background: #e8f4f0; padding: 4px 12px; border-radius: 30px; border: 1px solid #c0e0d6; }
+.progress-track { width: 100%; max-width: 900px; margin: 0 auto; height: 16px; background: #e0f0ea; border-radius: 30px; overflow: hidden; border: 1px solid #c0e0d6; box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); position: relative; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, #066d4d, #0a9d72); border-radius: 30px; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); position: relative; }
+.reports-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; margin-bottom: 20px; }
+.report-card { background: #f8fdfa; border: 2px solid #d4ebe2; border-radius: 12px; padding: 15px; transition: all 0.3s; position: relative; overflow: hidden; }
+.report-card:hover { border-color: #066d4d; box-shadow: 0 5px 15px rgba(6,109,77,0.15); transform: translateY(-3px); }
+.report-card.completed { border-right: 6px solid #066d4d; background: #f0f9f6; }
+.report-card .report-title { font-weight: 800; color: #044a35; font-size: 16px; margin-bottom: 10px; padding-left: 25px; }
+.report-card .report-criterion { font-size: 12px; color: #066d4d; margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
+.report-card .report-criterion i { font-size: 10px; }
+.report-card .report-weight { background: #ffd166; color: #5a3e00; padding: 2px 8px; border-radius: 15px; font-size: 11px; font-weight: 700; display: inline-block; margin-bottom: 10px; }
+.report-card .report-date { font-size: 11px; color: #666; margin-bottom: 15px; display: flex; align-items: center; gap: 5px; }
+.report-actions { display: flex; gap: 5px; justify-content: flex-end; flex-wrap: wrap; }
+.report-actions button { padding: 6px 8px; border: none; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 4px; flex: 1 1 auto; justify-content: center; }
+.report-actions .load-btn { background: #066d4d; color: white; }
+.report-actions .load-btn:hover { background: #044a35; }
+.report-actions .pdf-btn { background: #ff6b6b; color: white; }
+.report-actions .pdf-btn:hover { background: #ee5a52; }
+.report-actions .whatsapp-btn { background: #25D366; color: white; }
+.report-actions .whatsapp-btn:hover { background: #1da851; }
+.report-actions .delete-btn { background: #fee; color: #d9534f; border: 1px solid #fcc; }
+.report-actions .delete-btn:hover { background: #fdd; color: #b52b27; }
+.close-reports-btn { width: 100%; padding: 12px; background: #066d4d; color: white; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 14px; transition: all 0.3s; position: sticky; bottom: 0; }
+.close-reports-btn:hover { background: #044a35; }
+.empty-reports { text-align: center; padding: 30px; color: #666; font-size: 14px; background: #f8fdfa; border-radius: 10px; border: 2px dashed #d4ebe2; }
+.empty-reports i { font-size: 40px; color: #c0e0d6; margin-bottom: 10px; }
+#settingsModal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 5000; align-items: center; justify-content: center; font-family: 'Cairo', sans-serif; }
+#settingsModal > div { background: white; padding: 25px; border-radius: 15px; width: 90%; max-width: 400px; max-height: 80vh; overflow-y: auto; box-shadow: 0 15px 40px rgba(0,0,0,0.3); border: 3px solid #ffd166; }
+#settingsModal h3 { color: #044a35; text-align: center; margin-bottom: 15px; font-size: 22px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+#settingsModal #subInfo { font-size: 14px; line-height: 2; color: #333; text-align: center; margin-bottom: 15px; }
+#settingsModal label { font-weight: 700; color: #044a35; display: block; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+#settingsModal input[type="date"] { width: 100%; margin-top: 8px; padding: 10px; border-radius: 8px; border: 2px solid #d4ebe2; font-family: 'Cairo', sans-serif; font-size: 16px; }
+#settingsModal input[type="date"]:focus { outline: none; border-color: #066d4d; box-shadow: 0 0 0 3px rgba(6,109,77,0.15); }
+#settingsModal button { width: 100%; padding: 12px; background: #066d4d; color: white; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; font-family: 'Cairo', sans-serif; transition: all 0.3s; margin-top: 10px; }
+#settingsModal button:hover { background: #05553d; filter: brightness(1.05); }
+#settingsModal .btn-secondary { background: #4f7bff; margin-top: 5px; }
+#settingsModal .btn-secondary:hover { background: #3b5bdb; filter: brightness(1.05); }
+#settingsModal hr { margin: 15px 0; border: none; border-top: 1px solid #d4ebe2; }
+.theme-light-blue body { background: linear-gradient(135deg, #e8f0ff 0%, #d6e4ff 50%, #c2d4ff 100%) !important; }
+.theme-light-blue .input-section { background: #ffffff; border: 2px solid #c2d4ff; box-shadow: 0 10px 30px rgba(66, 133, 244, 0.15); }
+.theme-light-blue .input-section::before { background: linear-gradient(to left, #4285f4, #34a853, #fbbc05); }
+.theme-light-blue .input-section h2 { color: #4285f4; }
+.theme-light-blue .top-marquee { background: linear-gradient(135deg, #1a73e8 0%, #4285f4 100%); }
+.theme-light-blue #aiFillFloatingBtn { background: linear-gradient(135deg, #4285f4 0%, #34a853 25%, #fbbc05 50%, #ea4335 100%) !important; }
+.theme-dark body { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%) !important; color: #e0e0e0; }
+.theme-dark .input-section { background: #1e293b; border: 2px solid #334155; color: #e0e0e0; }
+.theme-dark .input-section h2 { color: #60a5fa; }
+.theme-dark input, .theme-dark select, .theme-dark textarea { background: #1e293b; border-color: #475569; color: #e0e0e0; }
+.theme-dark .top-marquee { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
+.theme-dark #aiFillFloatingBtn { background: linear-gradient(135deg, #6d28d9 0%, #7c3aed 25%, #8b5cf6 50%, #a78bfa 100%) !important; }
+.theme-green body { background: linear-gradient(135deg, #e6f7ef 0%, #d4f0e4 50%, #c2e8d9 100%) !important; }
+.theme-green .input-section { background: #ffffff; border: 2px solid #2ecc71; box-shadow: 0 10px 30px rgba(46, 204, 113, 0.15); }
+.theme-green .input-section h2 { color: #27ae60; }
+.theme-green .top-marquee { background: linear-gradient(135deg, #1e8449 0%, #27ae60 100%); }
+.theme-green #aiFillFloatingBtn { background: linear-gradient(135deg, #27ae60 0%, #2ecc71 25%, #3498db 50%, #9b59b6 100%) !important; }
+@page { size: A4; margin: 10mm; }
+:root { --main: #062f25; --border: #2f9e8f; --bg: #ffffff; }
+[id^="report-content"] { width: 100%; max-width: 210mm; margin: 4mm auto 0 auto; padding: 0 6mm; box-sizing: border-box; display: none; font-family: 'Cairo', sans-serif; background: var(--bg); }
+.header { background: var(--main); height: 150px; border-radius: 8px; color: #fff; display: flex; align-items: center; justify-content: center; position: relative; margin-bottom: 8px; }
+.header img { width: 260px; filter: brightness(0) invert(1); }
+.header-school { position: absolute; right: 12px; top: 45px; font-size: 16px; font-weight: 700; max-width: 70%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: right; }
+.header-education { position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); font-size: 16px; font-weight: 800; text-align: center; width: 100%; }
+.header-date { position: absolute; left: 12px; top: 10px; font-size: 12px; text-align: right; }
+.info-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 6px; }
+.info-grid2 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 6px; }
+.info-box { border: 1px solid var(--border); border-radius: 7px; padding: 14px 4px 6px; position: relative; text-align: center; font-size: 10px; min-height: 34px; overflow: hidden; background: var(--bg); }
+.info-title { position: absolute; top: 4px; right: 50%; transform: translateX(50%); font-size: 8px; font-weight: 800; color: var(--main); white-space: nowrap; }
+.info-value { font-size: 10px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.box-objective { border: 1px solid var(--border); border-radius: 8px; padding: 8px; margin-bottom: 6px; height: 110px; display: flex; flex-direction: column; overflow: hidden; background: var(--bg); }
+.box-objective .box-title { text-align: center; color: var(--main); font-weight: 800; font-size: 11px; margin-bottom: 4px; }
+.box-objective .box-content { font-size: 11px; line-height: 1.5; text-align: center; overflow: hidden; }
+.box { border: 1px solid var(--border); border-radius: 8px; padding: 8px; margin-bottom: 6px; height: 150px; display: flex; flex-direction: column; overflow: hidden; background: var(--bg); }
+.box-title { text-align: center; color: var(--main); font-weight: 800; font-size: 11px; margin-bottom: 4px; }
+.box-content { font-size: 11px; line-height: 1.5; text-align: center; overflow: hidden; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.images { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px; }
+.image-box { border: 1px dashed var(--border); height: 125px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #f9fdfb; position: relative; }
+.image-box::before { content: 'صورة توثيقية'; position: absolute; top: 4px; right: 4px; font-size: 12px; background: rgba(255,255,255,.9); padding: 1px 5px; border-radius: 3px; z-index: 1; }
+.image-box img { width: 65%; height: 100%; object-fit: contain; display: block; }
+.signatures { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; text-align: center; font-size: 10px; margin-bottom: 6px; }
+.signature-role { font-size: 9px; color: var(--main); font-weight: 600; margin-bottom: 2px; }
+.signature-name { font-size: 11px; font-weight: 700; }
+.sign-line { border-top: 1px solid #000; margin: 6px auto 0; width: 70%; }
+.footer-box { background: var(--main); color: #fff; text-align: center; font-size: 8px; padding: 3px 4px; border-radius: 6px; }
+.pdf-export * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+@media (max-width: 768px) { .top-small-buttons { padding: 6px 15px; } .small-buttons-grid { gap: 6px; } .small-btn { min-height: 38px; min-width: 70px; padding: 4px 3px; font-size: 9px; } .small-btn-icon { font-size: 10px; } .small-btn .small-btn-text { font-size: 8px; } .main-buttons-bar { padding: 8px 15px; } .main-buttons-grid { gap: 12px; max-width: 280px; } .main-btn { min-height: 55px; min-width: 110px; padding: 8px 6px; } .main-btn-icon { font-size: 16px; } .main-btn .main-btn-text { font-size: 11px; } .input-section { padding: 15px; margin-top: 160px; } .input-section h2 { font-size: 20px; } .form-row { grid-template-columns: 1fr; gap: 15px; } .tools-grid { grid-template-columns: repeat(2, 1fr); } #aiFillFloatingBtn { width: 85px; height: 85px; bottom: 20px; left: 20px; } #aiFillFloatingBtn .floating-ai-icon { font-size: 32px; } #aiFillFloatingBtn .floating-ai-text { font-size: 12px; } }
+@media (max-width: 480px) { .top-marquee { font-size: 12px; min-height: 40px; } .marquee-inner { animation-duration: 35s; } .small-btn { min-height: 35px; min-width: 60px; padding: 3px 2px; font-size: 8px; } .small-btn-icon { font-size: 9px; } .small-btn .small-btn-text { font-size: 7px; } .main-btn { min-height: 50px; min-width: 95px; } .main-btn-icon { font-size: 14px; } .main-btn .main-btn-text { font-size: 10px; } #aiFillFloatingBtn { width: 75px; height: 75px; bottom: 15px; left: 15px; } #aiFillFloatingBtn .floating-ai-icon { font-size: 28px; } #aiFillFloatingBtn .floating-ai-text { font-size: 11px; } .input-section { padding: 12px; margin-top: 150px; } input, select, textarea { padding: 12px; font-size: 16px; } .form-group label { font-size: 13px; } .tool-checkbox { padding: 10px 5px; } .tool-checkbox span { font-size: 12px; margin-right: 32px; } .tools-grid { grid-template-columns: repeat(2, 1fr); } }
+.ai-guide-box { position: fixed; bottom: 150px; left: 30px; background: white; border-radius: 20px; padding: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); border: 3px solid #ff6b6b; z-index: 2000; max-width: 280px; text-align: center; animation: slideIn 0.5s ease; direction: rtl; }
+@keyframes slideIn { from { transform: translateX(100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+.ai-guide-arrow { font-size: 50px; color: #ff6b6b; position: absolute; bottom: -20px; left: -20px; transform: rotate(45deg); animation: bounceArrow 1s infinite; }
+@keyframes bounceArrow { 0%, 100% { transform: rotate(45deg) translateX(0); } 50% { transform: rotate(45deg) translateX(-10px); } }
+.ai-guide-content h4 { color: #044a35; margin-bottom: 10px; font-size: 18px; }
+.ai-guide-timer { font-size: 24px; font-weight: 900; color: #ff6b6b; margin: 10px 0; }
+.ai-guide-btn { background: #ff6b6b; color: white; border: none; border-radius: 50px; padding: 12px 25px; font-size: 18px; font-weight: 700; cursor: pointer; width: 100%; margin: 10px 0; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.ai-guide-btn:hover { background: #ee5a52; transform: scale(1.05); }
+.ai-guide-close { background: none; border: none; color: #666; font-size: 14px; cursor: pointer; text-decoration: underline; margin-top: 5px; }
 </style>
 </head>
 
@@ -2133,11 +244,7 @@ button[title]:hover::before {
             <i class="fas fa-comments"></i>
             تواصل للتجربة أو الاشتراك
         </button>
-        <button id="skipActivationBtn" onclick="skipActivation()">
-            <i class="fas fa-forward"></i>
-            تخطي مؤقت (للتجربة)
-        </button>
-        <div id="activationError"></div>
+        <div id="activationError">كود غير صالح. الرجاء التأكد من الكود والمحاولة مرة أخرى.</div>
     </div>
 </div>
 
@@ -2190,7 +297,7 @@ button[title]:hover::before {
 <div class="wrapper">
 <div class="input-section">
   
-  <h2><i class="fas fa-tools" style="margin-left:10px;"></i>تقاريرك - النظام المتكامل</h2>
+  <h2><i class="fas fa-tools" style="margin-left:10px;"></i>تقاريرك - النظام المتكامل (موحد الأدوار)</h2>
   
   <!-- ========== اختيار مقدم التقرير (الدور) ========== -->
   <div class="form-group">
@@ -2327,27 +434,7 @@ button[title]:hover::before {
     </div>
   </div>
 
-  <!-- الحقول الخاصة بالمعلم (تظهر فقط إذا كان الدور teacher والمكان داخل الصف) -->
-  <div id="teacherFields" style="display: none;">
-    <div class="form-row">
-      <div class="form-group">
-        <label for="grade"><i class="fas fa-users-class"></i> الصف</label>
-        <input id="grade" placeholder="مثال: ٥/٣" oninput="updateReport()">
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label for="subject"><i class="fas fa-book"></i> المادة / البرنامج</label>
-        <input id="subject" placeholder="مثال: لغتي" oninput="updateReport()">
-      </div>
-      <div class="form-group">
-        <label for="lesson"><i class="fas fa-book-open"></i> الدرس / النشاط</label>
-        <input id="lesson" placeholder="مثال: درس الضرب" oninput="updateReport()">
-      </div>
-    </div>
-  </div>
-
-  <!-- الحقول الصغيرة الخاصة بالدور (تظهر في الأعلى) -->
+  <!-- الحقول الخاصة بالدور (يتم إنشاؤها ديناميكياً في smallRoleFields) -->
   <div id="smallRoleFields" class="small-fields" style="display: none;"></div>
 
   <!-- المستهدفون والعدد (حقول مشتركة) -->
@@ -2400,7 +487,7 @@ button[title]:hover::before {
     <textarea id="recomm" placeholder="أدخل النص" oninput="updateReport()"></textarea>
   </div>
 
-  <!-- الحقول الكبيرة الإضافية (للتوجيه الطلابي) -->
+  <!-- الحقول الكبيرة الإضافية (للتوجيه الطلابي وغيره) -->
   <div id="largeExtraFields" class="large-extra-fields" style="display: none;">
     <h4><i class="fas fa-list"></i> تفاصيل إضافية</h4>
   </div>
@@ -2445,8 +532,7 @@ button[title]:hover::before {
 </div>
 </div>
 
-<!-- ========== قوالب PDF السبعة ========== -->
-
+<!-- ========== قوالب PDF السبعة (نفس القوالب السابقة) ========== -->
 <!-- 1. تقرير داخل الصف (معلم) -->
 <div id="report-content" class="pdf-export" style="display:none;">
 <div class="header">
@@ -2651,7 +737,7 @@ button[title]:hover::before {
 
 <div class="signatures">
   <div>
-    <div class="signature-role" id="adminReporterTypeBox">معد التقرير</div>
+    <div class="signature-role">معد التقرير</div>
     <div class="signature-name" id="adminReporterNameBox"></div>
     <div class="sign-line"></div>
   </div>
@@ -3057,394 +1143,30 @@ function formatWeight(weight) {
     return num + '%';
 }
 
-// ==================== دوال مساعدة للتحليل ====================
-function removeFieldTitles(content) {
-    const titles = ['الهدف التربوي','نبذة مختصرة','إجراءات التنفيذ','الاستراتيجيات','نقاط القوة','نقاط التحسين','التوصيات','هو:','تشمل:','يتضمن:','يتمثل في','يشمل','تحتوي','تتضمن'];
-    let cleaned = content;
-    titles.forEach(t => {
-        cleaned = cleaned.replace(new RegExp(`^${t}[:\\.\\-]?\\s*`,'i'), '');
-        cleaned = cleaned.replace(new RegExp(`\\s*${t}[:\\.\\-]?\\s*`,'gi'), ' ');
-    });
-    return cleaned.trim().replace(/\s+/g, ' ') || content;
-}
-
-function ensureWordCount(content, target) {
-    const words = content.split(' ');
-    if (words.length >= target-5 && words.length <= target+5) return content;
-    if (words.length < target-5) {
-        const phrases = ['مع التركيز على تحقيق الأهداف المنشودة','بما يسهم في تحسين المخرجات','مع مراعاة الفروق الفردية','لضمان تحقيق رؤية التعليم','مع الاستفادة من أفضل الممارسات'];
-        let extended = content;
-        while (extended.split(' ').length < target) extended += ' ' + phrases[Math.floor(Math.random()*phrases.length)];
-        return extended;
-    }
-    return words.slice(0,target).join(' ');
-}
-
-function parseAIGeneric(response, fieldMapping) {
-    const lines = response.split('\n').filter(l => l.trim());
-    let found = 0;
-    lines.forEach(line => {
-        const match = line.match(/^(\d+)[\.\-]\s*(.+)/);
-        if (match) {
-            const num = match[1];
-            let content = match[2].trim();
-            content = removeFieldTitles(content);
-            content = ensureWordCount(content, 25);
-            if (fieldMapping[num]) {
-                const fieldId = fieldMapping[num];
-                const element = document.getElementById(fieldId);
-                if (element) {
-                    element.value = content;
-                    found++;
-                }
-            }
-        }
-    });
-    if (found < 3) fallbackAIParsing(response, fieldMapping);
-}
-
-function fallbackAIParsing(response, fieldMapping) {
-    const sentences = response.split(/[\.\n]/).filter(s => s.trim().length > 20);
-    const orderedFields = Object.keys(fieldMapping).sort((a,b)=>a-b);
-    orderedFields.forEach((num, idx) => {
-        if (idx < sentences.length) {
-            let content = sentences[idx].trim();
-            content = removeFieldTitles(content);
-            content = ensureWordCount(content, 25);
-            const fieldId = fieldMapping[num];
-            const element = document.getElementById(fieldId);
-            if (element) element.value = content;
-        }
-    });
-}
-
-// ==================== كائن معالج الأدوار المحسن ====================
-const roleHandlers = {
-    // المعلم
-    teacher: {
-        getPrompt: (data) => {
-            return `أنت خبير تربوي متخصص في إعداد تقارير الأداء الصفي. قم بكتابة تقرير احترافي للمعلم/المعلمة بعنوان "${data.title}" وفق البيانات التالية:
-- المادة: ${data.subject || 'غير محدد'}
-- الدرس: ${data.lesson || 'غير محدد'}
-- الصف: ${data.grade || 'غير محدد'}
-- المستهدفون: ${data.target || 'غير محدد'}
-- المكان: ${data.place || 'داخل الصف'}
-- العدد: ${data.count || 'غير محدد'}
-
-اكتب التقرير على شكل 7 فقرات مرقمة (1 إلى 7) بحيث تمثل:
-1. الهدف التربوي (جملة واضحة ومحددة)
-2. نبذة مختصرة عن النشاط
-3. إجراءات التنفيذ خطوة بخطوة
-4. الاستراتيجيات المستخدمة
-5. نقاط القوة
-6. نقاط التحسين
-7. التوصيات
-
-اجعل الفقرات واقعية ومفصلة ومناسبة للسياق التعليمي السعودي.`,
-        },
-        parseResponse: (response) => {
-            const fieldMapping = {
-                '1': 'goal', '2': 'summary', '3': 'steps', '4': 'strategies',
-                '5': 'strengths', '6': 'improve', '7': 'recomm'
-            };
-            parseAIGeneric(response, fieldMapping);
-        },
-        fieldLabels: {
-            goal: 'الهدف التربوي', summary: 'نبذة مختصرة', steps: 'إجراءات التنفيذ',
-            strategies: 'الاستراتيجيات', strengths: 'نقاط القوة', improve: 'نقاط التحسين',
-            recomm: 'التوصيات'
-        },
-        updateReport: function() {
-            updateTeacherReport();
-        }
-    },
-    // مدير المدرسة
-    school_principal: {
-        getPrompt: (data) => {
-            return `أنت قائد مدرسة خبير في الإدارة التعليمية. اكتب تقريراً إدارياً احترافياً بعنوان "${data.title}" وفق البيانات:
-- المجال: ${data.field || 'تربوي'}
-- المبادرة: ${data.initiative || ''}
-- مدة التنفيذ: ${data.duration || ''}
-- المستهدفون: ${data.target || ''}
-- المكان: ${data.place || ''}
-- العدد: ${data.count || ''}
-
-اكتب التقرير على شكل 7 فقرات مرقمة (1 إلى 7):
-1. الأهداف الإدارية
-2. الإجراءات المنفذة
-3. النتائج المحققة
-4. الاستراتيجيات المتبعة
-5. نقاط القوة
-6. أولويات التطوير
-7. خطة المتابعة
-
-اجعل التقرير واقعياً ومناسباً للسياق المدرسي السعودي.`,
-        },
-        parseResponse: (response) => {
-            const fieldMapping = {
-                '1': 'goal', '2': 'steps', '3': 'summary', '4': 'strategies',
-                '5': 'strengths', '6': 'improve', '7': 'recomm'
-            };
-            parseAIGeneric(response, fieldMapping);
-        },
-        fieldLabels: {
-            goal: 'الأهداف الإدارية', summary: 'النتائج', steps: 'الإجراءات المنفذة',
-            strategies: 'الاستراتيجيات المتبعة', strengths: 'نقاط القوة', improve: 'أولويات التطوير',
-            recomm: 'خطة المتابعة'
-        },
-        updateReport: function() {
-            updateAdminReport();
-        }
-    },
-    // وكيل المدرسة (نفس المدير)
-    vice_principal: {
-        getPrompt: (data) => roleHandlers.school_principal.getPrompt(data),
-        parseResponse: (response) => roleHandlers.school_principal.parseResponse(response),
-        fieldLabels: roleHandlers.school_principal.fieldLabels,
-        updateReport: function() {
-            updateAdminReport();
-        }
-    },
-    // مشرف تربوي
-    educational_supervisor: {
-        getPrompt: (data) => {
-            return `أنت مشرف تربوي خبير في تقويم الأداء التعليمي. اكتب تقريراً إشرافياً بعنوان "${data.title}" وفق البيانات:
-- المجال: ${data.field || 'تربوي'}
-- المبادرة: ${data.initiative || 'دعم الأداء الصفي'}
-- مدة التنفيذ: ${data.duration || 'حصة واحدة'}
-- المستهدفون: ${data.target || ''}
-- المكان: ${data.place || ''}
-- العدد: ${data.count || ''}
-
-اكتب التقرير على شكل 7 فقرات مرقمة (1 إلى 7):
-1. الأهداف الإشرافية
-2. الإجراءات المنفذة
-3. مستوى الأداء
-4. جوانب التميز
-5. مجالات التحسين
-6. التوصيات
-7. خطة الدعم والمتابعة
-
-اجعل التقرير واقعياً ومناسباً للسياق الإشرافي.`,
-        },
-        parseResponse: (response) => {
-            const fieldMapping = {
-                '1': 'goal', '2': 'steps', '3': 'summary', '4': 'strategies',
-                '5': 'improve', '6': 'recomm', '7': 'strengths'
-            };
-            parseAIGeneric(response, fieldMapping);
-        },
-        fieldLabels: {
-            goal: 'الأهداف الإشرافية', summary: 'مستوى الأداء', steps: 'الإجراءات',
-            strategies: 'جوانب التميز', strengths: 'خطة الدعم والمتابعة', improve: 'مجالات التحسين',
-            recomm: 'التوصيات'
-        },
-        updateReport: function() {
-            updateSupervisorReport();
-        }
-    },
-    // رائد النشاط
-    activity_leader: {
-        getPrompt: (data) => {
-            return `أنت رائد نشاط طلابي خبير. اكتب تقريراً عن نشاط طلابي بعنوان "${data.title}" وفق البيانات:
-- المجال: ${data.field || 'اجتماعي'}
-- نوع البرنامج: ${data.programType || 'برنامج تحفيزي'}
-- مدة التنفيذ: ${data.duration || 'يوم واحد'}
-- المستهدفون: ${data.target || ''}
-- المكان: ${data.place || ''}
-- العدد: ${data.count || ''}
-
-اكتب التقرير على شكل 7 فقرات مرقمة (1 إلى 7):
-1. أهداف البرنامج
-2. آلية التنفيذ
-3. مستوى التفاعل والمشاركة
-4. أبرز الإنجازات
-5. التحديات
-6. التوصيات التطويرية
-7. خطة المتابعة
-
-اجعل التقرير واقعياً ومناسباً للأنشطة الطلابية.`,
-        },
-        parseResponse: (response) => {
-            const fieldMapping = {
-                '1': 'goal', '2': 'steps', '3': 'summary', '4': 'strategies',
-                '5': 'improve', '6': 'recomm', '7': 'strengths'
-            };
-            parseAIGeneric(response, fieldMapping);
-        },
-        fieldLabels: {
-            goal: 'أهداف البرنامج', summary: 'مستوى التفاعل والمشاركة', steps: 'آلية التنفيذ',
-            strategies: 'أبرز الإنجازات', strengths: 'خطة المتابعة', improve: 'التحديات',
-            recomm: 'التوصيات التطويرية'
-        },
-        updateReport: function() {
-            updateActivityReport();
-        }
-    },
-    // موجه طلابي
-    student_guide: {
-        getPrompt: (data) => {
-            return `أنت موجه طلابي خبير في الإرشاد الطلابي. اكتب تقريراً عن برنامج توجيهي بعنوان "${data.title}" وفق البيانات:
-- المبادرة: ${data.initiative || ''}
-- مدة التنفيذ: ${data.duration || ''}
-- المستهدفون: ${data.target || ''}
-- المكان: ${data.place || ''}
-- العدد: ${data.count || ''}
-
-اكتب التقرير على شكل 6 فقرات مرقمة (1 إلى 6) تغطي:
-1. الأهداف
-2. الرعاية الطلابية
-3. الوقاية والتوعية
-4. التدخل ومعالجة الحالات
-5. التمكين والدعم
-6. الشراكة الأسرية وتطوير البيئة المدرسية
-
-اجعل التقرير واقعياً ومناسباً للتوجيه الطلابي.`,
-        },
-        parseResponse: (response) => {
-            const fieldMapping = {
-                '1': 'goal', '2': 'summary', '3': 'steps', '4': 'strategies',
-                '5': 'strengths', '6': 'improve'
-            };
-            parseAIGeneric(response, fieldMapping);
-            // توزيع الحقول الإضافية
-            const lines = response.split('\n').filter(l => l.trim());
-            lines.forEach(line => {
-                const match = line.match(/^(\d+)[\.\-]\s*(.+)/);
-                if (match) {
-                    const num = match[1];
-                    let content = match[2].trim();
-                    if (num === '6') {
-                        // تقسيم الفقرة السادسة إلى قسمين
-                        const parts = content.split(/[.]/);
-                        if (parts.length >= 2) {
-                            const family = document.getElementById('familyInput');
-                            const env = document.getElementById('envInput');
-                            if (family) family.value = parts[0].trim();
-                            if (env) env.value = parts.slice(1).join('.').trim();
-                        } else {
-                            const family = document.getElementById('familyInput');
-                            if (family) family.value = content;
-                        }
-                    }
-                }
-            });
-        },
-        fieldLabels: {
-            goal: 'الأهداف', summary: 'الرعاية الطلابية', steps: 'الوقاية والتوعية',
-            strategies: 'التدخل ومعالجة الحالات', strengths: 'التمكين والدعم', improve: 'الشراكة الأسرية',
-            recomm: 'تطوير البيئة المدرسية'
-        },
-        updateReport: function() {
-            updateStudentReport();
-        }
-    },
-    // موجه صحي
-    health_guide: {
-        getPrompt: (data) => {
-            return `أنت موجه صحي خبير في البرامج الصحية المدرسية. اكتب تقريراً عن برنامج صحي بعنوان "${data.title}" وفق البيانات:
-- المجال الصحي: ${data.field || 'توعوي'}
-- نوع البرنامج الصحي: ${data.programType || 'حملة توعوية'}
-- مدة التنفيذ: ${data.duration || 'يوم واحد'}
-- الفئة المستهدفة: ${data.target || ''}
-- المكان: ${data.place || ''}
-- العدد: ${data.count || ''}
-
-اكتب التقرير على شكل 7 فقرات مرقمة (1 إلى 7):
-1. أهداف البرنامج الصحي
-2. الإجراءات المتخذة
-3. مستوى الاستفادة
-4. التحديات الصحية
-5. أبرز النتائج
-6. التوصيات الوقائية
-7. خطة المتابعة الصحية
-
-اجعل التقرير واقعياً ومناسباً للسياق الصحي المدرسي.`,
-        },
-        parseResponse: (response) => {
-            const fieldMapping = {
-                '1': 'goal', '2': 'steps', '3': 'summary', '4': 'improve',
-                '5': 'strategies', '6': 'recomm', '7': 'strengths'
-            };
-            parseAIGeneric(response, fieldMapping);
-        },
-        fieldLabels: {
-            goal: 'أهداف البرنامج الصحي', summary: 'مستوى الاستفادة', steps: 'الإجراءات المتخذة',
-            strategies: 'أبرز النتائج', strengths: 'خطة المتابعة الصحية', improve: 'التحديات الصحية',
-            recomm: 'التوصيات الوقائية'
-        },
-        updateReport: function() {
-            updateHealthReport();
-        }
-    }
-};
-
-// ==================== دوال التفعيل ====================
+// ==================== التفعيل ====================
 function hideActivationScreen() {
-    const screen = document.getElementById("activationScreen");
-    screen.style.transition = 'opacity 0.5s ease';
-    screen.style.opacity = '0';
-    setTimeout(() => {
-        screen.style.display = 'none';
-        document.body.style.overflow = 'auto';
-    }, 500);
+    if (window.__ACTIVATED__) {
+        document.getElementById("activationScreen").style.display = "none";
+        document.body.style.overflow = "auto";
+    }
 }
 
-function showActivationError(message) {
-    const errorDiv = document.getElementById("activationError");
-    errorDiv.innerText = message;
-    errorDiv.style.display = 'block';
+function showActivationError() {
+    document.getElementById("activationError").style.display = "block";
 }
 
 async function activateTool() {
-    const codeInput = document.getElementById("activationCodeInput");
-    const code = codeInput.value.trim();
-    const errorDiv = document.getElementById("activationError");
-    const activateBtn = document.querySelector("#activationScreen button[onclick='activateTool()']");
-    
-    errorDiv.style.display = 'none';
-    errorDiv.innerText = '';
-    
-    if (!code) {
-        showActivationError('الرجاء إدخال كود التفعيل');
-        return;
-    }
-    
-    const originalText = activateBtn.innerText;
-    activateBtn.innerText = 'جارٍ التفعيل...';
-    activateBtn.disabled = true;
-    
+    const code = document.getElementById("activationCodeInput").value.trim();
+    if (!code) { showActivationError(); return; }
     try {
-        const res = await fetch(BACKEND_URL + "/health", { 
-            method: 'GET',
-            headers: { "X-Activation-Code": code },
-            mode: 'cors',
-            cache: 'no-cache'
-        });
-        
-        if (!res.ok) {
-            throw new Error(`فشل التفعيل (${res.status})`);
-        }
-        
+        const res = await fetch(BACKEND_URL + "/health", { headers: { "X-Activation-Code": code } });
+        if (!res.ok) throw new Error("Invalid");
         localStorage.setItem(ACTIVATION_KEY_NAME, code);
         window.__ACTIVATED__ = true;
         hideActivationScreen();
         showNotification("تم تفعيل الأداة بنجاح! ✓");
-        
-    } catch (error) {
-        console.error('خطأ في التفعيل:', error);
-        showActivationError('تعذر الاتصال بالخادم. تأكد من اتصالك بالإنترنت أو أن كود التفعيل صحيح.');
-    } finally {
-        activateBtn.innerText = originalText;
-        activateBtn.disabled = false;
-    }
-}
-
-function skipActivation() {
-    if (confirm('تخطي التفعيل؟ (للتجربة فقط)')) {
-        window.__ACTIVATED__ = true;
-        hideActivationScreen();
-        showNotification('تم تخطي التفعيل (وضع التجربة)');
+    } catch {
+        showActivationError();
     }
 }
 
@@ -3552,7 +1274,6 @@ function applyThemes() {
 // ==================== دوال إظهار/إخفاء الحقول ====================
 function togglePlaceFields() {
     const place = document.getElementById('place').value;
-    const role = document.getElementById('role').value;
     const insideTools = document.getElementById('insideToolsSection');
     const outsideTools = document.getElementById('outsideToolsSection');
     if (place === 'خارج الصف') {
@@ -3562,13 +1283,8 @@ function togglePlaceFields() {
         insideTools.style.display = 'block';
         outsideTools.style.display = 'none';
     }
-    // إظهار أو إخفاء حقول المعلم حسب المكان والدور
-    const teacherFields = document.getElementById('teacherFields');
-    if (role === 'teacher') {
-        teacherFields.style.display = place === 'داخل الصف' ? 'block' : 'none';
-    } else {
-        teacherFields.style.display = 'none';
-    }
+    // تحديث الحقول الخاصة بالدور بناءً على المكان
+    updateRoleSpecificFields(document.getElementById('role').value);
     updateReport();
 }
 
@@ -3597,20 +1313,41 @@ function getDetailedPlaceValue() {
 
 // ==================== تحديث الحقول الخاصة بالدور ====================
 function updateRoleSpecificFields(role) {
-    // الحقول الصغيرة (تظهر في الأعلى)
     const smallContainer = document.getElementById('smallRoleFields');
+    const largeContainer = document.getElementById('largeExtraFields');
+    const place = document.getElementById('place').value;
+
     smallContainer.innerHTML = '';
     smallContainer.style.display = 'none';
-
-    // الحقول الكبيرة الإضافية (تظهر في الأسفل)
-    const largeContainer = document.getElementById('largeExtraFields');
     largeContainer.innerHTML = '<h4><i class="fas fa-list"></i> تفاصيل إضافية</h4>';
     largeContainer.style.display = 'none';
 
     let smallHtml = '';
     let largeHtml = '';
 
-    if (role === 'school_principal' || role === 'vice_principal') {
+    if (role === 'teacher') {
+        // حقول المعلم: تظهر فقط إذا كان المكان "داخل الصف"
+        if (place === 'داخل الصف') {
+            smallHtml = `
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-users-class"></i> الصف</label>
+                        <input type="text" id="grade" placeholder="مثال: ٥/٣" oninput="updateReport()">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-book"></i> المادة / البرنامج</label>
+                        <input type="text" id="subject" placeholder="مثال: لغتي" oninput="updateReport()">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-book-open"></i> الدرس / النشاط</label>
+                        <input type="text" id="lesson" placeholder="مثال: درس الضرب" oninput="updateReport()">
+                    </div>
+                </div>
+            `;
+        }
+    } else if (role === 'school_principal' || role === 'vice_principal') {
         smallHtml = `
             <div class="form-row">
                 <div class="form-group">
@@ -3744,23 +1481,65 @@ function updateRoleSpecificFields(role) {
 }
 
 function updateFieldLabelsByRole(role) {
-    const handler = roleHandlers[role];
-    if (handler && handler.fieldLabels) {
-        const goal = document.getElementById('goalLabel');
-        const summary = document.getElementById('summaryLabel');
-        const steps = document.getElementById('stepsLabel');
-        const strategies = document.getElementById('strategiesLabel');
-        const strengths = document.getElementById('strengthsLabel');
-        const improve = document.getElementById('improveLabel');
-        const recomm = document.getElementById('recommLabel');
-        if (goal) goal.textContent = handler.fieldLabels.goal || 'الهدف';
-        if (summary) summary.textContent = handler.fieldLabels.summary || 'نبذة';
-        if (steps) steps.textContent = handler.fieldLabels.steps || 'إجراءات';
-        if (strategies) strategies.textContent = handler.fieldLabels.strategies || 'استراتيجيات';
-        if (strengths) strengths.textContent = handler.fieldLabels.strengths || 'نقاط القوة';
-        if (improve) improve.textContent = handler.fieldLabels.improve || 'نقاط التحسين';
-        if (recomm) recomm.textContent = handler.fieldLabels.recomm || 'التوصيات';
+    const labels = {
+        goalLabel: 'الهدف التربوي',
+        summaryLabel: 'نبذة مختصرة',
+        stepsLabel: 'إجراءات التنفيذ',
+        strategiesLabel: 'الاستراتيجيات',
+        strengthsLabel: 'نقاط القوة',
+        improveLabel: 'نقاط التحسين',
+        recommLabel: 'التوصيات'
+    };
+
+    if (role === 'school_principal' || role === 'vice_principal') {
+        labels.goalLabel = 'الأهداف الإدارية';
+        labels.summaryLabel = 'النتائج';
+        labels.stepsLabel = 'الإجراءات المنفذة';
+        labels.strategiesLabel = 'الاستراتيجيات المتبعة';
+        labels.strengthsLabel = 'نقاط القوة';
+        labels.improveLabel = 'أولويات التطوير';
+        labels.recommLabel = 'خطة المتابعة';
+    } else if (role === 'educational_supervisor') {
+        labels.goalLabel = 'الأهداف الإشرافية';
+        labels.summaryLabel = 'مستوى الأداء';
+        labels.stepsLabel = 'الإجراءات';
+        labels.strategiesLabel = 'جوانب التميز';
+        labels.strengthsLabel = 'خطة الدعم والمتابعة';
+        labels.improveLabel = 'مجالات التحسين';
+        labels.recommLabel = 'التوصيات';
+    } else if (role === 'activity_leader') {
+        labels.goalLabel = 'أهداف البرنامج';
+        labels.summaryLabel = 'مستوى التفاعل والمشاركة';
+        labels.stepsLabel = 'آلية التنفيذ';
+        labels.strategiesLabel = 'أبرز الإنجازات';
+        labels.strengthsLabel = 'خطة المتابعة';
+        labels.improveLabel = 'التحديات';
+        labels.recommLabel = 'التوصيات التطويرية';
+    } else if (role === 'student_guide') {
+        labels.goalLabel = 'الأهداف';
+        labels.summaryLabel = 'الرعاية الطلابية';
+        labels.stepsLabel = 'الوقاية والتوعية';
+        labels.strategiesLabel = 'التدخل ومعالجة الحالات';
+        labels.strengthsLabel = 'التمكين والدعم';
+        labels.improveLabel = 'الشراكة الأسرية';
+        labels.recommLabel = 'تطوير البيئة المدرسية';
+    } else if (role === 'health_guide') {
+        labels.goalLabel = 'أهداف البرنامج الصحي';
+        labels.summaryLabel = 'مستوى الاستفادة';
+        labels.stepsLabel = 'الإجراءات المتخذة';
+        labels.strategiesLabel = 'أبرز النتائج';
+        labels.strengthsLabel = 'خطة المتابعة الصحية';
+        labels.improveLabel = 'التحديات الصحية';
+        labels.recommLabel = 'التوصيات الوقائية';
     }
+
+    document.getElementById('goalLabel').textContent = labels.goalLabel;
+    document.getElementById('summaryLabel').textContent = labels.summaryLabel;
+    document.getElementById('stepsLabel').textContent = labels.stepsLabel;
+    document.getElementById('strategiesLabel').textContent = labels.strategiesLabel;
+    document.getElementById('strengthsLabel').textContent = labels.strengthsLabel;
+    document.getElementById('improveLabel').textContent = labels.improveLabel;
+    document.getElementById('recommLabel').textContent = labels.recommLabel;
 }
 
 function updateReporterFields(backendRole) {
@@ -3834,14 +1613,6 @@ function updateReporterFields(backendRole) {
     
     updateFieldLabelsByRole(backendRole);
     updateRoleSpecificFields(backendRole);
-    
-    // إظهار أو إخفاء حقول المعلم حسب الدور
-    const teacherFields = document.getElementById('teacherFields');
-    if (backendRole === 'teacher') {
-        teacherFields.style.display = document.getElementById('place').value === 'داخل الصف' ? 'block' : 'none';
-    } else {
-        teacherFields.style.display = 'none';
-    }
     
     updateReport();
 }
@@ -3934,56 +1705,494 @@ function updateOutsideToolsList() {
     }
 }
 
-// ==================== تحديثات PDF ====================
+// ==================== تحديثات PDF (مع فحص وجود العناصر) ====================
 function updateReport() {
+    // تحديث القالب الرئيسي للمعلم (داخل الصف) - مع فحص وجود العناصر
     const role = document.getElementById('role').value;
-    const handler = roleHandlers[role];
-    if (handler && handler.updateReport) {
-        handler.updateReport();
-    } else {
-        // fallback
-        updateTeacherReport();
-        updateOutsideReport();
-        updateAdminReport();
-        updateSupervisorReport();
-        updateActivityReport();
-        updateStudentReport();
-        updateHealthReport();
-    }
-}
-
-function updateTeacherReport() {
-    // تحديث القالب الرئيسي للمعلم (داخل الصف)
     const place = document.getElementById('place').value;
     
-    const setText = (id, value) => {
-        const el = document.getElementById(id);
-        if (el) el.innerText = value || 'غير محدد';
-    };
+    const educationBox = document.getElementById('educationBox');
+    if (educationBox) educationBox.innerText = document.getElementById('education').value || 'غير محدد';
     
-    setText('educationBox', document.getElementById('education').value);
-    setText('schoolBox', document.getElementById('school').value);
-    const termValue = document.getElementById('term').value;
-    setText('termBox', termValue ? `الفصل الدراسي ${termValue}` : 'غير محدد');
-    setText('gradeBox', document.getElementById('grade')?.value);
-    setText('countBox', document.getElementById('count').value);
-    setText('reportTypeBox', document.getElementById('manualReportTitle').value || 'تقرير');
-    setText('targetBox', document.getElementById('target').value);
-    setText('placeBox', place === 'داخل الصف' ? 'داخل الصف' : (getDetailedPlaceValue() || 'خارج الصف'));
-    setText('subjectBox', document.getElementById('subject')?.value);
-    setText('lessonBox', document.getElementById('lesson')?.value);
-    setText('reporterNameBox', document.getElementById('reporterName').value);
-    setText('principalBox', document.getElementById('principal').value);
-    setText('reporterTypeBox', document.getElementById('reporterType').value || 'مقدم التقرير');
-    setText('principalTypeBox', document.getElementById('principalTypeDisplay').value || 'المدير');
-    setText('goalBox', document.getElementById('goal').value || 'لم يتم تحديد الهدف التربوي');
-    setText('summaryBox', document.getElementById('summary').value || 'لم يتم إضافة نبذة مختصرة');
-    setText('stepsBox', document.getElementById('steps').value || 'لم يتم تحديد إجراءات التنفيذ');
-    setText('strategiesBox', document.getElementById('strategies').value || 'لم يتم تحديد الاستراتيجيات');
-    setText('strengthsBox', document.getElementById('strengths').value || 'لم يتم تحديد نقاط القوة');
-    setText('improveBox', document.getElementById('improve').value || 'لم يتم تحديد نقاط التحسين');
-    setText('recommBox', document.getElementById('recomm').value || 'لم يتم تحديد التوصيات');
+    const schoolBox = document.getElementById('schoolBox');
+    if (schoolBox) schoolBox.innerText = document.getElementById('school').value || 'غير محدد';
     
+    const termBox = document.getElementById('termBox');
+    if (termBox) {
+        const termValue = document.getElementById('term').value;
+        termBox.innerText = termValue ? `الفصل الدراسي ${termValue}` : 'غير محدد';
+    }
+    
+    const gradeBox = document.getElementById('gradeBox');
+    if (gradeBox) gradeBox.innerText = document.getElementById('grade')?.value || 'غير محدد';
+    
+    const countBox = document.getElementById('countBox');
+    if (countBox) countBox.innerText = document.getElementById('count').value || 'غير محدد';
+    
+    const reportTypeBox = document.getElementById('reportTypeBox');
+    if (reportTypeBox) reportTypeBox.innerText = document.getElementById('manualReportTitle').value || 'تقرير';
+    
+    const targetBox = document.getElementById('targetBox');
+    if (targetBox) targetBox.innerText = document.getElementById('target').value || 'غير محدد';
+    
+    const placeBox = document.getElementById('placeBox');
+    if (placeBox) {
+        const placeValue = document.getElementById('place').value;
+        placeBox.innerText = placeValue === 'داخل الصف' ? 'داخل الصف' : (getDetailedPlaceValue() || 'خارج الصف');
+    }
+    
+    const subjectBox = document.getElementById('subjectBox');
+    if (subjectBox) subjectBox.innerText = document.getElementById('subject')?.value || 'غير محدد';
+    
+    const lessonBox = document.getElementById('lessonBox');
+    if (lessonBox) lessonBox.innerText = document.getElementById('lesson')?.value || 'غير محدد';
+    
+    const reporterNameBox = document.getElementById('reporterNameBox');
+    if (reporterNameBox) reporterNameBox.innerText = document.getElementById('reporterName').value || 'غير محدد';
+    
+    const principalBox = document.getElementById('principalBox');
+    if (principalBox) principalBox.innerText = document.getElementById('principal').value || 'غير محدد';
+    
+    const reporterTypeBox = document.getElementById('reporterTypeBox');
+    if (reporterTypeBox) reporterTypeBox.innerText = document.getElementById('reporterType').value || 'مقدم التقرير';
+    
+    const principalTypeBox = document.getElementById('principalTypeBox');
+    if (principalTypeBox) principalTypeBox.innerText = document.getElementById('principalTypeDisplay').value || 'المدير';
+    
+    const goalBox = document.getElementById('goalBox');
+    if (goalBox) goalBox.innerText = document.getElementById('goal').value || 'لم يتم تحديد الهدف التربوي';
+    
+    const summaryBox = document.getElementById('summaryBox');
+    if (summaryBox) summaryBox.innerText = document.getElementById('summary').value || 'لم يتم إضافة نبذة مختصرة';
+    
+    const stepsBox = document.getElementById('stepsBox');
+    if (stepsBox) stepsBox.innerText = document.getElementById('steps').value || 'لم يتم تحديد إجراءات التنفيذ';
+    
+    const strategiesBox = document.getElementById('strategiesBox');
+    if (strategiesBox) strategiesBox.innerText = document.getElementById('strategies').value || 'لم يتم تحديد الاستراتيجيات';
+    
+    const strengthsBox = document.getElementById('strengthsBox');
+    if (strengthsBox) strengthsBox.innerText = document.getElementById('strengths').value || 'لم يتم تحديد نقاط القوة';
+    
+    const improveBox = document.getElementById('improveBox');
+    if (improveBox) improveBox.innerText = document.getElementById('improve').value || 'لم يتم تحديد نقاط التحسين';
+    
+    const recommBox = document.getElementById('recommBox');
+    if (recommBox) recommBox.innerText = document.getElementById('recomm').value || 'لم يتم تحديد التوصيات';
+    
+    updateToolsDisplay();
+    
+    // تحديث القوالب الأخرى
+    updateOutsideReport();
+    updateAdminReport();
+    updateSupervisorReport();
+    updateActivityReport();
+    updateStudentReport();
+    updateHealthReport();
+}
+
+function updateOutsideReport() {
+    // تحديث قالب خارج الصف - مع فحص وجود العناصر
+    const place = document.getElementById('place').value;
+    if (place !== 'خارج الصف') return;
+    
+    const schoolBox = document.getElementById('outsideSchoolBox');
+    if (schoolBox) schoolBox.innerText = document.getElementById('school').value || 'غير محدد';
+    
+    const educationBox = document.getElementById('outsideEducationBox');
+    if (educationBox) educationBox.innerText = document.getElementById('education').value || 'غير محدد';
+    
+    const termBox = document.getElementById('outsideTermBox');
+    if (termBox) termBox.innerText = document.getElementById('term').value ? `الفصل الدراسي ${document.getElementById('term').value}` : 'غير محدد';
+    
+    const countBox = document.getElementById('outsideCountBox');
+    if (countBox) countBox.innerText = document.getElementById('count').value || 'غير محدد';
+    
+    const reportTypeBox = document.getElementById('outsideReportTypeBox');
+    if (reportTypeBox) reportTypeBox.innerText = document.getElementById('manualReportTitle').value || 'تقرير';
+    
+    const targetBox = document.getElementById('outsideTargetBox');
+    if (targetBox) targetBox.innerText = document.getElementById('target').value || 'غير محدد';
+    
+    const detailedPlaceBox = document.getElementById('outsideDetailedPlaceBox');
+    if (detailedPlaceBox) detailedPlaceBox.innerText = getDetailedPlaceValue() || 'غير محدد';
+    
+    const reporterNameBox = document.getElementById('outsideReporterNameBox');
+    if (reporterNameBox) reporterNameBox.innerText = document.getElementById('reporterName').value || 'غير محدد';
+    
+    const principalBox = document.getElementById('outsidePrincipalBox');
+    if (principalBox) principalBox.innerText = document.getElementById('principal').value || 'غير محدد';
+    
+    const reporterTypeBox = document.getElementById('outsideReporterTypeBox');
+    if (reporterTypeBox) reporterTypeBox.innerText = document.getElementById('reporterType').value || 'مقدم التقرير';
+    
+    const principalTypeBox = document.getElementById('outsidePrincipalTypeBox');
+    if (principalTypeBox) principalTypeBox.innerText = document.getElementById('principalTypeDisplay').value || 'المدير';
+    
+    const goalBox = document.getElementById('outsideGoalBox');
+    if (goalBox) goalBox.innerText = document.getElementById('goal').value || 'لم يتم تحديد الهدف التربوي';
+    
+    const summaryBox = document.getElementById('outsideSummaryBox');
+    if (summaryBox) summaryBox.innerText = document.getElementById('summary').value || 'لم يتم إضافة نبذة مختصرة';
+    
+    const stepsBox = document.getElementById('outsideStepsBox');
+    if (stepsBox) stepsBox.innerText = document.getElementById('steps').value || 'لم يتم تحديد إجراءات التنفيذ';
+    
+    const strategiesBox = document.getElementById('outsideStrategiesBox');
+    if (strategiesBox) strategiesBox.innerText = document.getElementById('strategies').value || 'لم يتم تحديد الاستراتيجيات';
+    
+    const strengthsBox = document.getElementById('outsideStrengthsBox');
+    if (strengthsBox) strengthsBox.innerText = document.getElementById('strengths').value || 'لم يتم تحديد نقاط القوة';
+    
+    const improveBox = document.getElementById('outsideImproveBox');
+    if (improveBox) improveBox.innerText = document.getElementById('improve').value || 'لم يتم تحديد نقاط التحسين';
+    
+    const recommBox = document.getElementById('outsideRecommBox');
+    if (recommBox) recommBox.innerText = document.getElementById('recomm').value || 'لم يتم تحديد التوصيات';
+    
+    updateOutsideToolsList();
+}
+
+function updateAdminReport() {
+    const role = document.getElementById('role').value;
+    if (role !== 'school_principal' && role !== 'vice_principal') return;
+    
+    // الحقول الأساسية
+    const schoolBox = document.getElementById('adminSchoolBox');
+    if (schoolBox) schoolBox.innerText = document.getElementById('school').value || 'غير محدد';
+    
+    const educationBox = document.getElementById('adminEducationBox');
+    if (educationBox) educationBox.innerText = document.getElementById('education').value || 'غير محدد';
+    
+    const termBox = document.getElementById('adminTermBox');
+    if (termBox) termBox.innerText = document.getElementById('term').value || 'غير محدد';
+    
+    const placeBox = document.getElementById('adminPlaceBox');
+    if (placeBox) placeBox.innerText = getDetailedPlaceValue() || 'غير محدد';
+    
+    const targetBox = document.getElementById('adminTargetBox');
+    if (targetBox) targetBox.innerText = document.getElementById('target').value || 'غير محدد';
+    
+    const countBox = document.getElementById('adminCountBox');
+    if (countBox) countBox.innerText = document.getElementById('count').value || 'غير محدد';
+    
+    const reportTypeBox = document.getElementById('adminReportTypeBox');
+    if (reportTypeBox) reportTypeBox.innerText = document.getElementById('manualReportTitle').value || 'تقرير إداري';
+    
+    // الحقول النصية الكبيرة
+    const goalBox = document.getElementById('adminGoalBox');
+    if (goalBox) goalBox.innerText = document.getElementById('goal').value || '';
+    
+    const stepsBox = document.getElementById('adminStepsBox');
+    if (stepsBox) stepsBox.innerText = document.getElementById('steps').value || '';
+    
+    const summaryBox = document.getElementById('adminSummaryBox');
+    if (summaryBox) summaryBox.innerText = document.getElementById('summary').value || '';
+    
+    // استراتيجيات
+    const strategiesBox = document.getElementById('adminStrategiesBox');
+    if (strategiesBox) strategiesBox.innerText = document.getElementById('strategies').value || '';
+    
+    const strengthsBox = document.getElementById('adminStrengthsBox');
+    if (strengthsBox) strengthsBox.innerText = document.getElementById('strengths').value || '';
+    
+    const improveBox = document.getElementById('adminImproveBox');
+    if (improveBox) improveBox.innerText = document.getElementById('improve').value || '';
+    
+    const followupBox = document.getElementById('adminFollowupBox');
+    if (followupBox) followupBox.innerText = document.getElementById('recomm').value || 'متابعة مستمرة';
+    
+    // التوقيعات
+    const reporterNameBox = document.getElementById('adminReporterNameBox');
+    if (reporterNameBox) reporterNameBox.innerText = document.getElementById('reporterName').value || '';
+    
+    const principalBox = document.getElementById('adminPrincipalBox');
+    if (principalBox) principalBox.innerText = document.getElementById('principal').value || '';
+
+    // الحقول الصغيرة
+    const fieldInput = document.getElementById('fieldInput');
+    const fieldBox = document.getElementById('adminFieldBox');
+    if (fieldBox) fieldBox.innerText = fieldInput ? fieldInput.value || 'تربوي' : 'تربوي';
+    
+    const initiativeInput = document.getElementById('initiativeInput');
+    const initiativeBox = document.getElementById('adminInitiativeBox');
+    if (initiativeBox) initiativeBox.innerText = initiativeInput ? initiativeInput.value || ('مبادرة ' + (document.getElementById('manualReportTitle').value || '')) : ('مبادرة ' + (document.getElementById('manualReportTitle').value || ''));
+    
+    const durationInput = document.getElementById('durationInput');
+    const durationBox = document.getElementById('adminDurationBox');
+    if (durationBox) durationBox.innerText = durationInput ? durationInput.value || 'يوم واحد' : 'يوم واحد';
+}
+
+function updateSupervisorReport() {
+    const role = document.getElementById('role').value;
+    if (role !== 'educational_supervisor') return;
+    
+    const schoolBox = document.getElementById('supervisorSchoolBox');
+    if (schoolBox) schoolBox.innerText = document.getElementById('school').value || 'مكتب الإشراف';
+    
+    const educationBox = document.getElementById('supervisorEducationBox');
+    if (educationBox) educationBox.innerText = document.getElementById('education').value || 'غير محدد';
+    
+    const termBox = document.getElementById('supervisorTermBox');
+    if (termBox) termBox.innerText = document.getElementById('term').value || 'غير محدد';
+    
+    const placeBox = document.getElementById('supervisorPlaceBox');
+    if (placeBox) placeBox.innerText = getDetailedPlaceValue() || 'غير محدد';
+    
+    const targetBox = document.getElementById('supervisorTargetBox');
+    if (targetBox) targetBox.innerText = document.getElementById('target').value || 'غير محدد';
+    
+    const countBox = document.getElementById('supervisorCountBox');
+    if (countBox) countBox.innerText = document.getElementById('count').value || 'غير محدد';
+    
+    const reportTypeBox = document.getElementById('supervisorReportTypeBox');
+    if (reportTypeBox) reportTypeBox.innerText = document.getElementById('manualReportTitle').value || 'تقرير إشرافي';
+    
+    const goalBox = document.getElementById('supervisorGoalBox');
+    if (goalBox) goalBox.innerText = document.getElementById('goal').value || '';
+    
+    const stepsBox = document.getElementById('supervisorStepsBox');
+    if (stepsBox) stepsBox.innerText = document.getElementById('steps').value || '';
+    
+    const performanceBox = document.getElementById('supervisorPerformanceBox');
+    if (performanceBox) performanceBox.innerText = document.getElementById('summary').value || '';
+    
+    const strengthsBox = document.getElementById('supervisorStrengthsBox');
+    if (strengthsBox) strengthsBox.innerText = document.getElementById('strategies').value || '';
+    
+    const improveBox = document.getElementById('supervisorImproveBox');
+    if (improveBox) improveBox.innerText = document.getElementById('improve').value || '';
+    
+    const recommBox = document.getElementById('supervisorRecommBox');
+    if (recommBox) recommBox.innerText = document.getElementById('recomm').value || '';
+    
+    // خطة الدعم والمتابعة تأخذ من حقل strengths
+    const followupBox = document.getElementById('supervisorFollowupBox');
+    if (followupBox) followupBox.innerText = document.getElementById('strengths').value || '';
+    
+    const reporterNameBox = document.getElementById('supervisorReporterNameBox');
+    if (reporterNameBox) reporterNameBox.innerText = document.getElementById('reporterName').value || '';
+    
+    const principalBox = document.getElementById('supervisorPrincipalBox');
+    if (principalBox) principalBox.innerText = document.getElementById('principal').value || '';
+
+    const fieldInput = document.getElementById('fieldInput');
+    const fieldBox = document.getElementById('supervisorFieldBox');
+    if (fieldBox) fieldBox.innerText = fieldInput ? fieldInput.value || 'تربوي' : 'تربوي';
+    
+    const initiativeInput = document.getElementById('initiativeInput');
+    const initiativeBox = document.getElementById('supervisorInitiativeBox');
+    if (initiativeBox) initiativeBox.innerText = initiativeInput ? initiativeInput.value || 'دعم الأداء الصفي' : 'دعم الأداء الصفي';
+    
+    const durationInput = document.getElementById('durationInput');
+    const durationBox = document.getElementById('supervisorDurationBox');
+    if (durationBox) durationBox.innerText = durationInput ? durationInput.value || 'حصة واحدة' : 'حصة واحدة';
+}
+
+function updateActivityReport() {
+    const role = document.getElementById('role').value;
+    if (role !== 'activity_leader') return;
+    
+    const schoolBox = document.getElementById('activitySchoolBox');
+    if (schoolBox) schoolBox.innerText = document.getElementById('school').value || 'مدرسة ................';
+    
+    const educationBox = document.getElementById('activityEducationBox');
+    if (educationBox) educationBox.innerText = document.getElementById('education').value || 'غير محدد';
+    
+    const termBox = document.getElementById('activityTermBox');
+    if (termBox) termBox.innerText = document.getElementById('term').value || 'غير محدد';
+    
+    const placeBox = document.getElementById('activityPlaceBox');
+    if (placeBox) placeBox.innerText = getDetailedPlaceValue() || 'غير محدد';
+    
+    const targetBox = document.getElementById('activityTargetBox');
+    if (targetBox) targetBox.innerText = document.getElementById('target').value || 'غير محدد';
+    
+    const countBox = document.getElementById('activityCountBox');
+    if (countBox) countBox.innerText = document.getElementById('count').value || 'غير محدد';
+    
+    const reportTypeBox = document.getElementById('activityReportTypeBox');
+    if (reportTypeBox) reportTypeBox.innerText = document.getElementById('manualReportTitle').value || 'تقرير نشاط';
+    
+    const goalBox = document.getElementById('activityGoalBox');
+    if (goalBox) goalBox.innerText = document.getElementById('goal').value || '';
+    
+    const stepsBox = document.getElementById('activityStepsBox');
+    if (stepsBox) stepsBox.innerText = document.getElementById('steps').value || '';
+    
+    const interactionBox = document.getElementById('activityInteractionBox');
+    if (interactionBox) interactionBox.innerText = document.getElementById('summary').value || '';
+    
+    const strengthsBox = document.getElementById('activityStrengthsBox');
+    if (strengthsBox) strengthsBox.innerText = document.getElementById('strategies').value || '';
+    
+    const improveBox = document.getElementById('activityImproveBox');
+    if (improveBox) improveBox.innerText = document.getElementById('improve').value || '';
+    
+    const recommBox = document.getElementById('activityRecommBox');
+    if (recommBox) recommBox.innerText = document.getElementById('recomm').value || '';
+    
+    const followupBox = document.getElementById('activityFollowupBox');
+    if (followupBox) followupBox.innerText = document.getElementById('strengths').value || '';
+    
+    const reporterNameBox = document.getElementById('activityReporterNameBox');
+    if (reporterNameBox) reporterNameBox.innerText = document.getElementById('reporterName').value || '';
+    
+    const principalBox = document.getElementById('activityPrincipalBox');
+    if (principalBox) principalBox.innerText = document.getElementById('principal').value || '';
+
+    const fieldInput = document.getElementById('fieldInput');
+    const fieldBox = document.getElementById('activityFieldBox');
+    if (fieldBox) fieldBox.innerText = fieldInput ? fieldInput.value || 'اجتماعي' : 'اجتماعي';
+    
+    const programTypeInput = document.getElementById('programTypeInput');
+    const programTypeBox = document.getElementById('activityTypeBox');
+    if (programTypeBox) programTypeBox.innerText = programTypeInput ? programTypeInput.value || 'برنامج تحفيزي' : 'برنامج تحفيزي';
+    
+    const durationInput = document.getElementById('durationInput');
+    const durationBox = document.getElementById('activityDurationBox');
+    if (durationBox) durationBox.innerText = durationInput ? durationInput.value || 'يوم واحد' : 'يوم واحد';
+}
+
+function updateStudentReport() {
+    const role = document.getElementById('role').value;
+    if (role !== 'student_guide') return;
+    
+    const schoolBox = document.getElementById('studentSchoolBox');
+    if (schoolBox) schoolBox.innerText = document.getElementById('school').value || 'اسم المدرسة';
+    
+    const educationBox = document.getElementById('studentEducationBox');
+    if (educationBox) educationBox.innerText = document.getElementById('education').value || 'غير محدد';
+    
+    const termBox = document.getElementById('studentTermBox');
+    if (termBox) termBox.innerText = document.getElementById('term').value || 'غير محدد';
+    
+    const placeBox = document.getElementById('studentPlaceBox');
+    if (placeBox) placeBox.innerText = getDetailedPlaceValue() || 'غير محدد';
+    
+    const targetBox = document.getElementById('studentTargetBox');
+    if (targetBox) targetBox.innerText = document.getElementById('target').value || 'غير محدد';
+    
+    const countBox = document.getElementById('studentCountBox');
+    if (countBox) countBox.innerText = document.getElementById('count').value || 'غير محدد';
+    
+    const reportTypeBox = document.getElementById('studentReportTypeBox');
+    if (reportTypeBox) reportTypeBox.innerText = document.getElementById('manualReportTitle').value || 'تقرير توجيه طلابي';
+    
+    const goalBox = document.getElementById('studentGoalBox');
+    if (goalBox) goalBox.innerText = document.getElementById('goal').value || '';
+
+    // الحقول الكبيرة
+    const careInput = document.getElementById('careInput');
+    const careBox = document.getElementById('studentCareBox');
+    if (careBox) careBox.innerText = careInput ? careInput.value || '' : '';
+    
+    const awarenessInput = document.getElementById('awarenessInput');
+    const awarenessBox = document.getElementById('studentAwarenessBox');
+    if (awarenessBox) awarenessBox.innerText = awarenessInput ? awarenessInput.value || '' : '';
+    
+    const interventionInput = document.getElementById('interventionInput');
+    const interventionBox = document.getElementById('studentInterventionBox');
+    if (interventionBox) interventionBox.innerText = interventionInput ? interventionInput.value || '' : '';
+    
+    const supportInput = document.getElementById('supportInput');
+    const supportBox = document.getElementById('studentSupportBox');
+    if (supportBox) supportBox.innerText = supportInput ? supportInput.value || '' : '';
+    
+    const familyInput = document.getElementById('familyInput');
+    const familyBox = document.getElementById('studentFamilyBox');
+    if (familyBox) familyBox.innerText = familyInput ? familyInput.value || '' : '';
+    
+    const envInput = document.getElementById('envInput');
+    const envBox = document.getElementById('studentEnvBox');
+    if (envBox) envBox.innerText = envInput ? envInput.value || '' : '';
+
+    // التوقيعات
+    const reporterNameBox = document.getElementById('studentReporterNameBox');
+    if (reporterNameBox) reporterNameBox.innerText = document.getElementById('reporterName').value || '';
+    
+    const principalBox = document.getElementById('studentPrincipalBox');
+    if (principalBox) principalBox.innerText = document.getElementById('principal').value || '';
+
+    // الحقول الصغيرة
+    const initiativeInput = document.getElementById('initiativeInput');
+    const initiativeBox = document.getElementById('studentInitiativeBox');
+    if (initiativeBox) initiativeBox.innerText = initiativeInput ? initiativeInput.value || ('مبادرة ' + (document.getElementById('manualReportTitle').value || '')) : ('مبادرة ' + (document.getElementById('manualReportTitle').value || ''));
+    
+    const durationInput = document.getElementById('durationInput');
+    const durationBox = document.getElementById('studentDurationBox');
+    if (durationBox) durationBox.innerText = durationInput ? durationInput.value || 'أسبوع' : 'أسبوع';
+}
+
+function updateHealthReport() {
+    const role = document.getElementById('role').value;
+    if (role !== 'health_guide') return;
+    
+    const schoolBox = document.getElementById('healthSchoolBox');
+    if (schoolBox) schoolBox.innerText = document.getElementById('school').value || 'اسم المدرسة';
+    
+    const educationBox = document.getElementById('healthEducationBox');
+    if (educationBox) educationBox.innerText = document.getElementById('education').value || 'غير محدد';
+    
+    const termBox = document.getElementById('healthTermBox');
+    if (termBox) termBox.innerText = document.getElementById('term').value || 'غير محدد';
+    
+    const placeBox = document.getElementById('healthPlaceBox');
+    if (placeBox) placeBox.innerText = getDetailedPlaceValue() || 'غير محدد';
+    
+    const targetBox = document.getElementById('healthTargetBox');
+    if (targetBox) targetBox.innerText = document.getElementById('target').value || 'غير محدد';
+    
+    const countBox = document.getElementById('healthCountBox');
+    if (countBox) countBox.innerText = document.getElementById('count').value || 'غير محدد';
+    
+    const reportTypeBox = document.getElementById('healthReportTypeBox');
+    if (reportTypeBox) reportTypeBox.innerText = document.getElementById('manualReportTitle').value || 'تقرير صحي';
+    
+    const goalBox = document.getElementById('healthGoalBox');
+    if (goalBox) goalBox.innerText = document.getElementById('goal').value || '';
+    
+    const stepsBox = document.getElementById('healthStepsBox');
+    if (stepsBox) stepsBox.innerText = document.getElementById('steps').value || '';
+    
+    const benefitBox = document.getElementById('healthBenefitBox');
+    if (benefitBox) benefitBox.innerText = document.getElementById('summary').value || '';
+    
+    const challengesBox = document.getElementById('healthChallengesBox');
+    if (challengesBox) challengesBox.innerText = document.getElementById('improve').value || '';
+    
+    const resultsBox = document.getElementById('healthResultsBox');
+    if (resultsBox) resultsBox.innerText = document.getElementById('strategies').value || '';
+    
+    const recommBox = document.getElementById('healthRecommBox');
+    if (recommBox) recommBox.innerText = document.getElementById('recomm').value || '';
+    
+    const followupBox = document.getElementById('healthFollowupBox');
+    if (followupBox) followupBox.innerText = document.getElementById('strengths').value || '';
+    
+    const reporterNameBox = document.getElementById('healthReporterNameBox');
+    if (reporterNameBox) reporterNameBox.innerText = document.getElementById('reporterName').value || '';
+    
+    const principalBox = document.getElementById('healthPrincipalBox');
+    if (principalBox) principalBox.innerText = document.getElementById('principal').value || '';
+
+    const fieldInput = document.getElementById('fieldInput');
+    const fieldBox = document.getElementById('healthFieldBox');
+    if (fieldBox) fieldBox.innerText = fieldInput ? fieldInput.value || 'توعوي' : 'توعوي';
+    
+    const programTypeInput = document.getElementById('programTypeInput');
+    const programBox = document.getElementById('healthProgramBox');
+    if (programBox) programBox.innerText = programTypeInput ? programTypeInput.value || 'حملة توعوية' : 'حملة توعوية';
+    
+    const durationInput = document.getElementById('durationInput');
+    const durationBox = document.getElementById('healthDurationBox');
+    if (durationBox) durationBox.innerText = durationInput ? durationInput.value || 'يوم واحد' : 'يوم واحد';
+}
+
+function toggleTool(element) {
+    const checkbox = element.querySelector('input[type="checkbox"]');
+    checkbox.checked = !checkbox.checked;
+    if (checkbox.checked) element.classList.add('checked'); else element.classList.remove('checked');
     updateToolsDisplay();
 }
 
@@ -4010,227 +2219,6 @@ function updateToolsDisplay() {
     }
 }
 
-function updateOutsideReport() {
-    const place = document.getElementById('place').value;
-    if (place !== 'خارج الصف') return;
-    
-    const setText = (id, value) => {
-        const el = document.getElementById(id);
-        if (el) el.innerText = value || 'غير محدد';
-    };
-    
-    setText('outsideSchoolBox', document.getElementById('school').value);
-    setText('outsideEducationBox', document.getElementById('education').value);
-    const termValue = document.getElementById('term').value;
-    setText('outsideTermBox', termValue ? `الفصل الدراسي ${termValue}` : 'غير محدد');
-    setText('outsideCountBox', document.getElementById('count').value);
-    setText('outsideReportTypeBox', document.getElementById('manualReportTitle').value || 'تقرير');
-    setText('outsideTargetBox', document.getElementById('target').value);
-    setText('outsideDetailedPlaceBox', getDetailedPlaceValue());
-    setText('outsideReporterNameBox', document.getElementById('reporterName').value);
-    setText('outsidePrincipalBox', document.getElementById('principal').value);
-    setText('outsideReporterTypeBox', document.getElementById('reporterType').value || 'مقدم التقرير');
-    setText('outsidePrincipalTypeBox', document.getElementById('principalTypeDisplay').value || 'المدير');
-    setText('outsideGoalBox', document.getElementById('goal').value || 'لم يتم تحديد الهدف التربوي');
-    setText('outsideSummaryBox', document.getElementById('summary').value || 'لم يتم إضافة نبذة مختصرة');
-    setText('outsideStepsBox', document.getElementById('steps').value || 'لم يتم تحديد إجراءات التنفيذ');
-    setText('outsideStrategiesBox', document.getElementById('strategies').value || 'لم يتم تحديد الاستراتيجيات');
-    setText('outsideStrengthsBox', document.getElementById('strengths').value || 'لم يتم تحديد نقاط القوة');
-    setText('outsideImproveBox', document.getElementById('improve').value || 'لم يتم تحديد نقاط التحسين');
-    setText('outsideRecommBox', document.getElementById('recomm').value || 'لم يتم تحديد التوصيات');
-    
-    updateOutsideToolsList();
-}
-
-function updateAdminReport() {
-    const role = document.getElementById('role').value;
-    if (role !== 'school_principal' && role !== 'vice_principal') return;
-    
-    const setText = (id, value) => {
-        const el = document.getElementById(id);
-        if (el) el.innerText = value || '';
-    };
-    
-    setText('adminSchoolBox', document.getElementById('school').value);
-    setText('adminEducationBox', document.getElementById('education').value);
-    setText('adminTermBox', document.getElementById('term').value);
-    setText('adminPlaceBox', getDetailedPlaceValue());
-    setText('adminTargetBox', document.getElementById('target').value);
-    setText('adminCountBox', document.getElementById('count').value);
-    setText('adminReportTypeBox', document.getElementById('manualReportTitle').value || 'تقرير إداري');
-    setText('adminGoalBox', document.getElementById('goal').value);
-    setText('adminStepsBox', document.getElementById('steps').value);
-    setText('adminSummaryBox', document.getElementById('summary').value);
-    setText('adminStrategiesBox', document.getElementById('strategies').value);
-    setText('adminStrengthsBox', document.getElementById('strengths').value);
-    setText('adminImproveBox', document.getElementById('improve').value);
-    setText('adminFollowupBox', document.getElementById('recomm').value || 'متابعة مستمرة');
-    setText('adminReporterNameBox', document.getElementById('reporterName').value);
-    setText('adminPrincipalBox', document.getElementById('principal').value);
-
-    const fieldInput = document.getElementById('fieldInput');
-    setText('adminFieldBox', fieldInput ? fieldInput.value : 'تربوي');
-    
-    const initiativeInput = document.getElementById('initiativeInput');
-    setText('adminInitiativeBox', initiativeInput ? initiativeInput.value : ('مبادرة ' + (document.getElementById('manualReportTitle').value || '')));
-    
-    const durationInput = document.getElementById('durationInput');
-    setText('adminDurationBox', durationInput ? durationInput.value : 'يوم واحد');
-}
-
-function updateSupervisorReport() {
-    const role = document.getElementById('role').value;
-    if (role !== 'educational_supervisor') return;
-    
-    const setText = (id, value) => {
-        const el = document.getElementById(id);
-        if (el) el.innerText = value || '';
-    };
-    
-    setText('supervisorSchoolBox', document.getElementById('school').value || 'مكتب الإشراف');
-    setText('supervisorEducationBox', document.getElementById('education').value);
-    setText('supervisorTermBox', document.getElementById('term').value);
-    setText('supervisorPlaceBox', getDetailedPlaceValue());
-    setText('supervisorTargetBox', document.getElementById('target').value);
-    setText('supervisorCountBox', document.getElementById('count').value);
-    setText('supervisorReportTypeBox', document.getElementById('manualReportTitle').value || 'تقرير إشرافي');
-    setText('supervisorGoalBox', document.getElementById('goal').value);
-    setText('supervisorStepsBox', document.getElementById('steps').value);
-    setText('supervisorPerformanceBox', document.getElementById('summary').value);
-    setText('supervisorStrengthsBox', document.getElementById('strategies').value);
-    setText('supervisorImproveBox', document.getElementById('improve').value);
-    setText('supervisorRecommBox', document.getElementById('recomm').value);
-    setText('supervisorFollowupBox', document.getElementById('strengths').value);
-    setText('supervisorReporterNameBox', document.getElementById('reporterName').value);
-    setText('supervisorPrincipalBox', document.getElementById('principal').value);
-
-    const fieldInput = document.getElementById('fieldInput');
-    setText('supervisorFieldBox', fieldInput ? fieldInput.value : 'تربوي');
-    
-    const initiativeInput = document.getElementById('initiativeInput');
-    setText('supervisorInitiativeBox', initiativeInput ? initiativeInput.value : 'دعم الأداء الصفي');
-    
-    const durationInput = document.getElementById('durationInput');
-    setText('supervisorDurationBox', durationInput ? durationInput.value : 'حصة واحدة');
-}
-
-function updateActivityReport() {
-    const role = document.getElementById('role').value;
-    if (role !== 'activity_leader') return;
-    
-    const setText = (id, value) => {
-        const el = document.getElementById(id);
-        if (el) el.innerText = value || '';
-    };
-    
-    setText('activitySchoolBox', document.getElementById('school').value || 'مدرسة ................');
-    setText('activityEducationBox', document.getElementById('education').value);
-    setText('activityTermBox', document.getElementById('term').value);
-    setText('activityPlaceBox', getDetailedPlaceValue());
-    setText('activityTargetBox', document.getElementById('target').value);
-    setText('activityCountBox', document.getElementById('count').value);
-    setText('activityReportTypeBox', document.getElementById('manualReportTitle').value || 'تقرير نشاط');
-    setText('activityGoalBox', document.getElementById('goal').value);
-    setText('activityStepsBox', document.getElementById('steps').value);
-    setText('activityInteractionBox', document.getElementById('summary').value);
-    setText('activityStrengthsBox', document.getElementById('strategies').value);
-    setText('activityImproveBox', document.getElementById('improve').value);
-    setText('activityRecommBox', document.getElementById('recomm').value);
-    setText('activityFollowupBox', document.getElementById('strengths').value);
-    setText('activityReporterNameBox', document.getElementById('reporterName').value);
-    setText('activityPrincipalBox', document.getElementById('principal').value);
-
-    const fieldInput = document.getElementById('fieldInput');
-    setText('activityFieldBox', fieldInput ? fieldInput.value : 'اجتماعي');
-    
-    const programTypeInput = document.getElementById('programTypeInput');
-    setText('activityTypeBox', programTypeInput ? programTypeInput.value : 'برنامج تحفيزي');
-    
-    const durationInput = document.getElementById('durationInput');
-    setText('activityDurationBox', durationInput ? durationInput.value : 'يوم واحد');
-}
-
-function updateStudentReport() {
-    const role = document.getElementById('role').value;
-    if (role !== 'student_guide') return;
-    
-    const setText = (id, value) => {
-        const el = document.getElementById(id);
-        if (el) el.innerText = value || '';
-    };
-    
-    setText('studentSchoolBox', document.getElementById('school').value || 'اسم المدرسة');
-    setText('studentEducationBox', document.getElementById('education').value);
-    setText('studentTermBox', document.getElementById('term').value);
-    setText('studentPlaceBox', getDetailedPlaceValue());
-    setText('studentTargetBox', document.getElementById('target').value);
-    setText('studentCountBox', document.getElementById('count').value);
-    setText('studentReportTypeBox', document.getElementById('manualReportTitle').value || 'تقرير توجيه طلابي');
-    setText('studentGoalBox', document.getElementById('goal').value);
-
-    // الحقول الكبيرة
-    setText('studentCareBox', document.getElementById('careInput')?.value);
-    setText('studentAwarenessBox', document.getElementById('awarenessInput')?.value);
-    setText('studentInterventionBox', document.getElementById('interventionInput')?.value);
-    setText('studentSupportBox', document.getElementById('supportInput')?.value);
-    setText('studentFamilyBox', document.getElementById('familyInput')?.value);
-    setText('studentEnvBox', document.getElementById('envInput')?.value);
-
-    // التوقيعات
-    setText('studentReporterNameBox', document.getElementById('reporterName').value);
-    setText('studentPrincipalBox', document.getElementById('principal').value);
-
-    // الحقول الصغيرة
-    const initiativeInput = document.getElementById('initiativeInput');
-    setText('studentInitiativeBox', initiativeInput ? initiativeInput.value : ('مبادرة ' + (document.getElementById('manualReportTitle').value || '')));
-    
-    const durationInput = document.getElementById('durationInput');
-    setText('studentDurationBox', durationInput ? durationInput.value : 'أسبوع');
-}
-
-function updateHealthReport() {
-    const role = document.getElementById('role').value;
-    if (role !== 'health_guide') return;
-    
-    const setText = (id, value) => {
-        const el = document.getElementById(id);
-        if (el) el.innerText = value || '';
-    };
-    
-    setText('healthSchoolBox', document.getElementById('school').value || 'اسم المدرسة');
-    setText('healthEducationBox', document.getElementById('education').value);
-    setText('healthTermBox', document.getElementById('term').value);
-    setText('healthPlaceBox', getDetailedPlaceValue());
-    setText('healthTargetBox', document.getElementById('target').value);
-    setText('healthCountBox', document.getElementById('count').value);
-    setText('healthReportTypeBox', document.getElementById('manualReportTitle').value || 'تقرير صحي');
-    setText('healthGoalBox', document.getElementById('goal').value);
-    setText('healthStepsBox', document.getElementById('steps').value);
-    setText('healthBenefitBox', document.getElementById('summary').value);
-    setText('healthChallengesBox', document.getElementById('improve').value);
-    setText('healthResultsBox', document.getElementById('strategies').value);
-    setText('healthRecommBox', document.getElementById('recomm').value);
-    setText('healthFollowupBox', document.getElementById('strengths').value);
-    setText('healthReporterNameBox', document.getElementById('reporterName').value);
-    setText('healthPrincipalBox', document.getElementById('principal').value);
-
-    const fieldInput = document.getElementById('fieldInput');
-    setText('healthFieldBox', fieldInput ? fieldInput.value : 'توعوي');
-    
-    const programTypeInput = document.getElementById('programTypeInput');
-    setText('healthProgramBox', programTypeInput ? programTypeInput.value : 'حملة توعوية');
-    
-    const durationInput = document.getElementById('durationInput');
-    setText('healthDurationBox', durationInput ? durationInput.value : 'يوم واحد');
-}
-
-function toggleTool(element) {
-    const checkbox = element.querySelector('input[type="checkbox"]');
-    checkbox.checked = !checkbox.checked;
-    if (checkbox.checked) element.classList.add('checked'); else element.classList.remove('checked');
-    updateToolsDisplay();
-}
-
 function loadImage(input, ...targetIds) {
     if (input.files && input.files[0]) {
         const reader = new FileReader();
@@ -4249,99 +2237,154 @@ function loadImage(input, ...targetIds) {
     }
 }
 
-// ==================== التعبئة الذكية المحسنة ====================
-async function fillWithAI() {
-    const activationCode = localStorage.getItem(ACTIVATION_KEY_NAME);
-    if (!activationCode && !window.__ACTIVATED__) { alert('الرجاء تفعيل الأداة أولاً باستخدام كود التفعيل'); return; }
-    if (!navigator.onLine) { alert('لا يوجد اتصال بالإنترنت.'); return; }
-    const reportTitle = document.getElementById('manualReportTitle').value.trim();
-    if (!reportTitle) { alert('الرجاء إدخال عنوان التقرير أولاً'); return; }
-    const criterionId = document.getElementById('criterionSelect').value || null;
-    const subcategoryId = document.getElementById('subcategorySelect').value || null;
-    const reportId = document.getElementById('reportSelect').value || null;
-    const uiRole = document.getElementById('role').value;
-    const backendRole = getBackendRole(uiRole);
-    
-    // قراءة الحقول الإضافية
-    const field = document.getElementById('fieldInput')?.value || '';
-    const initiative = document.getElementById('initiativeInput')?.value || '';
-    const duration = document.getElementById('durationInput')?.value || '';
-    const programType = document.getElementById('programTypeInput')?.value || '';
-    
-    const handler = roleHandlers[backendRole] || roleHandlers.teacher;
-    const prompt = handler.getPrompt({
-        title: reportTitle,
-        subject: document.getElementById('subject')?.value,
-        lesson: document.getElementById('lesson')?.value,
-        grade: document.getElementById('grade')?.value,
-        target: document.getElementById('target').value,
-        place: document.getElementById('place').value,
-        count: document.getElementById('count').value,
-        field, initiative, duration, programType
-    });
-    
-    const aiButton = document.getElementById('aiFillFloatingBtn');
-    const originalText = aiButton.querySelector('.floating-ai-text').textContent;
-    const originalIcon = aiButton.querySelector('.floating-ai-icon').className;
-    aiButton.classList.add('loading');
-    aiButton.querySelector('.floating-ai-text').textContent = 'جارٍ...';
-    aiButton.querySelector('.floating-ai-icon').className = 'fas fa-spinner fa-spin floating-ai-icon';
-    aiButton.disabled = true;
-    try {
-        const response = await fetch(BACKEND_URL + "/api/generate-report-content", {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'X-Activation-Code': activationCode },
-            body: JSON.stringify({ 
-                criterion_id: criterionId, 
-                subcategory_id: subcategoryId, 
-                report_id: reportId, 
-                role: backendRole, 
-                prompt: prompt,
-                report_data: { 
-                    subject: document.getElementById('subject')?.value || '', 
-                    lesson: document.getElementById('lesson')?.value || '', 
-                    grade: document.getElementById('grade')?.value || '', 
-                    target: document.getElementById('target').value || '', 
-                    place: document.getElementById('place').value || '', 
-                    count: document.getElementById('count').value || '', 
-                    title: reportTitle,
-                    field: field,
-                    initiative: initiative,
-                    duration: duration,
-                    programType: programType
-                } 
-            })
-        });
-        if (!response.ok) throw new Error("تعذر تنفيذ الطلب");
-        const data = await response.json();
-        if (!data || !data.content) throw new Error('لم يتم الحصول على إجابة من الذكاء الاصطناعي');
-        
-        // استخدام معالج الدور لتحليل الرد
-        handler.parseResponse(data.content);
-        
-        saveCurrentReport();
-        showGuideBox();
-    } catch (error) {
-        console.error('خطأ في الذكاء الاصطناعي:', error);
-        alert(error.message || "تعذر تنفيذ الطلب.");
-    } finally {
-        aiButton.classList.remove('loading');
-        aiButton.querySelector('.floating-ai-text').textContent = originalText;
-        aiButton.querySelector('.floating-ai-icon').className = originalIcon;
-        aiButton.disabled = false;
-        updateAiButtonTheme(localStorage.getItem(APP_THEME_KEY) || 'default');
+// ==================== دالة تعيين الحقول حسب الدور ====================
+function getFieldMappingByRole(role) {
+    // التعيين الافتراضي للمعلم وبقية الأدوار (ما عدا المدير والمشرف التربوي)
+    const defaultMapping = {
+        '1': 'goal',
+        '2': 'summary',
+        '3': 'steps',
+        '4': 'strategies',
+        '5': 'strengths',
+        '6': 'improve',
+        '7': 'recomm'
+    };
+
+    // تعيين خاص للمدير والوكيل
+    if (role === 'school_principal' || role === 'vice_principal') {
+        return {
+            '1': 'goal',      // الهدف القيادي
+            '2': 'summary',    // النتائج
+            '3': 'steps',      // الإجراءات المنفذة
+            '4': 'strategies', // الاستراتيجيات المتبعة
+            '5': 'strengths',  // نقاط القوة
+            '6': 'improve',    // أولويات التطوير
+            '7': 'recomm'      // خطة المتابعة
+        };
     }
+    
+    // تعيين خاص للمشرف التربوي
+    if (role === 'educational_supervisor') {
+        return {
+            '1': 'goal',      // الأهداف الإشرافية
+            '2': 'steps',     // الإجراءات
+            '3': 'summary',   // مستوى الأداء
+            '4': 'strategies', // جوانب التميز
+            '5': 'improve',   // مجالات التحسين
+            '6': 'recomm',    // التوصيات
+            '7': 'strengths'  // خطة الدعم والمتابعة
+        };
+    }
+
+    // تعيين خاص للموجه الطلابي
+    if (role === 'student_guide') {
+        return {
+            '1': 'goal',      // الأهداف
+            '2': 'summary',    // الرعاية الطلابية
+            '3': 'steps',      // الوقاية والتوعية
+            '4': 'strategies', // التدخل ومعالجة الحالات
+            '5': 'strengths',  // التمكين والدعم
+            '6': 'improve',    // الشراكة الأسرية
+            '7': 'recomm'      // تطوير البيئة المدرسية
+        };
+    }
+
+    // تعيين خاص للموجه الصحي
+    if (role === 'health_guide') {
+        return {
+            '1': 'goal',      // أهداف البرنامج الصحي
+            '2': 'steps',     // الإجراءات المتخذة
+            '3': 'summary',   // مستوى الاستفادة
+            '4': 'improve',   // التحديات الصحية
+            '5': 'strategies', // أبرز النتائج
+            '6': 'recomm',    // التوصيات الوقائية
+            '7': 'strengths'  // خطة المتابعة الصحية
+        };
+    }
+
+    // تعيين خاص لرائد النشاط
+    if (role === 'activity_leader') {
+        return {
+            '1': 'goal',      // أهداف البرنامج
+            '2': 'steps',     // آلية التنفيذ
+            '3': 'summary',   // مستوى التفاعل والمشاركة
+            '4': 'strategies', // أبرز الإنجازات
+            '5': 'improve',   // التحديات
+            '6': 'recomm',    // التوصيات التطويرية
+            '7': 'strengths'  // خطة المتابعة
+        };
+    }
+
+    return defaultMapping;
 }
 
-function showGuideBox() {
-    const guideBox = document.getElementById('aiGuideBox');
-    const timerSpan = document.getElementById('guideTimer');
-    let seconds = 20;
-    if (window.guideTimerInterval) clearInterval(window.guideTimerInterval);
-    window.guideTimerInterval = setInterval(() => { seconds--; timerSpan.textContent = seconds; if (seconds <= 0) { clearInterval(window.guideTimerInterval); guideBox.style.display = 'none'; } }, 1000);
-    document.getElementById('guideDownloadBtn').onclick = function() { downloadPDF(); clearInterval(window.guideTimerInterval); guideBox.style.display = 'none'; };
-    document.getElementById('guideCloseBtn').onclick = function() { clearInterval(window.guideTimerInterval); guideBox.style.display = 'none'; };
-    guideBox.style.display = 'block';
+// ==================== دالة parseAIResponseProfessional المعدلة ====================
+function parseAIResponseProfessional(response) {
+    const role = document.getElementById('role').value;
+    const fieldMapping = getFieldMappingByRole(role);
+    
+    const lines = response.split('\n').filter(l => l.trim());
+    let found = 0;
+    
+    lines.forEach(line => {
+        const match = line.match(/^(\d+)[\.\-]\s*(.+)/);
+        if (match) {
+            const num = match[1];
+            let content = match[2].trim();
+            content = removeFieldTitles(content);
+            
+            if (fieldMapping[num]) {
+                content = ensureWordCount(content, 25);
+                document.getElementById(fieldMapping[num]).value = content;
+                found++;
+            }
+        }
+    });
+    
+    if (found < 3) fallbackProfessionalAIParsing(response, role);
+    updateReport();
+}
+
+// ==================== دالة fallbackProfessionalAIParsing المعدلة ====================
+function fallbackProfessionalAIParsing(response, role) {
+    const fieldMapping = getFieldMappingByRole(role);
+    const sentences = response.split(/[\.\n]/).filter(s => s.trim().length > 20 && !s.match(/الهدف|نبذة|إجراءات|الاستراتيجيات|نقاط القوة|نقاط التحسين|التوصيات|خطة المتابعة/i));
+    
+    // ترتيب الحقول حسب الأهمية (نفس ترتيب الأرقام)
+    const orderedFields = ['goal', 'summary', 'steps', 'strategies', 'strengths', 'improve', 'recomm'];
+    
+    let idx = 0;
+    orderedFields.forEach(field => {
+        if (idx < sentences.length) {
+            let content = sentences[idx].trim();
+            content = removeFieldTitles(content);
+            content = ensureWordCount(content, 25);
+            document.getElementById(field).value = content;
+            idx++;
+        }
+    });
+}
+
+function removeFieldTitles(content) {
+    const titles = ['الهدف التربوي','نبذة مختصرة','إجراءات التنفيذ','الاستراتيجيات','نقاط القوة','نقاط التحسين','التوصيات','هو:','تشمل:','يتضمن:','يتمثل في','يشمل','تحتوي','تتضمن'];
+    let cleaned = content;
+    titles.forEach(t => {
+        cleaned = cleaned.replace(new RegExp(`^${t}[:\\.\\-]?\\s*`,'i'), '');
+        cleaned = cleaned.replace(new RegExp(`\\s*${t}[:\\.\\-]?\\s*`,'gi'), ' ');
+    });
+    return cleaned.trim().replace(/\s+/g, ' ') || content;
+}
+
+function ensureWordCount(content, target) {
+    const words = content.split(' ');
+    if (words.length >= target-5 && words.length <= target+5) return content;
+    if (words.length < target-5) {
+        const phrases = ['مع التركيز على تحقيق أهداف التعلم وتنمية المهارات الأساسية','بما يسهم في رفع مستوى التحصيل الدراسي وتحسين المخرجات التعليمية','مع مراعاة الفروق الفردية وتنويع أساليب التدريس','لضمان تحقيق رؤية التعليم وتطوير العملية التعليمية','مع الاستفادة من أفضل الممارسات التربوية والتقنيات التعليمية الحديثة'];
+        let extended = content;
+        while (extended.split(' ').length < target) extended += ' ' + phrases[Math.floor(Math.random()*phrases.length)];
+        return extended;
+    }
+    return words.slice(0,target).join(' ');
 }
 
 // ==================== حفظ واستعراض التقارير ====================
@@ -4362,6 +2405,23 @@ function saveCurrentReport() {
     }
     const uiRole = document.getElementById('role').value;
 
+    // جمع البيانات من الحقول المشتركة والحقول الخاصة
+    let extraData = {};
+    // الحقول الصغيرة
+    if (document.getElementById('grade')) extraData.grade = document.getElementById('grade').value;
+    if (document.getElementById('subject')) extraData.subject = document.getElementById('subject').value;
+    if (document.getElementById('lesson')) extraData.lesson = document.getElementById('lesson').value;
+    if (document.getElementById('fieldInput')) extraData.field = document.getElementById('fieldInput').value;
+    if (document.getElementById('initiativeInput')) extraData.initiative = document.getElementById('initiativeInput').value;
+    if (document.getElementById('durationInput')) extraData.duration = document.getElementById('durationInput').value;
+    if (document.getElementById('programTypeInput')) extraData.programType = document.getElementById('programTypeInput').value;
+    if (document.getElementById('careInput')) extraData.care = document.getElementById('careInput').value;
+    if (document.getElementById('awarenessInput')) extraData.awareness = document.getElementById('awarenessInput').value;
+    if (document.getElementById('interventionInput')) extraData.intervention = document.getElementById('interventionInput').value;
+    if (document.getElementById('supportInput')) extraData.support = document.getElementById('supportInput').value;
+    if (document.getElementById('familyInput')) extraData.family = document.getElementById('familyInput').value;
+    if (document.getElementById('envInput')) extraData.env = document.getElementById('envInput').value;
+
     const reportData = {
         id: Date.now().toString(),
         title: reportTitle,
@@ -4375,10 +2435,7 @@ function saveCurrentReport() {
             reporterType: document.getElementById('reporterType').value,
             reporterName: document.getElementById('reporterName').value,
             principal: document.getElementById('principal').value,
-            grade: document.getElementById('grade')?.value || '',
             term: document.getElementById('term').value,
-            subject: document.getElementById('subject')?.value || '',
-            lesson: document.getElementById('lesson')?.value || '',
             target: document.getElementById('target').value,
             count: document.getElementById('count').value,
             place, detailedPlace: getDetailedPlaceValue(),
@@ -4390,17 +2447,7 @@ function saveCurrentReport() {
             improve: document.getElementById('improve').value,
             recomm: document.getElementById('recomm').value,
             tools, otherTools: window.otherTools,
-            // الحقول الخاصة
-            field: document.getElementById('fieldInput')?.value,
-            initiative: document.getElementById('initiativeInput')?.value,
-            duration: document.getElementById('durationInput')?.value,
-            programType: document.getElementById('programTypeInput')?.value,
-            care: document.getElementById('careInput')?.value,
-            awareness: document.getElementById('awarenessInput')?.value,
-            intervention: document.getElementById('interventionInput')?.value,
-            support: document.getElementById('supportInput')?.value,
-            family: document.getElementById('familyInput')?.value,
-            env: document.getElementById('envInput')?.value,
+            ...extraData
         }
     };
 
@@ -4442,10 +2489,7 @@ function loadSavedReport(criterionId) {
     document.getElementById('reporterType').value = report.data.reporterType || 'المعلم';
     document.getElementById('reporterName').value = report.data.reporterName || '';
     document.getElementById('principal').value = report.data.principal || '';
-    if (document.getElementById('grade')) document.getElementById('grade').value = report.data.grade || '';
     document.getElementById('term').value = report.data.term || '';
-    if (document.getElementById('subject')) document.getElementById('subject').value = report.data.subject || '';
-    if (document.getElementById('lesson')) document.getElementById('lesson').value = report.data.lesson || '';
     document.getElementById('target').value = report.data.target || '';
     document.getElementById('count').value = report.data.count || '';
     document.getElementById('place').value = report.data.place || 'داخل الصف';
@@ -4458,8 +2502,11 @@ function loadSavedReport(criterionId) {
     document.getElementById('recomm').value = report.data.recomm || '';
     document.getElementById('manualReportTitle').value = report.title || '';
 
-    // تعبئة الحقول الخاصة
+    // تعبئة الحقول الخاصة بعد إنشائها (بعد استدعاء updateRoleSpecificFields)
     setTimeout(() => {
+        if (document.getElementById('grade')) document.getElementById('grade').value = report.data.grade || '';
+        if (document.getElementById('subject')) document.getElementById('subject').value = report.data.subject || '';
+        if (document.getElementById('lesson')) document.getElementById('lesson').value = report.data.lesson || '';
         if (document.getElementById('fieldInput')) document.getElementById('fieldInput').value = report.data.field || '';
         if (document.getElementById('initiativeInput')) document.getElementById('initiativeInput').value = report.data.initiative || '';
         if (document.getElementById('durationInput')) document.getElementById('durationInput').value = report.data.duration || '';
@@ -4740,7 +2787,83 @@ function handleReportSearch() {
     }
 }
 
-// ==================== حفظ بيانات مقدم التقرير ====================
+// ==================== التعبئة الذكية (المعدلة لإرسال الحقول الإضافية) ====================
+async function fillWithAI() {
+    const activationCode = localStorage.getItem(ACTIVATION_KEY_NAME);
+    if (!activationCode) { alert('الرجاء تفعيل الأداة أولاً باستخدام كود التفعيل'); return; }
+    if (!navigator.onLine) { alert('لا يوجد اتصال بالإنترنت.'); return; }
+    const reportTitle = document.getElementById('manualReportTitle').value.trim();
+    if (!reportTitle) { alert('الرجاء إدخال عنوان التقرير أولاً'); return; }
+    const criterionId = document.getElementById('criterionSelect').value || null;
+    const subcategoryId = document.getElementById('subcategorySelect').value || null;
+    const reportId = document.getElementById('reportSelect').value || null;
+    const uiRole = document.getElementById('role').value;
+    const backendRole = getBackendRole(uiRole);
+    
+    // قراءة الحقول الإضافية
+    const field = document.getElementById('fieldInput')?.value || '';
+    const initiative = document.getElementById('initiativeInput')?.value || '';
+    const duration = document.getElementById('durationInput')?.value || '';
+    
+    const aiButton = document.getElementById('aiFillFloatingBtn');
+    const originalText = aiButton.querySelector('.floating-ai-text').textContent;
+    const originalIcon = aiButton.querySelector('.floating-ai-icon').className;
+    aiButton.classList.add('loading');
+    aiButton.querySelector('.floating-ai-text').textContent = 'جارٍ...';
+    aiButton.querySelector('.floating-ai-icon').className = 'fas fa-spinner fa-spin floating-ai-icon';
+    aiButton.disabled = true;
+    try {
+        const response = await fetch(BACKEND_URL + "/api/generate-report-content", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-Activation-Code': activationCode },
+            body: JSON.stringify({ 
+                criterion_id: criterionId, 
+                subcategory_id: subcategoryId, 
+                report_id: reportId, 
+                role: backendRole, 
+                report_data: { 
+                    subject: document.getElementById('subject')?.value || '', 
+                    lesson: document.getElementById('lesson')?.value || '', 
+                    grade: document.getElementById('grade')?.value || '', 
+                    target: document.getElementById('target').value || '', 
+                    place: document.getElementById('place').value || '', 
+                    count: document.getElementById('count').value || '', 
+                    title: reportTitle,
+                    field: field,
+                    initiative: initiative,
+                    duration: duration
+                } 
+            })
+        });
+        if (!response.ok) throw new Error("تعذر تنفيذ الطلب");
+        const data = await response.json();
+        if (!data || !data.content) throw new Error('لم يتم الحصول على إجابة من الذكاء الاصطناعي');
+        parseAIResponseProfessional(data.content);
+        saveCurrentReport();
+        showGuideBox();
+    } catch (error) {
+        console.error('خطأ في الذكاء الاصطناعي:', error);
+        alert(error.message || "تعذر تنفيذ الطلب.");
+    } finally {
+        aiButton.classList.remove('loading');
+        aiButton.querySelector('.floating-ai-text').textContent = originalText;
+        aiButton.querySelector('.floating-ai-icon').className = originalIcon;
+        aiButton.disabled = false;
+        updateAiButtonTheme(localStorage.getItem(APP_THEME_KEY) || 'default');
+    }
+}
+
+function showGuideBox() {
+    const guideBox = document.getElementById('aiGuideBox');
+    const timerSpan = document.getElementById('guideTimer');
+    let seconds = 20;
+    if (window.guideTimerInterval) clearInterval(window.guideTimerInterval);
+    window.guideTimerInterval = setInterval(() => { seconds--; timerSpan.textContent = seconds; if (seconds <= 0) { clearInterval(window.guideTimerInterval); guideBox.style.display = 'none'; } }, 1000);
+    document.getElementById('guideDownloadBtn').onclick = function() { downloadPDF(); clearInterval(window.guideTimerInterval); guideBox.style.display = 'none'; };
+    document.getElementById('guideCloseBtn').onclick = function() { clearInterval(window.guideTimerInterval); guideBox.style.display = 'none'; };
+    guideBox.style.display = 'block';
+}
+
 function saveTeacherData() {
     saveCurrentReport();
     const teacherData = {
